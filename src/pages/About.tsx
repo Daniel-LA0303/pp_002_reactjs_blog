@@ -1,7 +1,13 @@
 import React from 'react';
+import NavBar from '../components/NavBar';
+import Sidebar from '../components/sidebar';
 
 const About: React.FC = () => {
-  return <h2>About us</h2>;
-};
+  return (
+    <div>
+      <NavBar />
+      <Sidebar />
+    </div>
+)};
 
 export default About;

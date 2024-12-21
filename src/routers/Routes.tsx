@@ -7,6 +7,7 @@ import ViewBlog from '../pages/Blog/ViewBlog';
 import Profile from '../pages/UserPages/Profile';
 import UserSettings from '../pages/UserPages/UserSettings';
 import ViewCategories from '../pages/Category/ViewCategories';
+import Home from '../pages/Home/Home';
 
 
 
@@ -23,6 +24,8 @@ const AppRoutes: React.FC = () => {
       <Route path="/user-settings" element={<UserSettings />} />
 
       <Route path="/categories" element={<ViewCategories />} />
+
+      <Route path='/home-dev' element={<Home />} />
 
     </Routes>
   );

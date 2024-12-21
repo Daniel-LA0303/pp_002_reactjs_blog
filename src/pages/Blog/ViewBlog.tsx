@@ -1,15 +1,16 @@
-import React from 'react'
+
 import CommentBlog from '../../components/Blog/CommentBlog'
 import ActionsBlog from '../../components/Blog/ActionsBlog'
+import AuthorBlogCard from '../../components/User/AuthorBlogCard'
+import RecommendBlog from '../../components/Blog/RecommendBlog'
 
 const ViewBlog = () => {
   return (
-    <div className="max-w-screen-xl mx-auto flex justify-center">
+    <div className="max-w-screen-xl mx-auto flex flex-col justify-center sm:flex-row">
         <div className="flex-col hidden sm:block sticky top-0 h-[90%] p-4">
             <ActionsBlog />
         </div>
-        <main className="">
-
+        <main className="w-full md:w-4/6 lg:w-6/12">
             <div className="mb-4 md:mb-0 w-full max-w-screen-md mx-auto relative" style={{height: '24em'}}>
                 <div className="absolute left-0 bottom-0 w-full h-full z-10"
                 style={{backgroundImage: 'linear-gradient(180deg,transparent,rgba(0,0,0,.7));'}}></div>
@@ -127,6 +128,13 @@ const ViewBlog = () => {
             </div>
       
         </main>
+
+        <aside className="w-full md:w-2/6 lg:w-3/12 mx-1">
+            <AuthorBlogCard />
+            <RecommendBlog />
+            <RecommendBlog />
+            <RecommendBlog />
+        </aside>
 
         <div className="fixed z-1 bottom-0 w-full p-1 block sm:hidden bg-slate-500">
             <div className='flex justify-center'>

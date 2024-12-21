@@ -1,13 +1,9 @@
-import React from 'react'
-import CardBlog from '../components/Card'
+
+import CardBlog from '../../components/Card'
 
 const Profile = () => {
   return (
     <div className=''>
-
-      {
-      
-
         <section className="pt-8 sm:pt-8 ">
         <div className="w-full md:w-10/12 lg:w-8/12 mx-auto">
           <div className={`flex flex-col min-w-0 break-word w-full mb-6 shadow-2xl rounded-lg mt-16`}>
@@ -44,7 +40,7 @@ const Profile = () => {
                       </div>
                     </div>
                     <div className=" my-2 border-t border-0.5 text-center"></div>
-                    <div className='mx-auto block sm:flex'>
+                    <div className=' block sm:flex'>
                       <div className="my-3 text-left sm:text-center  w-full sm:w-2/4">
                         <h2 className=' text-sm sm:text-xs font-bold'>Work: </h2>   
                         <p className=' text-lg'>IDA</p>       
@@ -75,10 +71,10 @@ const Profile = () => {
 
               <div>
                 <div className=" flex flex-col min-w-0 break-word w-full mb-6 shadow-2xl rounded-lg text-center ">
-                  <div className=" py-4 lg:pt-4 ">
-                    <div className="flex items-center p-3 text-center">
+                  <div className=" py-4 lg:pt-4 px-2">
+                    <div className="flex items-center  text-center">
                       {/* <InsertDriveFileIcon /> */}
-                      <span className="text-sm font-bold block uppercase tracking-wide text-blueGray-600 mx-1">
+                      <span className="text-sm font-bold block uppercase tracking-wide text-blueGray-600 mr-1">
                         30
                       </span>
                       <span className="text-sm text-blueGray-400">           
@@ -86,18 +82,18 @@ const Profile = () => {
                       </span>
                     </div>
 
-                    <div className="flex items-center p-3 text-center">
+                    <div className="flex items-center pt-2 text-center">
                       {/* <FavoriteIcon /> */}
-                      <span className="text-sm font-bold block uppercase tracking-wide text-blueGray-600 mx-1">
+                      <span className="text-sm font-bold block uppercase tracking-wide text-blueGray-600 mr-1">
                         100
                       </span>
                       <span className="text-sm text-blueGray-400">
                         Likes on posts
                       </span>
                     </div>
-                    <div className="flex items-center p-3 text-center">
+                    <div className="flex items-center pt-2 text-center">
                       {/* <PersonIcon /> */}
-                      <span className="text-sm font-bold block uppercase tracking-wide text-blueGray-600 mx-1">
+                      <span className="text-sm font-bold block uppercase tracking-wide text-blueGray-600 mr-1">
                         1000
                       </span>
                       <span className="text-sm text-blueGray-400">
@@ -135,7 +131,7 @@ const Profile = () => {
           </div>
         </footer>
       </section>
-      }
+      
 
     </div>
   )

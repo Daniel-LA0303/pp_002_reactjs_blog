@@ -6,6 +6,7 @@ import CreateBlog from '../pages/Blog/CreateBlog';
 import ViewBlog from '../pages/Blog/ViewBlog';
 import Profile from '../pages/UserPages/Profile';
 import UserSettings from '../pages/UserPages/UserSettings';
+import ViewCategories from '../pages/Category/ViewCategories';
 
 
 
@@ -20,6 +21,8 @@ const AppRoutes: React.FC = () => {
 
       <Route path="/profile" element={<Profile />} />
       <Route path="/user-settings" element={<UserSettings />} />
+
+      <Route path="/categories" element={<ViewCategories />} />
 
     </Routes>
   );

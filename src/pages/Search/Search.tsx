@@ -1,4 +1,8 @@
 import { useState } from "react";
+import SearchBlogs from "../../components/Search/SearchBlogs";
+import CategoryCard from "../../components/Category/CategoryCard";
+import SearchCategories from "../../components/Search/SearchCategories";
+import SearchUsers from "../../components/Search/SearchUsers";
 
 function TabMenu() {
     const [activeTab, setActiveTab] = useState("blog");
@@ -6,22 +10,23 @@ function TabMenu() {
     const renderContent = () => {
         switch (activeTab) {
             case "blog":
-                return <div>Bienvenido al Home</div>;
+                return <SearchBlogs />;
             case "category":
-                return <div>Configuraciones de usuario</div>;
+                return <SearchCategories />;
             case "user":
-                return <div>Perfil del usuario</div>;
+                return <SearchUsers />;
             default:
                 return <div>Selecciona una pestaña</div>;
         }
     };
 
     return (
-        <div className="flex gap-4 w-10/12  font-[sans-serif] mx-auto">
-            <ul className="hidden md:block md:w-3/12  bg-gray-100  py-5 rounded-md">
+        <div className="flex flex-col md:flex-row gap-4 w-10/12 font-[sans-serif] mx-auto">
+            {/* Lista de pestañas */}
+            <ul className="w-full md:w-3/12 max-h-52 bg-gray-100 py-0 rounded-md flex md:flex-col flex-row justify-between">
                 <li
                     id="homeTab"
-                    className={`tab flex items-center text-sm ${
+                    className={`tab w-2/6 md:w-full flex justify-center md:justify-start items-center text-sm text-center md:text-left ${
                         activeTab === "blog" ? "font-semibold bg-white text-blue-600" : "text-gray-800"
                     } hover:text-blue-600 py-5 px-5 cursor-pointer transition-all`}
                     onClick={() => setActiveTab("blog")}
@@ -30,7 +35,7 @@ function TabMenu() {
                 </li>
                 <li
                     id="settingTab"
-                    className={`tab flex items-center text-sm ${
+                    className={`tab w-2/6 md:w-full flex justify-center md:justify-start items-center text-sm md:text-center text-left ${
                         activeTab === "category" ? "font-semibold bg-white text-blue-600" : "text-gray-800"
                     } hover:text-blue-600 py-5 px-5 cursor-pointer transition-all`}
                     onClick={() => setActiveTab("category")}
@@ -39,7 +44,7 @@ function TabMenu() {
                 </li>
                 <li
                     id="profileTab"
-                    className={`tab flex items-center text-sm ${
+                    className={`tab w-2/6 md:w-full flex justify-center md:justify-start items-center text-sm text-center md:text-left ${
                         activeTab === "user" ? "font-semibold bg-white text-blue-600" : "text-gray-800"
                     } hover:text-blue-600 py-5 px-5 cursor-pointer transition-all`}
                     onClick={() => setActiveTab("user")}
@@ -49,7 +54,9 @@ function TabMenu() {
             </ul>
 
             {/* Contenedor del contenido */}
-            <div className="md:w-8/12 p-3 flex-grow bg-white shadow-lg rounded-lg">{renderContent()}</div>
+            <div className="md:w-8/12 w-full p-3 flex-grow bg-white shadow-lg rounded-lg">
+                {renderContent()}
+            </div>
         </div>
     );
 }

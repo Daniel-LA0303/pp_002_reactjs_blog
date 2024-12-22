@@ -1,8 +1,15 @@
+import SearchUserCard from "../User/SearchUserCard"
 
 
 const SearchUsers = () => {
   return (
-    <div>SearchUsers</div>
+    <div>
+        <SearchUserCard />
+        <SearchUserCard />
+        <SearchUserCard />
+        <SearchUserCard />
+        <SearchUserCard />
+    </div>
   )
 }
 

@@ -7,7 +7,6 @@ const App: React.FC = () => {
   return (
     <BrowserRouter>
       <div>
-        <h1>My app</h1>
         <AppRoutes />
       </div>
     </BrowserRouter>

@@ -1,8 +1,9 @@
-import React from 'react'
 
 const SearchBlogs = () => {
   return (
-    <div>SearchBlogs</div>
+    <div>
+
+    </div>
   )
 }
 

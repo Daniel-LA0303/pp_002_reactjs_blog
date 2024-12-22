@@ -1,6 +1,6 @@
-import React from 'react'
 import CardBlog from '../../components/Card'
 import RecommendBlog from '../../components/Blog/RecommendBlog'
+import { Link } from 'react-router-dom'
 
 const Home = () => {
   return (
@@ -12,6 +12,14 @@ const Home = () => {
             <div className="w-full lg:w-8/12">
                 <div className="flex items-center justify-between">
                     <h1 className="text-xl font-bold text-gray-700 md:text-2xl">Post</h1>
+                    <ul>
+                        <li><Link to={"/user-settings"}>Profile settings</Link></li>
+                        <li><Link to={"/view-blog"}>View blog</Link></li>
+                        <li><Link to={"/profile"}>Profile</Link></li>
+                        <li><Link to={"/create-blog"}>Create a blog</Link></li>
+                        <li><Link to={"/dashboard"}>Dashboard</Link></li>
+                        <li><Link to={"/categories"}>Categories</Link></li>
+                    </ul>
                     <div>
                         <select className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                             <option>Latest</option>

@@ -8,6 +8,7 @@ import Profile from '../pages/UserPages/Profile';
 import UserSettings from '../pages/UserPages/UserSettings';
 import ViewCategories from '../pages/Category/ViewCategories';
 import Home from '../pages/Home/Home';
+import PrincipalDashBoard from '../pages/UserPages/Dashboard/PrincipalDashBoard';
 
 
 
@@ -22,6 +23,7 @@ const AppRoutes: React.FC = () => {
 
       <Route path="/profile" element={<Profile />} />
       <Route path="/user-settings" element={<UserSettings />} />
+      <Route path="/dashboard" element={<PrincipalDashBoard />} />  
 
       <Route path="/categories" element={<ViewCategories />} />
 

@@ -1,12 +1,57 @@
 
+import { useDispatch } from 'react-redux';
 import CardBlog from '../../components/Card'
+import { AppDispatch, RootState } from '../../redux/store';
+import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { UserProfile } from '../../types/user';
+import { fetchGetProfileBack } from '../../slices/userSlice';
+import Spinner from '../../components/Spinner/Spinner';
+import Error from '../../components/Error/Error';
+import { formatDate } from '../../utils/dateUtils';
+import { useParams } from 'react-router-dom';
 
-const Profile = () => {
+const Profile: React.FC = () => {
+  const { id } = useParams<{ id: string }>(); // Obtenemos el userId como string
+
+  const dispatch = useDispatch<AppDispatch>(); // Tipamos correctamente el dispatch
+  const loading = useSelector((state: RootState) => state.user.loading);
+  const error = useSelector((state: RootState) => state.user.error);
+
+  const [user, setUser] = React.useState<UserProfile | null>(null);
+
+  // Verificar si el userId está presente y es un número válido
+  const userIdNumber = id ? parseInt(id) : NaN;
+
+  useEffect(() => {
+    if (isNaN(userIdNumber)) {
+      console.error("El ID de usuario no es válido");
+      return;
+    }
+
+    const fetchData = async () => {
+      try {
+        // Despachamos la acción para obtener el perfil del usuario
+        const response = await dispatch(fetchGetProfileBack(userIdNumber)).unwrap();
+        setUser(response); // Guardamos la información del perfil en el estado
+        console.log("response", response);
+      } catch (err) {
+        // Manejo de errores
+        console.error("Error al obtener el perfil", err);
+      }
+    };
+
+    fetchData(); // Llamamos a la función para obtener los datos del usuario
+  }, [userIdNumber, dispatch]);
+
+  if (loading) return <Spinner />;
+  if (error) return <Error />;
+
   return (
     <div className=''>
         <section className="pt-8 sm:pt-8 ">
         <div className="w-full md:w-10/12 lg:w-8/12 mx-auto">
-          <div className={`flex flex-col min-w-0 break-word w-full mb-6 shadow-2xl rounded-lg mt-16`}>
+          <div className={`flex flex-col min-w-0 break-word w-full mb-6 shadow-lg rounded-lg mt-16`}>
             <div className="px-2 sm:px-6 ">
               <div className="flex flex-wrap justify-center">
                 <div className="w-full ml-10 md:ml-0 px-4 flex justify-start sm:justify-center">
@@ -20,7 +65,7 @@ const Profile = () => {
               </div>
               <div className=" ">
                 <h3 className={`text-left md:text-center text-xl mt-10 md:mt-10 font-bold leading-normal mb-2`}>
-                  User
+                  {user?.username}
                 </h3>
                 
                   <>
@@ -28,14 +73,15 @@ const Profile = () => {
                     <div className="flex flex-wrap justify-center">
                       <div className="w-full lg:w-9/12">
                         <p className=" text-left md:text-center text-sm mb-4 leading-relaxed text-blueGray-700">
-                          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa, maxime iure! Autem officia numquam magnam ea obcaecati. Sunt velit quaerat accusamus sequi quae repellendus, tempora fugit cum blanditiis quidem iste!
+                          {user?.bio}
                         </p>
                       </div>
                     </div>
                     <div className="flex flex-wrap justify-center">
                       <div className="w-full lg:w-9/12">
                         <p className=" text-left md:text-center text-sm mb-4 leading-relaxed text-blueGray-700">
-                            Join in
+                        Join in {user?.createdAt ? formatDate(user.createdAt) : 'Date not available'}
+
                         </p>
                       </div>
                     </div>
@@ -43,11 +89,11 @@ const Profile = () => {
                     <div className=' block sm:flex'>
                       <div className="my-3 text-left sm:text-center  w-full sm:w-2/4">
                         <h2 className=' text-sm sm:text-xs font-bold'>Work: </h2>   
-                        <p className=' text-lg'>IDA</p>       
+                        <p className=' text-lg'>{user?.work}</p>       
                       </div>
                       <div className="my-3 text-left sm:text-center w-full sm:w-2/4">
                         <h2 className=' text-sm sm:text-xs font-bold'>Education: </h2>   
-                        <p className='text-lg'>BUAP</p>
+                        <p className='text-lg'>{user?.education}</p>
                       </div>
                     </div>
                   </>
@@ -61,21 +107,21 @@ const Profile = () => {
         <div className='block sm:flex mx-auto w-full md:w-10/12 lg:w-8/12'> 
             <div className='w-full sm:w-3/12 mr-0 sm:mr-2'>
 
-                <div className= "flex flex-col min-w-0 break-word w-full my-1 shadow-2xl rounded-lg mt-4">
+                <div className= "flex flex-col min-w-0 break-word w-full my-1 shadow-lg  rounded-lg mt-4">
                   <div className=" px-2 mb-2 mt-4 text-left block sm:text-center  sm:justify-center">
                     <h2 className=' text-sm sm:text-xs font-bold'>Skills:</h2>
                     <div className=" my-2 border-t border-0.5 text-center"></div>
-                    <p>Skills</p>
+                    <p>{user?.skills}</p>
                   </div>
                 </div>
 
               <div>
-                <div className=" flex flex-col min-w-0 break-word w-full mb-6 shadow-2xl rounded-lg text-center ">
+                <div className=" flex flex-col min-w-0 break-word w-full mb-6 shadow-lg  rounded-lg text-center ">
                   <div className=" py-4 lg:pt-4 px-2">
                     <div className="flex items-center  text-center">
                       {/* <InsertDriveFileIcon /> */}
                       <span className="text-sm font-bold block uppercase tracking-wide text-blueGray-600 mr-1">
-                        30
+                        {user?.blogsNumber}
                       </span>
                       <span className="text-sm text-blueGray-400">           
                         Posts published
@@ -85,7 +131,7 @@ const Profile = () => {
                     <div className="flex items-center pt-2 text-center">
                       {/* <FavoriteIcon /> */}
                       <span className="text-sm font-bold block uppercase tracking-wide text-blueGray-600 mr-1">
-                        100
+                        {user?.likesNumber}
                       </span>
                       <span className="text-sm text-blueGray-400">
                         Likes on posts
@@ -94,7 +140,7 @@ const Profile = () => {
                     <div className="flex items-center pt-2 text-center">
                       {/* <PersonIcon /> */}
                       <span className="text-sm font-bold block uppercase tracking-wide text-blueGray-600 mr-1">
-                        1000
+                        {user?.followers}
                       </span>
                       <span className="text-sm text-blueGray-400">
                         Followers

@@ -28,7 +28,7 @@ const AppRoutes: React.FC = () => {
 
       
 
-      <Route path="/profile" element={<Profile />} />
+      <Route path="/profile/:id" element={<Profile />} />
       <Route path="/user-settings" element={<UserSettings />} />
       <Route path="/dashboard" element={<PrincipalDashBoard />} />  
 

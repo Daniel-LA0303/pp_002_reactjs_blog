@@ -1,36 +1,170 @@
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MultiSelect } from "react-multi-select-component";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { useDispatch } from "react-redux";
+import { CategoriesSelect, CategoriesSelectedInterface } from "../../types/category"; 
+import { CreateBlogRequestI } from "../../types/blog";
+import { AppDispatch, RootState } from "../../redux/store";
+import { useSelector } from "react-redux";
+import { fetchCategories } from "../../slices/categorySlice";
+import Spinner from "../../components/Spinner/Spinner";
+import Error from "../../components/Error/Error";
+import { fetchCreateBlog } from "../../slices/blogSlice";
+import Modal from "../../components/MultipleUtils/ModalError";
+import { useNavigate } from "react-router-dom";
 
-const options = [
-    { label: "Grapes 🍇", value: "grapes" },
-    { label: "Mango 🥭", value: "mango" },
-    { label: "Strawberry 🍓", value: "strawberry", disabled: true },
-  ];
+// modules of react quill
+const modules = {
+  toolbar: {
+      container: [
+          [{ header: [1, 2, 3, false] }], 
+          ["bold", "italic", "underline", "strike"], 
+          [{ align: [] }],
+          ["link", "image", "video"], 
+          [{ list: "ordered" }, { list: "bullet" }], 
+          ["clean"], 
+      ],
+  },
+};
+
+
 
 const CreateBlog = () => {
 
-    const [selected, setSelected] = useState([]);
-    const [value, setValue] = useState('');
+  /**
+   * state redux
+   */
+  const dispatch = useDispatch<AppDispatch>();
+
+  const navigate = useNavigate();
+
+  // redux categories
+  const loading = useSelector((state: RootState) => state.categories.loading);
+  const error = useSelector((state: RootState) => state.categories.error);
+
+  // redux blog
+  const loadingCreateBlog = useSelector((state: RootState) => state.blog.loading);
+  const errorCreateBlog = useSelector((state: RootState) => state.blog.error);
+
+  /**
+   * state section
+   */
+  // show options of categories
+  const [options, setOptions] = useState<CategoriesSelect[]>([]);
+  // categories selected by user
+  const [categoriesSelected, setCategoriesSelected] = useState<CategoriesSelectedInterface[]>([]);
+  // check or validate if user choosed a category
+  const [categoriesIsEmpty, setCategoryIsEmpty] = useState<Boolean>(false);
+  // content of blog
+  const [content, setContent] = useState('');
+  // image selected by user
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  // data that we send to backend
+  const [formData, setFormData] = useState<CreateBlogRequestI>({
+    userId: 1,
+    title: '',
+    description: '',
+    content: '',
+    categories: []
+  });
+  const [modalInfo, setModalInfo] = useState<{ message: string; status: string } | null>(null);
+
+  /**
+   * useEffect section
+   */
+  // useEffect get categories to show it in select
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await dispatch(fetchCategories()).unwrap();
+        // mapping categories tooptions
+        const optionsC = response.map(c => ({
+          label: c.name,
+          value: c.categoryId
+        }));
+
+        setOptions(optionsC);
+      } catch (error) {
+        console.error("There is a problem to get categories.");
+      }
+    }
+    fetchData();
+  }, [dispatch]);
 
 
-    const modules = {
-        toolbar: {
-            container: [
-                [{ header: [1, 2, 3, false] }], // Títulos
-                ["bold", "italic", "underline", "strike"], // Formato de texto
-                [{ align: [] }], // Alineación (izquierda, centro, derecha)
-                ["link", "image", "video"], // Insertar enlaces, imágenes y videos
-                [{ list: "ordered" }, { list: "bullet" }], // Listas ordenadas y no ordenadas
-                ["clean"], // Limpiar formato
-            ],
-        },
-      };
+  /**
+   * functions section
+   */
+  // read properties as title and description
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const {name, value} = e.target;
+    setFormData(prevData => ({...prevData, [name]: value}))
+  }
 
+  // handle submit prepare info to backend
+  const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    // check if user choose category
+    if(categoriesSelected.length === 0){
+      setCategoryIsEmpty(true);
+      return
+    }
+    
+    // prepare data
+    formData.content = content;
+    formData.categories = categoriesSelected.map(c => c.value);
+    
+    // request to backend
+    try {
+      // fetch with redux
+      await dispatch(fetchCreateBlog(formData)).unwrap();
+      navigate('/profile/1');
+    } catch (error: any) {
+      console.log(error);
+      
+      if (error.data !== null) {
+        // console.log(error.data);
+        console.log(errorCreateBlog);
+      }else{
+        setModalInfo({
+          message: error.message,
+          status: error.status,
+        });
+      } 
+    }
+  }
+
+  // set file in UI
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setSelectedImage(file);
+    }
+  };
+
+  // remove Image
+  const removeImage = () => {
+    setSelectedImage(null);
+  };
+
+  // loading a errors category
+  if (loading) return <Spinner />;
+  if (error) return <Error />;
+
+  // loading to create blog
+  if (loadingCreateBlog) return <Spinner />
 
   return (
     <div className="min-h-screen p-6 bg-gray-100 flex items-center justify-center">
+      {modalInfo && (
+        <Modal
+          message={modalInfo.message}
+          status={modalInfo.status}
+          onClose={() => setModalInfo(null)}
+        />
+      )}
       <div className="container max-w-screen-lg mx-auto">
         <div>
           <h2 className="font-semibold text-xl text-gray-600">
@@ -47,53 +181,65 @@ const CreateBlog = () => {
                 <p>Please fill out all the fields.</p>
               </div>
 
-              <div className="lg:col-span-2">
+              <form 
+                onSubmit={handleSubmit}
+                className="lg:col-span-2"
+              >
                 <div className="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-5">
                   <div className="md:col-span-5">
-                    <label htmlFor="full_name">Title</label>
+                    <label htmlFor="title">Title</label>
+                    <p className=" text-red-400 font-bold">{errorCreateBlog?.data?.title ? errorCreateBlog?.data?.title : null}</p>
+                    
                     <input
                       type="text"
-                      name="full_name"
-                      id="full_name"
+                      name="title"
+                      id="title"
                       className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                      value=""
+                      value={formData.title}
+                      placeholder="Title"
+                      onChange={handleChange}
                     />
                   </div>
 
                   <div className="md:col-span-5">
-                    <label htmlFor="email">Description</label>
+                    <label htmlFor="description">Description</label>
+                    <p className=" text-red-400 font-bold">{errorCreateBlog?.data?.description ? errorCreateBlog?.data?.description : null}</p>
+                    
                     <input
                       type="text"
-                      name="email"
-                      id="email"
+                      name="description"
+                      id="description"
                       className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                      value=""
-                      placeholder="email@domain.com"
+                      value={formData.description}
+                      placeholder="This is a description example"
+                      onChange={handleChange}
                     />
                   </div>
 
                   <div className="md:col-span-5">
                     <label htmlFor="email">Categories</label>
-                    <pre>{JSON.stringify(selected)}</pre>
+                    <p className=" text-red-400 font-bold">{categoriesIsEmpty ? 'Please choose a category' : null}</p>
                     <MultiSelect
                         options={options}
-                        value={selected}
-                        onChange={setSelected}
-                        labelledBy="Select"
+                        value={categoriesSelected}
+                        onChange={setCategoriesSelected}
+                        labelledBy="Categories"
+                        hasSelectAll={false}
                     />
                   </div>
 
                   <div className="md:col-span-5">
                     <label htmlFor="email">Content Blog</label>
+                    <p className=" text-red-400 font-bold">{errorCreateBlog?.data?.content ? errorCreateBlog?.data?.content : null}</p>
                     <ReactQuill 
                         theme="snow" 
-                        value={value} 
+                        value={content} 
                         modules={modules}
-                        onChange={setValue} 
+                        onChange={setContent} 
                         style={{
-                            height: "300px", // Altura predeterminada
-                            overflow: "auto", // Scroll automático si el contenido excede
-                            border: "1px solid #ccc", // Borde opcional
+                            height: "300px", 
+                            overflow: "auto", 
+                            border: "1px solid #ccc", 
                         }}
                     />
                   </div>
@@ -103,6 +249,7 @@ const CreateBlog = () => {
                     <label className="uppercase md:text-sm text-xs text-gray-500 text-light font-semibold mb-1">
                       Upload Photo
                     </label>
+                    {!selectedImage && (
                     <div className="flex items-center justify-center w-full">
                       <label className="flex flex-col border-4 border-dashed w-full h-32 hover:bg-gray-100 hover:border-slate-300 group">
                         <div className="flex flex-col items-center justify-center pt-7">
@@ -124,9 +271,28 @@ const CreateBlog = () => {
                             Select a photo
                           </p>
                         </div>
-                        <input type="file" className="hidden" />
+                        <input type="file" className="hidden" onChange={handleImageChange} />
                       </label>
+
                     </div>
+                    )}
+ 
+                    {selectedImage && (
+                      <div className="mt-4 relative">
+                        <p className="text-sm text-gray-500">Selected file: {selectedImage.name}</p>
+                        <img
+                          src={URL.createObjectURL(selectedImage)}
+                          alt="Preview"
+                          className="mt-2 w-full h-40  md:h-80 object-cover rounded"
+                        />
+                        <button
+                          onClick={removeImage}
+                          className="absolute bottom-2 right-2 bg-slate-500 text-white rounded-full w-8 h-8 flex items-center justify-center shadow-md hover:bg-slate-600 focus:outline-none"
+                        >
+                          <span className=" text-base font-bold">X</span>
+                        </button>
+                      </div>
+                    )}
                   </div>
 
                   <div className="md:col-span-5 text-right">
@@ -137,7 +303,7 @@ const CreateBlog = () => {
                     </div>
                   </div>
                 </div>
-              </div>
+              </form>
             </div>
           </div>
         </div>

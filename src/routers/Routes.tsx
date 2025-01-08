@@ -24,7 +24,7 @@ const AppRoutes: React.FC = () => {
       <Route path='/search' element={<Search />} />
 
       <Route path="/create-blog" element={<CreateBlog />} />
-      <Route path="/view-blog" element={<ViewBlog />} />
+      <Route path="/view-blog/:id" element={<ViewBlog />} />
 
       
 

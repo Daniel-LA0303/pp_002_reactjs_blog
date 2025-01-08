@@ -50,3 +50,12 @@ export interface ApiResponse<T> {
 }
 
 
+export interface CategorySmallInfo{
+  categroyId: number; 
+  name: string;
+  description: string;
+  color: string; // Hexadecimal format
+  createdAt: string;
+}
+
+

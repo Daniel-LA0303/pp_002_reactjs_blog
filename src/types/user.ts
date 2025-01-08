@@ -13,3 +13,13 @@ export interface UserProfile {
     followers: number;
     createdAt: string | null; 
 }
+
+export interface UserInfoCard{
+    userId: number;
+    username: string;
+    profilePicture: string; 
+    city: string;
+    blogsByUser: number;
+    followers: number;
+    following: number;
+}

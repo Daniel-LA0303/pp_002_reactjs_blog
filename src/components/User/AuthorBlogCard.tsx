@@ -1,5 +1,7 @@
+import React from "react"
+import { UserInfoCard } from "../../types/user"
 
-const AuthorBlogCard = () => {
+const AuthorBlogCard: React.FC<UserInfoCard> = (props) => {
   return (
     <div className="relative w-full mx-auto md:max-w-2xl  min-w-0 break-words bg-white mb-6 shadow-md rounded-xl mt-16">
         <div className="px-6">
@@ -11,28 +13,28 @@ const AuthorBlogCard = () => {
                 </div>
                 <div className="w-full text-center mt-5 md:mt-10">
                     <div className="flex justify-center lg:pt-4 pt-8 pb-0">
-                        <div className="p-3 text-center">
-                            <span className="text-xl font-bold block uppercase tracking-wide text-slate-700">3,360</span>
-                            <span className="text-sm text-slate-400">Photos</span>
+                        <div className="p-2 text-center">
+                            <span className="text-lg font-bold block uppercase tracking-wide text-slate-700">{props.blogsByUser}</span>
+                            <span className="text-sm text-slate-400">Blogs</span>
                         </div>
-                        <div className="p-3 text-center">
-                            <span className="text-xl font-bold block uppercase tracking-wide text-slate-700">2,454</span>
+                        <div className="p-2 text-center">
+                            <span className="text-lg font-bold block uppercase tracking-wide text-slate-700">{props.followers}</span>
                             <span className="text-sm text-slate-400">Followers</span>
                         </div>
 
-                        <div className="p-3 text-center">
-                            <span className="text-xl font-bold block uppercase tracking-wide text-slate-700">564</span>
+                        <div className="p-2 text-center">
+                            <span className="text-lg font-bold block uppercase tracking-wide text-slate-700">{props.following}</span>
                             <span className="text-sm text-slate-400">Following</span>
                         </div>
                     </div>
                 </div>
             </div>
             <div className="text-center mt-2">
-                <h3 className="text-2xl text-slate-700 font-bold leading-normal mb-1">Mike Thompson</h3>
-                <div className="text-xs mt-0 mb-2 text-slate-400 font-bold uppercase">
-                    <i className="fas fa-map-marker-alt mr-2 text-slate-400 opacity-75"></i>Paris, France
+                <h3 className=" text-base text-slate-700 font-bold leading-normal mb-1">{props.username}</h3>
+                <div className="text-sm mt-0 mb-2 text-slate-400 font-bold uppercase">
+                    <p>{props.city}</p>
                 </div>
-                <button className="bg-blue-500 mb-5 w-full text-white font-bold py-2 px-4 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-200">
+                <button className="bg-blue-500 text-sm mb-5 w-full text-white font-bold py-2 px-4 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-200">
                 Follow
                 </button>
             </div>

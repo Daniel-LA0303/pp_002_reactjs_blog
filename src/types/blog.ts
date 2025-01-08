@@ -1,6 +1,7 @@
 // Blog interfaces
 
-import { CategoryAllInfoI } from "./category";
+import { CategoryAllInfoI, CategorySmallInfo } from "./category";
+import { UserInfoCard } from "./user";
 
 /**
  * create a blog
@@ -30,4 +31,23 @@ export interface CreateBlogValidationErrorResponseI {
   title: string;
   description: string;
   content: string;
+}
+
+export interface BlogEngagement{
+  likesNumber: number;
+  commentsNumber: number;
+  savedNumber: number;
+}
+
+export interface BlogPageResponse{
+  blogId: number;
+  title: string;
+  description: string;
+  content: string;
+  status: "PUBLISHED" | "DRAFT" | "ARCHIVED"; 
+  slug: string;
+  createdAt: string; 
+  categories: CategorySmallInfo[];
+  userInfo: UserInfoCard;
+  blogEngagement: BlogEngagement;
 }

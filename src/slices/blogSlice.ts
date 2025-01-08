@@ -1,12 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { CreateBlogRequestI, CreateBlogValidationErrorResponseI } from "../types/blog";
-import { fetchCreateBlogRequest } from "../services/blogService";
+import { fetchCreateBlogRequest, fetchGetOneBlog } from "../services/blogService";
 import { ApiResponse } from "../types/category";
 
 
 interface BlogState {
     loading: boolean;
-    error: ApiResponse<CreateBlogValidationErrorResponseI> | null;
+    error: ApiResponse<CreateBlogValidationErrorResponseI> | string | null;
 }
 
 const initialState: BlogState = {
@@ -26,6 +26,18 @@ export const fetchCreateBlog = createAsyncThunk(
     }
 );
 
+export const fecthGetOneBlogPage = createAsyncThunk(
+    '/blog/getOneBlogPage',
+    async (id: number, {rejectWithValue}) => {
+        try {
+            const response = await fetchGetOneBlog(id);
+            return response;
+        } catch (error: any) {
+            return  rejectWithValue(error.response?.data || 'Error to get one blog')
+        }
+    }
+)
+
 const blogSlice =  createSlice({
     name: 'blog',
     initialState,
@@ -44,6 +56,20 @@ const blogSlice =  createSlice({
             state.loading = false;
             state.error = action.payload as ApiResponse<CreateBlogValidationErrorResponseI> || 'Failded to fecth create blog'
         })
+
+        .addCase(fecthGetOneBlogPage.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+        })
+        .addCase(fecthGetOneBlogPage.fulfilled, (state, action) => {
+            state.loading = false;
+            // state.error = null;
+            //state.currentBlog = action.payload; // Ajustar según tu estado
+        })
+        .addCase(fecthGetOneBlogPage.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.payload as string;
+        });
     }
 });
 

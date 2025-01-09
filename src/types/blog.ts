@@ -51,3 +51,16 @@ export interface BlogPageResponse{
   userInfo: UserInfoCard;
   blogEngagement: BlogEngagement;
 }
+
+
+export interface BlogCard{
+  blogId: number;
+  title: string;
+  description: string;  
+  status: "PUBLISHED" | "DRAFT" | "ARCHIVED"; 
+  slug: string;
+  createdAt: string;
+  userId: number;
+  username: string;
+  categories: CategorySmallInfo[];
+}

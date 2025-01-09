@@ -1,6 +1,6 @@
 
 import { useDispatch } from 'react-redux';
-import CardBlog from '../../components/Card'
+import CardBlog from '../../components/BlogCard'
 import { AppDispatch, RootState } from '../../redux/store';
 import { useSelector } from 'react-redux';
 import React, { useEffect } from 'react';

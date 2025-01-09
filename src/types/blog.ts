@@ -53,7 +53,7 @@ export interface BlogPageResponse{
 }
 
 
-export interface BlogCard{
+export interface BlogCardI{
   blogId: number;
   title: string;
   description: string;  

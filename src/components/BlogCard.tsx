@@ -1,8 +1,8 @@
 import React from 'react'
-import { BlogCard } from '../types/blog'
+import { BlogCardI } from '../types/blog'
 import { formatDate } from '../utils/dateUtils'
 
-const CardBlog: React.FC<BlogCard>  = (props) => {
+const BlogCard: React.FC<BlogCardI>  = (props) => {
   return (
     <div>
         <div className="mx-auto w-full overflow-hidden rounded-lg bg-white shadow mb-7">
@@ -32,4 +32,4 @@ const CardBlog: React.FC<BlogCard>  = (props) => {
   )
 }
 
-export default CardBlog
+export default BlogCard

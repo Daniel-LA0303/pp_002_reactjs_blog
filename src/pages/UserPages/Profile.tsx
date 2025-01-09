@@ -1,26 +1,40 @@
 
 import { useDispatch } from 'react-redux';
-import CardBlog from '../../components/BlogCard'
 import { AppDispatch, RootState } from '../../redux/store';
 import { useSelector } from 'react-redux';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { UserProfile } from '../../types/user';
 import { fetchGetProfileBack } from '../../slices/userSlice';
 import Spinner from '../../components/Spinner/Spinner';
 import Error from '../../components/Error/Error';
 import { formatDate } from '../../utils/dateUtils';
 import { useParams } from 'react-router-dom';
+import BlogCard from '../../components/BlogCard';
+import axios from 'axios';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import LanguageIcon from '@mui/icons-material/Language';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
+import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
+import TerminalOutlinedIcon from '@mui/icons-material/TerminalOutlined';
 
 const Profile: React.FC = () => {
-  const { id } = useParams<{ id: string }>(); // Obtenemos el userId como string
+  const { id } = useParams<{ id: string }>(); 
 
-  const dispatch = useDispatch<AppDispatch>(); // Tipamos correctamente el dispatch
+  const dispatch = useDispatch<AppDispatch>();
   const loading = useSelector((state: RootState) => state.user.loading);
   const error = useSelector((state: RootState) => state.user.error);
 
   const [user, setUser] = React.useState<UserProfile | null>(null);
 
-  // Verificar si el userId está presente y es un número válido
+
+      const [blogs, setBlogs] = useState([]);
+      const [page, setPage] = useState(0);
+      const [loadingBlogs, setLoadingBlogs] = useState(false);
+      const [hasMore, setHasMore] = useState(true); 
+    
+
+
   const userIdNumber = id ? parseInt(id) : NaN;
 
   useEffect(() => {
@@ -31,18 +45,61 @@ const Profile: React.FC = () => {
 
     const fetchData = async () => {
       try {
-        // Despachamos la acción para obtener el perfil del usuario
+        
         const response = await dispatch(fetchGetProfileBack(userIdNumber)).unwrap();
-        setUser(response); // Guardamos la información del perfil en el estado
+        setUser(response); 
         console.log("response", response);
       } catch (err) {
-        // Manejo de errores
         console.error("Error al obtener el perfil", err);
       }
     };
 
-    fetchData(); // Llamamos a la función para obtener los datos del usuario
+    fetchData(); 
   }, [userIdNumber, dispatch]);
+
+
+
+  const fetchBlogs = async () => {
+  if (loadingBlogs || !hasMore) return;
+
+  setLoadingBlogs(true);
+  try {
+
+    const response = await axios.get(
+      `http://127.0.0.1:8080/api/blog/pagination-by-user?userId=${userIdNumber}&page=${page}&size=5`
+    );
+
+    const { content, last } = response.data.data;
+    setBlogs((prevBlogs) => [...prevBlogs, ...content]);
+    setPage((prevPage) => prevPage + 1);
+    setHasMore(!last);
+  } catch (error) {
+    console.error("Error fetching blogs:", error);
+  } finally {
+    setLoadingBlogs(false);
+  }
+};
+
+
+  useEffect(() => {
+    fetchBlogs();
+  }, []);
+
+  const handleScroll = () => {
+    if (
+      !loadingBlogs &&
+      hasMore &&
+      window.innerHeight + document.documentElement.scrollTop + 50 >=
+      document.documentElement.scrollHeight
+    ) {
+      fetchBlogs();
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll); 
+  }, [loadingBlogs, hasMore]);
 
   if (loading) return <Spinner />;
   if (error) return <Error />;
@@ -109,9 +166,34 @@ const Profile: React.FC = () => {
 
                 <div className= "flex flex-col min-w-0 break-word w-full my-1 shadow-lg  rounded-lg mt-4">
                   <div className=" px-2 mb-2 mt-4 text-left block sm:text-center  sm:justify-center">
-                    <h2 className=' text-sm sm:text-xs font-bold'>Skills:</h2>
+                    <h2 className=' text-sm sm:text-xs font-bold flex justify-center items-center'>
+                      <TerminalOutlinedIcon fontSize='small'/>
+                      Skills/Lnaguages:
+                    </h2>
                     <div className=" my-2 border-t border-0.5 text-center"></div>
-                    <p>{user?.skills}</p>
+                    <p>{user?.skills ? user?.skills : 'No data'}</p>
+                  </div>
+                </div>
+
+                <div className= "flex flex-col min-w-0 break-word w-full my-1 shadow-lg  rounded-lg mt-4">
+                  <div className=" px-2 mb-2 mt-4 text-left block sm:text-center  sm:justify-center">
+                    <h2 className=' text-sm sm:text-xs font-bold flex justify-center items-center'>
+                      <LocationOnIcon fontSize='small'/>
+                      City
+                    </h2>
+                    <div className=" my-2 border-t border-0.5 text-center"></div>
+                    <p>{user?.city ? user?.city : 'No data'}</p>
+                  </div>
+                </div>
+
+                <div className= "flex flex-col min-w-0 break-word w-full my-1 shadow-lg  rounded-lg mt-4">
+                  <div className=" px-2 mb-2 mt-4 text-left block sm:text-center  sm:justify-center">
+                    <h2 className=' text-sm sm:text-xs font-bold flex justify-center items-center'>
+                      <LanguageIcon fontSize='small'/>
+                      WebSite
+                    </h2>
+                    <div className=" my-2 border-t border-0.5 text-center"></div>
+                    <p className=' text-sm'>{user?.webSite ? user?.webSite : 'No data'}</p>
                   </div>
                 </div>
 
@@ -119,8 +201,8 @@ const Profile: React.FC = () => {
                 <div className=" flex flex-col min-w-0 break-word w-full mb-6 shadow-lg  rounded-lg text-center ">
                   <div className=" py-4 lg:pt-4 px-2">
                     <div className="flex items-center  text-center">
-                      {/* <InsertDriveFileIcon /> */}
-                      <span className="text-sm font-bold block uppercase tracking-wide text-blueGray-600 mr-1">
+                        <ArticleOutlinedIcon fontSize='small'/>
+                      <span className="text-sm font-bold block uppercase tracking-wide text-blueGray-600 mx-1">
                         {user?.blogsNumber}
                       </span>
                       <span className="text-sm text-blueGray-400">           
@@ -129,17 +211,19 @@ const Profile: React.FC = () => {
                     </div>
 
                     <div className="flex items-center pt-2 text-center">
-                      {/* <FavoriteIcon /> */}
-                      <span className="text-sm font-bold block uppercase tracking-wide text-blueGray-600 mr-1">
+                      <FavoriteBorderIcon fontSize='small'/>
+                      <span className="text-sm font-bold block uppercase tracking-wide text-blueGray-600 mx-1">
+                        
                         {user?.likesNumber}
                       </span>
                       <span className="text-sm text-blueGray-400">
+                        
                         Likes on posts
                       </span>
                     </div>
                     <div className="flex items-center pt-2 text-center">
-                      {/* <PersonIcon /> */}
-                      <span className="text-sm font-bold block uppercase tracking-wide text-blueGray-600 mr-1">
+                      <PersonAddAltIcon fontSize='small'/>
+                      <span className="text-sm font-bold block uppercase tracking-wide text-blueGray-600 mx-1">
                         {user?.followers}
                       </span>
                       <span className="text-sm text-blueGray-400">
@@ -151,10 +235,17 @@ const Profile: React.FC = () => {
               </div>
             </div>
             <div className='w-full sm:w-9/12'>
-                <div className='w-full flex flex-col items-center'>
-                    <CardBlog />                    
-                    <CardBlog />
-                    <CardBlog />
+                <div className='w-full items-center'>
+                  {blogs.map((b, index) => (
+                    <BlogCard 
+                          key={index} {...b} 
+                          {...blogs}
+
+                      />
+                  ))}
+
+
+                  {loadingBlogs && <p>Cargando más blogs...</p>}
                 </div>
             </div>
         </div>

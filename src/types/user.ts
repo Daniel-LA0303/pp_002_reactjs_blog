@@ -12,6 +12,7 @@ export interface UserProfile {
     likesNumber: number;
     followers: number;
     createdAt: string | null; 
+    webSite: string;
 }
 
 export interface UserInfoCard{

@@ -1,6 +1,84 @@
+import React, { useEffect, useState } from "react";
+import { UserUpdateInfoRequest, UserUpdateInfoResponse } from "../../types/user";
+import { useDispatch } from "react-redux";
+import { AppDispatch, RootState } from "../../redux/store";
+import { useSelector } from "react-redux";
+import { fetchGetUpdateUserInfoThunk, fetchPutUpdatedUserInfoThunk } from "../../slices/userSlice";
+import Spinner from "../../components/Spinner/Spinner";
+import Error from "../../components/Error/Error";
+import { useParams } from "react-router-dom";
 
 
 const UserSettings = () => {
+
+  const { id } = useParams<{ id: string }>();
+
+  const dispatch = useDispatch<AppDispatch>();
+  const loading = useSelector((state: RootState) => state.user.loading);
+  const error = useSelector((state: RootState) => state.user.error);
+
+  const [userUpdateInfo, setUserUpdateInfo] = React.useState<UserUpdateInfoResponse | null>(null);
+  const [formData, setFormData] = useState<UserUpdateInfoResponse>({
+    name: '',
+    lastName: '',
+    work: '',
+    education: '',
+    pronouns: '',
+    website: '',
+    address: '',
+    city: '',
+    skills: '',
+    bio: '',
+  });
+
+  const userIdNumber = id ? parseInt(id) : NaN;
+
+
+  useEffect(() => {
+    if (isNaN(userIdNumber)) {
+      console.error("El ID de usuario no es válido");
+      return;
+    }
+
+    const fetchData = async () => {
+      try {
+        const response = await dispatch(fetchGetUpdateUserInfoThunk(userIdNumber)).unwrap();
+        setUserUpdateInfo(response);
+        setFormData(response);
+        console.log(response);
+        
+      } catch (error) {
+        console.log(error);
+        
+      }
+    }
+
+    fetchData();
+
+  }, [dispatch]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const {name, value} = e.target;
+    setFormData(prevData => ({...prevData, [name]: value}))
+  }  
+
+  const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      console.log(formData);
+      
+      try {
+        const response = await dispatch(fetchPutUpdatedUserInfoThunk({ id: 100, userInfoUpdated: formData })).unwrap();
+        console.log(response);
+        
+      } catch (error) {
+        console.log(error);
+        
+      }
+    }
+
+  if (loading) return <Spinner />;
+  if (error) return <Error />;
+
   return (
     <div>
       <div className="min-h-screen p-6 bg-gray-100 flex items-center justify-center">
@@ -20,7 +98,10 @@ const UserSettings = () => {
                   <p>Please fill out all the fields.</p>
                 </div>
 
-                <div className="lg:col-span-2">
+                <form 
+                  className="lg:col-span-2"
+                  onSubmit={handleSubmit}
+                >
                   <div className="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-5">
 
                     <div className="md:col-span-3">
@@ -30,7 +111,9 @@ const UserSettings = () => {
                         name="name"
                         id="name"
                         className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                        value=""
+                        value={formData.name}
+                        placeholder="ex: Jhoe"
+                        onChange={handleChange}
                       />
                     </div>
 
@@ -38,10 +121,12 @@ const UserSettings = () => {
                       <label htmlFor="full_name">Lastname</label>
                       <input
                         type="text"
-                        name="lastname"
-                        id="lastname"
+                        name="lastName"
+                        id="lastName"
                         className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                        value=""
+                        value={formData.lastName}
+                        placeholder="ex: Dae"
+                        onChange={handleChange}
                       />
                     </div>
 
@@ -49,10 +134,12 @@ const UserSettings = () => {
                       <label htmlFor="full_name">Work</label>
                       <input
                         type="text"
-                        name="name"
-                        id="name"
+                        name="work"
+                        id="work"
                         className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                        value=""
+                        value={formData.work}
+                        placeholder="ex: Google"
+                        onChange={handleChange}
                       />
                     </div>
 
@@ -60,10 +147,12 @@ const UserSettings = () => {
                       <label htmlFor="full_name">Education</label>
                       <input
                         type="text"
-                        name="lastname"
-                        id="lastname"
+                        name="education"
+                        id="education"
                         className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                        value=""
+                        value={formData.education}
+                        placeholder="ex: Harvad"
+                        onChange={handleChange}
                       />
                     </div>
 
@@ -71,22 +160,25 @@ const UserSettings = () => {
                       <label htmlFor="full_name">Pronouns</label>
                       <input
                         type="text"
-                        name="lastname"
-                        id="lastname"
+                        name="pronouns"
+                        id="pronouns"
                         className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                        value=""
+                        value={formData.pronouns}
+                        placeholder="ex: Jonny"
+                        onChange={handleChange}
                       />
                     </div>
 
                     <div className="md:col-span-5">
-                      <label htmlFor="email">Wensite</label>
+                      <label htmlFor="email">Website</label>
                       <input
                         type="text"
                         name="website"
                         id="website"
                         className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                        value=""
+                        value={formData.website}
                         placeholder="https://www.google.com.mx/"
+                        onChange={handleChange}
                       />
                     </div>
 
@@ -97,8 +189,9 @@ const UserSettings = () => {
                         name="address"
                         id="address"
                         className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                        value=""
-                        placeholder=""
+                        value={formData.address}
+                        placeholder="ex: Cll Delante 203 Ensenada, Mexico"
+                        onChange={handleChange}
                       />
                     </div>
 
@@ -109,28 +202,33 @@ const UserSettings = () => {
                         name="city"
                         id="city"
                         className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                        value=""
-                        placeholder=""
+                        value={formData.city}
+                        placeholder="ex: New York"
+                        onChange={handleChange}
                       />
                     </div>
 
                     <div className="md:col-span-2">
                       <label htmlFor="zipcode">Skills</label>
                       <textarea
-                        name="city"
-                        id="city"
-                        className="h-20 border mt-1 rounded px-4 w-full bg-gray-50"
-                        placeholder=""
+                        name="skills"
+                        id="skills"
+                        className="h-20 max-h-40  border mt-1 rounded px-4 w-full bg-gray-50"
+                        placeholder="ex: My skills are Java, Python, JS"
+                        value={formData.skills}
+                        onChange={handleChange}
                       ></textarea>
                     </div>
 
                     <div className="md:col-span-3">
                       <label htmlFor="city">Bio</label>
                       <textarea
-                        name="city"
-                        id="city"
-                        className="h-20 border mt-1 rounded px-4 w-full bg-gray-50"
-                        placeholder=""
+                        name="bio"
+                        id="bio"
+                        className="h-20 max-h-40  border mt-1 rounded px-4 w-full bg-gray-50"
+                        placeholder="ex: This is a simple info bio"
+                        value={formData.bio}
+                        onChange={handleChange}
                       ></textarea>
                     </div>
 
@@ -172,7 +270,7 @@ const UserSettings = () => {
                       </div>
                     </div>
                   </div>
-                </div>
+                </form>
               </div>
             </div>
           </div>

@@ -23,3 +23,30 @@ export interface UserInfoCard{
     followers: number;
     following: number;
 }
+
+
+export interface UserUpdateInfoRequest{
+    name: string;
+    lastName: string;
+    work: string;
+    education: string;
+    pronouns: string;
+    website: string;
+    address: string;
+    city: string;
+    skills: string;
+    bio: string;
+}
+
+export interface UserUpdateInfoResponse{
+    name: string;
+    lastName: string;
+    work: string;
+    education: string;
+    pronouns: string;
+    website: string;
+    address: string;
+    city: string;
+    skills: string;
+    bio: string;
+}

@@ -6,6 +6,7 @@ import { Category } from "../../types/category";
 import CategoryCard from "../../components/Category/CategoryCard";
 import Spinner from "../../components/Spinner/Spinner";
 import Error from "../../components/Error/Error";
+import axios from "axios";
 
 const ViewCategories: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>(); 
@@ -14,23 +15,77 @@ const ViewCategories: React.FC = () => {
 
   const [categories, setCategories] = useState<Category[]>([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await dispatch(fetchCategories()).unwrap(); 
-        setCategories(response); 
-      } catch (err) {
-        console.error("Error al obtener categorías", err);
-        //console.log("status", err.status);
+  
+  const [page, setPage] = useState(0);
+  const [loadingCategories, setLoadingCategories] = useState(false);
+  const [hasMoreCategories, setHasMoreCategories] = useState(true);
+
+  /**
+   * TODO first we do it direct, in the future we need to do it with redux
+   * @returns 
+   */
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await dispatch(fetchCategories()).unwrap(); 
+  //       setCategories(response); 
+  //     } catch (err) {
+  //       console.error("Error al obtener categorías", err);
+  //       //console.log("status", err.status);
         
-      }
-    };
+  //     }
+  //   };
 
-    fetchData();
-  }, [dispatch]);
+  //   fetchData();
+  // }, [dispatch]);
 
-  if (loading) return <Spinner />;
-  if (error) return <Error />;
+  // if (loading) return <Spinner />;
+  // if (error) return <Error />;
+
+  const fetchCategories = async () => {
+    if (loadingCategories || !hasMoreCategories) return;
+
+    setLoadingCategories(true);
+    try {
+      const response = await axios.get(
+        `http://127.0.0.1:8080/api/category/pagination?page=${page}&size=10`
+      );
+
+      const { content, last } = response.data.data;
+      setCategories((prevCategories) => [...prevCategories, ...content]);
+      setPage((prevPage) => prevPage + 1);
+      setHasMoreCategories(!last);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    } finally {
+      setLoadingCategories(false);
+    }
+  };
+
+  // Cargar datos iniciales
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  // Manejar el Infinite Scroll
+  const handleScroll = () => {
+    if (
+      !loadingCategories &&
+      hasMoreCategories &&
+      window.innerHeight + document.documentElement.scrollTop + 50 >=
+        document.documentElement.scrollHeight
+    ) {
+      fetchCategories();
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [loadingCategories, hasMoreCategories]);
+
+  if (loadingCategories) return <Spinner />;
+  if (!loadingCategories && categories.length === 0) return <Error />;
 
   return (
     <div className="container mx-auto px-4 sm:px-8 w-10/12">

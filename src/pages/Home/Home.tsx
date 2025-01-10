@@ -3,6 +3,9 @@ import RecommendBlog from '../../components/Blog/RecommendBlog'
 import { Link } from 'react-router-dom'
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import Sidebar from '../../components/sidebar';
+import NavBar from '../../components/NavBar';
+import SideBarMenu from '../../components/sidebar/SideBarMenu';
 
 const Home = () => {
 
@@ -54,11 +57,19 @@ const Home = () => {
     }, [loading, hasMore]);
   return (
 <div className="overflow-x-hidden bg-gray-100">
-   
+    
+    <NavBar />
 
-    <div className="px-6 py-8">
-        <div className="w-full md:w-9/12 lg:w-8/12 flex justify-between mx-auto">
-            <div className="w-full lg:w-8/12">
+    <div className="px-3 md:px-6 py-8 mt-20">
+        <div className="w-full md:w-full lg:w-11/12 flex justify-between mx-auto">
+
+            {/* aside menu */}
+            <div className='hidden md:block md:w-2/12 lg:w-2/12'>
+                <SideBarMenu />
+            </div>
+
+            {/* blogs home */}
+            <div className="w-full md:w-6/12 lg:w-7/12">
                 <div className="flex items-center justify-between">
                     <h1 className="text-xl font-bold text-gray-700 md:text-2xl">Post</h1>
                     <ul>
@@ -118,7 +129,9 @@ const Home = () => {
                     </div>
                 </div>
             </div>
-            <div className="hidden md:w-10/12 lg:w-5/12  -mx-8 md:block ml-0">
+
+            {/* top autors/categories */}
+            <div className="hidden md:w-4/12 lg:w-3/12  -mx-8 md:block ml-0">
                 <div className="px-8">
                     <h1 className="mb-4 text-xl font-bold text-gray-700">Top Authors</h1>
                     <div className="flex flex-col max-w-sm px-6 py-4 mx-auto bg-white rounded-lg shadow-md">

@@ -2,4 +2,52 @@
 @tailwind components;
 @tailwind utilities;
 
+.image_profile{
+    /* border-radius: 10%; */
+    height: 100px;
+    width: 100px;
+    overflow: hidden;
+    border-radius: 50%;
+  }
 
+  .ql-editor {
+    padding: 10px !important; /* Quitar todo el padding */
+  }
+  .ql-editor h1 {
+    @apply text-4xl font-bold text-gray-900 my-4; /* Títulos grandes */
+  }
+  
+  .ql-editor h2 {
+    @apply text-3xl font-semibold text-gray-800 my-3; /* Subtítulos */
+  }
+  
+  .ql-editor h3 {
+    @apply text-2xl font-semibold text-gray-700 my-3; /* Encabezado de nivel 3 */
+  }
+  
+  .ql-editor h4 {
+    @apply text-xl font-medium text-gray-600 my-2; /* Encabezado de nivel 4 */
+  }
+  
+  .ql-editor h5 {
+    @apply text-lg font-medium text-gray-500 my-2; /* Encabezado de nivel 5 */
+  }
+  
+  .ql-editor h6 {
+    @apply text-base font-medium text-gray-400 my-1; /* Encabezado de nivel 6 */
+  }
+  
+  /* Estilos personalizados para enlaces */
+  .ql-editor a {
+    @apply text-blue-500 underline hover:text-blue-700; /* Enlaces con hover */
+  }
+  
+  /* Estilos personalizados para videos */
+  .ql-editor iframe {
+    @apply w-full h-[20rem] my-4; /* Tamaño responsivo para videos */
+  }
+  
+  .ql-editor a {
+    @apply text-blue-500 underline hover:text-blue-700; /* Estilo personalizado para enlaces */
+  }
+  

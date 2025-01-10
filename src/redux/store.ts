@@ -1,15 +1,16 @@
 import { configureStore } from '@reduxjs/toolkit';
-
-// Si vas a tener reducers, los importas aquí
-
+import categoryReducer from '../slices/categorySlice';
+import userReducer from '../slices/userSlice';
+import blogReducer from '../slices/blogSlice'
 
 export const store = configureStore({
   reducer: {
-    // Asegúrate de agregar tus reducers aquí
-
+    categories: categoryReducer,
+    user: userReducer,
+    blog: blogReducer
   },
 });
 
-// Definir tipos para el store y los dispatchers (útil para TypeScript)
+
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

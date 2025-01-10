@@ -13,6 +13,7 @@ export interface UserProfile {
     followers: number;
     createdAt: string | null; 
     webSite: string;
+    categoryFollows: number;
 }
 
 export interface UserInfoCard{

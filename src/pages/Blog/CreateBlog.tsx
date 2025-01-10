@@ -62,7 +62,7 @@ const CreateBlog = () => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   // data that we send to backend
   const [formData, setFormData] = useState<CreateBlogRequestI>({
-    userId: 2,
+    userId: 4,
     title: '',
     description: '',
     content: '',

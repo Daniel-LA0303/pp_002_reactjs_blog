@@ -1,6 +1,7 @@
 import React from 'react'
 import { BlogCardI } from '../types/blog'
 import { formatDate } from '../utils/dateUtils'
+import { Link } from 'react-router-dom'
 
 const BlogCard: React.FC<BlogCardI>  = (props) => {
   return (
@@ -12,8 +13,13 @@ const BlogCard: React.FC<BlogCardI>  = (props) => {
                 alt=""
             />
             <div className="p-4">
-                <p className="mb-1 text-sm text-primary-500">{props.username} • <time>{props.createdAt ? formatDate(props.createdAt) : 'Date not available'}</time></p>
-                <h3 className="text-xl font-medium text-gray-900">{props.title}</h3>
+                <p className="mb-1 text-sm text-primary-500">
+                    <Link to={`/profile/${props.userId}`}>{props.username}</Link> • 
+                    <time> {props.createdAt ? formatDate(props.createdAt) : 'Date not available'}</time>
+                </p>
+                <h3 className="text-xl font-medium text-gray-900">
+                    <Link to={`/view-blog/${props.blogId}`}>{props.title}</Link>
+                </h3>
                 <p className="mt-1 text-gray-500">{props.description}</p>
                 <div className="mt-4 flex gap-2">
                 {props.categories.map((category: { name: string; color: string }, index: number) => (

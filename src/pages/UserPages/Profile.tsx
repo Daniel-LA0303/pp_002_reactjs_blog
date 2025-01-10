@@ -17,6 +17,8 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import TerminalOutlinedIcon from '@mui/icons-material/TerminalOutlined';
+import TagIcon from '@mui/icons-material/Tag';
+import { Link } from 'react-router-dom';
 
 const Profile: React.FC = () => {
   const { id } = useParams<{ id: string }>(); 
@@ -130,7 +132,7 @@ const Profile: React.FC = () => {
                     <div className="flex flex-wrap justify-center">
                       <div className="w-full lg:w-9/12">
                         <p className=" text-left md:text-center text-sm mb-4 leading-relaxed text-blueGray-700">
-                          {user?.bio}
+                          {user?.bio ? user?.bio : 'No data'}
                         </p>
                       </div>
                     </div>
@@ -146,11 +148,11 @@ const Profile: React.FC = () => {
                     <div className=' block sm:flex'>
                       <div className="my-3 text-left sm:text-center  w-full sm:w-2/4">
                         <h2 className=' text-sm sm:text-xs font-bold'>Work: </h2>   
-                        <p className=' text-lg'>{user?.work}</p>       
+                        <p className=' text-lg'>{user?.work ? user?.work : 'No data'}</p>       
                       </div>
                       <div className="my-3 text-left sm:text-center w-full sm:w-2/4">
                         <h2 className=' text-sm sm:text-xs font-bold'>Education: </h2>   
-                        <p className='text-lg'>{user?.education}</p>
+                        <p className='text-lg'>{user?.education ? user?.education : 'No data'}</p>
                       </div>
                     </div>
                   </>
@@ -230,19 +232,36 @@ const Profile: React.FC = () => {
                         Followers
                       </span>
                     </div>
+                    <div className="flex items-center pt-2 text-center">
+                      <TagIcon fontSize='small'/>
+                      <span className="text-sm font-bold block uppercase tracking-wide text-blueGray-600 mx-1">
+                        {user?.categoryFollows}
+                      </span>
+                      <span className="text-sm text-blueGray-400">
+                        Tags followed
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
             <div className='w-full sm:w-9/12'>
                 <div className='w-full items-center'>
-                  {blogs.map((b, index) => (
+                  {blogs.length !== 0 ? blogs.map((b, index) => (
                     <BlogCard 
                           key={index} {...b} 
                           {...blogs}
 
                       />
-                  ))}
+                  )) : 
+                    <div className='flex flex-col justify-center items-center '>
+                      <p className='text-center text-2xl mt-10'>You do not have blogs yet</p>
+                      <p className='text-lg mt-5 mb-3'>You can create a blog here</p>
+                      <Link to={`/create-blog`} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        Create Blog
+                      </Link>
+                    </div>
+                  }
 
 
                   {loadingBlogs && <p>Cargando más blogs...</p>}
@@ -252,8 +271,6 @@ const Profile: React.FC = () => {
         
         <div className='flex flex-row mt-0 md:mt-10 mx-auto w-full md:w-10/12 lg:w-8/12'>
             
-            {/* <CardBlog />
-            <CardBlog /> */}
         </div>
         
         <footer className="relative  pt-8 pb-6 mt-8">

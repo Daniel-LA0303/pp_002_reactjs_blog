@@ -1,4 +1,4 @@
-import CardBlog from "../Card"
+import CardBlog from "../BlogCard"
 
 const SearchBlogs = () => {
   return (

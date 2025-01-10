@@ -12,6 +12,8 @@ export interface UserProfile {
     likesNumber: number;
     followers: number;
     createdAt: string | null; 
+    webSite: string;
+    categoryFollows: number;
 }
 
 export interface UserInfoCard{
@@ -22,4 +24,31 @@ export interface UserInfoCard{
     blogsByUser: number;
     followers: number;
     following: number;
+}
+
+
+export interface UserUpdateInfoRequest{
+    name: string;
+    lastName: string;
+    work: string;
+    education: string;
+    pronouns: string;
+    website: string;
+    address: string;
+    city: string;
+    skills: string;
+    bio: string;
+}
+
+export interface UserUpdateInfoResponse{
+    name: string;
+    lastName: string;
+    work: string;
+    education: string;
+    pronouns: string;
+    website: string;
+    address: string;
+    city: string;
+    skills: string;
+    bio: string;
 }

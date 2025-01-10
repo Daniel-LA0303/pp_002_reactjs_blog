@@ -1,8 +1,57 @@
-import CardBlog from '../../components/Card'
+import BlogCard from '../../components/BlogCard'
 import RecommendBlog from '../../components/Blog/RecommendBlog'
 import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 const Home = () => {
+
+    const [blogs, setBlogs] = useState([]);
+    const [page, setPage] = useState(0);
+    const [loading, setLoading] = useState(false);
+    const [hasMore, setHasMore] = useState(true); 
+  
+    const fetchBlogs = async () => {
+      if (loading || !hasMore) return;
+  
+      setLoading(true);
+      try {
+        const response = await axios.get(
+          `http://127.0.0.1:8080/api/blog/pagination?page=${page}&size=10`
+        );
+  
+        const { content, last } = response.data.data; 
+        setBlogs((prevBlogs) => [...prevBlogs, ...content]); 
+        setPage((prevPage) => prevPage + 1); 
+        setHasMore(!last); 
+      } catch (error) {
+        console.error("Error fetching blogs:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    // Cargar datos iniciales
+    useEffect(() => {
+      fetchBlogs();
+    }, []);
+  
+    // Manejar el Infinite Scroll
+    const handleScroll = () => {
+      if (
+        !loading &&
+        hasMore &&
+        window.innerHeight + document.documentElement.scrollTop + 50 >=
+        document.documentElement.scrollHeight
+      ) {
+        fetchBlogs();
+      }
+    };
+  
+    useEffect(() => {
+      window.addEventListener("scroll", handleScroll);
+      return () => window.removeEventListener("scroll", handleScroll); 
+    }, [loading, hasMore]);
   return (
 <div className="overflow-x-hidden bg-gray-100">
    
@@ -29,19 +78,19 @@ const Home = () => {
                 </div>
 
                 {/* show blogs */}
+
+            {blogs.map((b, index) => (
+              <BlogCard 
+                    key={index} {...b} 
+                    {...blogs}
+
+                />
+            ))}
+
+            {/* Indicador de carga */}
+            {loading && <p>Cargando más blogs...</p>}
                 
-                <CardBlog />
-                <CardBlog />
-                <CardBlog />
-                <CardBlog />
-                <CardBlog />
-                <CardBlog />
-                <CardBlog />
-                <CardBlog />
-                <CardBlog />
-                <CardBlog />
-                <CardBlog />
-                <CardBlog />
+                
 
 
 

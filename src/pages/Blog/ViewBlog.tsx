@@ -16,6 +16,7 @@ import 'react-quill/dist/quill.bubble.css';
 import Spinner from '../../components/Spinner/Spinner'
 import Error from '../../components/Error/Error'
 import { useParams } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 
 const ViewBlog = () => {
@@ -76,10 +77,12 @@ const ViewBlog = () => {
                 >
                     
                     <div className="flex mt-3">
-                        <img src="https://randomuser.me/api/portraits/men/97.jpg"
-                        className="h-10 w-10 rounded-full mr-2 object-cover" />
+                        <Link to={`/profile/${blog?.userInfo.userId}`}>
+                            <img src="https://randomuser.me/api/portraits/men/97.jpg"
+                            className="h-10 w-10 rounded-full mr-2 object-cover" />
+                        </Link>
                         <div>
-                            <p className="font-semibold  text-sm">{blog?.userInfo.username}</p>
+                            <Link to={`/profile/${blog?.userInfo.userId}`} className="font-semibold  text-sm">{blog?.userInfo.username}</Link>
                             <p className="font-semibold text-gray-400 text-xs">Posted on {blog?.createdAt ? formatDate(blog?.createdAt) : 'Date not available'}</p>
                         </div>
                     </div>

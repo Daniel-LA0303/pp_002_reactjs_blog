@@ -1,5 +1,6 @@
 import React from "react"
 import { UserInfoCard } from "../../types/user"
+import { Link } from "react-router-dom"
 
 const AuthorBlogCard: React.FC<UserInfoCard> = (props) => {
   return (
@@ -8,7 +9,9 @@ const AuthorBlogCard: React.FC<UserInfoCard> = (props) => {
             <div className="flex flex-wrap justify-center">
                 <div className=" w-full flex justify-center">
                     <div className="relative">
-                        <img src="https://github.com/creativetimofficial/soft-ui-dashboard-tailwind/blob/main/build/assets/img/team-2.jpg?raw=true" className="shadow-xl rounded-full align-middle border-none absolute -m-16 -ml-10 lg:-ml-10 max-w-[100px]"/>
+                        <Link to={`/profile/${props.userId}`}>
+                            <img src="https://github.com/creativetimofficial/soft-ui-dashboard-tailwind/blob/main/build/assets/img/team-2.jpg?raw=true" className="shadow-xl rounded-full align-middle border-none absolute -m-16 -ml-10 lg:-ml-10 max-w-[100px]"/>
+                        </Link>
                     </div>
                 </div>
                 <div className="w-full text-center mt-5 md:mt-10">
@@ -30,7 +33,11 @@ const AuthorBlogCard: React.FC<UserInfoCard> = (props) => {
                 </div>
             </div>
             <div className="text-center mt-2">
-                <h3 className=" text-base text-slate-700 font-bold leading-normal mb-1">{props.username}</h3>
+                <h3 className=" text-base text-slate-700 font-bold leading-normal mb-1">
+                    <Link to={`/profile/${props.userId}`}>
+                        {props.username}
+                    </Link>
+                </h3>
                 <div className="text-sm mt-0 mb-2 text-slate-400 font-bold uppercase">
                     <p>{props.city}</p>
                 </div>

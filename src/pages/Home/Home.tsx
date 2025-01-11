@@ -106,16 +106,16 @@ return (
     
         <NavBar />
 
-        <div className="px-3 md:px-6 py-8 mt-20">
+        <div className="px-3 md:px-3 py-2 mt-20">
             <div className="w-full md:w-full lg:w-11/12 flex justify-between mx-auto">
 
                 {/* aside menu */}
-                <div className='hidden md:block md:w-2/12 lg:w-2/12'>
+                <div className='hidden md:block md:w-3/12 lg:w-2/12 mr-2'>
                     <SideBarMenu />
                 </div>
 
                 {/* blogs home */}
-                <div className="w-full md:w-6/12 lg:w-7/12">
+                <div className="w-full md:w-9/12 lg:w-7/12">
                     <div className="flex items-center justify-between">
                         <h1 className="text-xl font-bold text-gray-700 md:text-2xl">Post</h1>
 
@@ -135,9 +135,9 @@ return (
                 </div>
 
                 {/* aside top authors, tup categories and blogs recommended */}
-                <div className="hidden md:w-4/12 lg:w-3/12  -mx-8 md:block ml-0">
+                <div className="hidden md:w-4/12 lg:w-4/12 -mx-4 lg:block ml-0">
                     {/* top authors */}
-                    <div className="px-8">
+                    <div className="px-4">
                         <h1 className="mb-4 text-xl font-bold text-gray-700">Top Authors</h1>
                         <div className="flex flex-col max-w-sm px-6 py-4 mx-auto bg-white rounded-lg shadow-md">
                             <ul className="-mx-4">
@@ -168,7 +168,7 @@ return (
                     </div>
 
                     {/* top categories */}
-                    <div className="px-8 mt-10">
+                    <div className="px-4 mt-10">
                         <h1 className="mb-4 text-xl font-bold text-gray-700">Top Categories</h1>
                         <div className="flex flex-col max-w-sm px-4 py-6 mx-auto bg-white rounded-lg shadow-md">
                             <ul>
@@ -203,7 +203,7 @@ return (
                     </div>
 
                     {/* top blogs */}
-                    <div className="px-8 mt-10">
+                    <div className="px-4 mt-10">
                         <h1 className="mb-4 text-xl font-bold text-gray-700">Popular Posts</h1>
                         <RecommendBlog />
                         <RecommendBlog />

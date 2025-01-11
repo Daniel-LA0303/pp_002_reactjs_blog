@@ -2,16 +2,15 @@ import React, { useState } from "react";
 import SearchIcon from '@mui/icons-material/Search';
 import ProfileButton from "./User/ProfileButton";
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
+import CloseIcon from '@mui/icons-material/Close';
 import { Link, useNavigate } from "react-router-dom";
+import SideBarMenu from "./sidebar/SideBarMenu";
 
 const NavBar: React.FC = () => {
 
   const route = useNavigate();
-
   const [atTop, setAtTop] = useState(true);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [notificationOpen, setNotificationOpen] = useState(false);
-  const [profileOpen, setProfileOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false); // Estado para el menú
 
   // Detect scroll to handle "atTop" state
   React.useEffect(() => {
@@ -24,11 +23,14 @@ const NavBar: React.FC = () => {
     };
   }, []);
 
-
   const handleSearch = () => {
-    
-    route('/search');
-  }
+    route("/search");
+  };
+
+  const toggleMenu = () => {
+    setMenuOpen((prev) => !prev);
+  };
+
 
   return (
     <>
@@ -40,8 +42,12 @@ const NavBar: React.FC = () => {
         >
           <div className="flex max-w-screen-xl mx-auto md:items-center justify-between md:flex-row ">
             <div className="py-3 flex flex-row items-center justify-between">
-              <button className="block md:hidden">
-                <MenuOutlinedIcon fontSize="medium"/>
+            <button className="block md:hidden" onClick={toggleMenu}>
+                {menuOpen ? (
+                  <CloseIcon fontSize="medium" />
+                ) : (
+                  <MenuOutlinedIcon fontSize="medium" />
+                )}
               </button>
               <Link
                 to={`/home-dev`}
@@ -68,6 +74,35 @@ const NavBar: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* SideBar Menu */}
+      {menuOpen && (
+        <div
+        className={`fixed top-0 left-0 z-50 w-64 h-full bg-white shadow-lg transition-transform transform ${
+          menuOpen ? "translate-x-0" : "-translate-x-full"
+        } duration-300 ease-in-out`}
+        > 
+          <div
+            className="mt-2 mr-2 flex justify-end"
+          >
+            <CloseIcon 
+              fontSize="medium" 
+              onClick={toggleMenu}
+            />
+          </div>
+          <SideBarMenu />
+        </div>
+      )}
+
+      {menuOpen && (
+        <div
+        className={`fixed inset-0 bg-black transition-opacity ${
+          menuOpen ? "opacity-50" : "opacity-0 pointer-events-none h-full"
+        } z-40 duration-300 ease-in-out`}
+          onClick={toggleMenu}
+        ></div>
+      )}
+
     </>
   );
 };

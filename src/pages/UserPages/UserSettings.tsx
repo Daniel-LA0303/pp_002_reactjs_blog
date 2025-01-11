@@ -1,25 +1,46 @@
+/**
+ * react
+ */
 import React, { useEffect, useState } from "react";
-import { UserUpdateInfoRequest, UserUpdateInfoResponse } from "../../types/user";
+
+/**
+ * redux
+ */
 import { useDispatch } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
 import { useSelector } from "react-redux";
 import { fetchGetUpdateUserInfoThunk, fetchPutUpdatedUserInfoThunk } from "../../slices/userSlice";
+
+/**
+ * react router dom
+ */
+import { useParams } from "react-router-dom";
+
+/**
+ * types
+ */
+import { UserUpdateInfoI } from "../../types/user";
+
+/**
+ * components
+ */
+import NavBar from "../../components/NavBar";
 import Spinner from "../../components/Spinner/Spinner";
 import Error from "../../components/Error/Error";
-import { useParams } from "react-router-dom";
-import NavBar from "../../components/NavBar";
-
 
 const UserSettings = () => {
 
+  // id to get user info to update
   const { id } = useParams<{ id: string }>();
 
+  // redux
   const dispatch = useDispatch<AppDispatch>();
   const loading = useSelector((state: RootState) => state.user.loading);
   const error = useSelector((state: RootState) => state.user.error);
 
-  const [userUpdateInfo, setUserUpdateInfo] = React.useState<UserUpdateInfoResponse | null>(null);
-  const [formData, setFormData] = useState<UserUpdateInfoResponse>({
+  // state section
+  // form state
+  const [formData, setFormData] = useState<UserUpdateInfoI>({
     name: '',
     lastName: '',
     work: '',
@@ -32,9 +53,12 @@ const UserSettings = () => {
     bio: '',
   });
 
+  // conver id
   const userIdNumber = id ? parseInt(id) : NaN;
 
 
+  // useEffect section
+  // to get one user info
   useEffect(() => {
     if (isNaN(userIdNumber)) {
       console.error("El ID de usuario no es válido");
@@ -44,7 +68,6 @@ const UserSettings = () => {
     const fetchData = async () => {
       try {
         const response = await dispatch(fetchGetUpdateUserInfoThunk(userIdNumber)).unwrap();
-        setUserUpdateInfo(response);
         setFormData(response);
         console.log(response);
         
@@ -58,11 +81,13 @@ const UserSettings = () => {
 
   }, [dispatch]);
 
+  // function section
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const {name, value} = e.target;
     setFormData(prevData => ({...prevData, [name]: value}))
   }  
 
+  // submit to backend
   const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
       e.preventDefault();
       console.log(formData);
@@ -77,6 +102,7 @@ const UserSettings = () => {
       }
     }
 
+  // prevent errors
   if (loading) return <Spinner />;
   if (error) return <Error />;
 
@@ -84,14 +110,9 @@ const UserSettings = () => {
     <div>
       <NavBar />
       <div className="min-h-screen p-6 bg-gray-100 flex items-center justify-center mt-16">
+
         <div className="container max-w-screen-lg mx-auto">
           <div>
-            <h2 className="font-semibold text-xl text-gray-600">
-              Responsive htmlForm
-            </h2>
-            <p className="text-gray-500 mb-6">
-              htmlForm is mobile responsive. Give it a try.
-            </p>
 
             <div className="bg-white rounded shadow-lg p-4 px-4 md:p-8 mb-6">
               <div className="grid gap-4 gap-y-2 text-sm grid-cols-1 lg:grid-cols-3">
@@ -100,6 +121,7 @@ const UserSettings = () => {
                   <p>Please fill out all the fields.</p>
                 </div>
 
+                {/* form */}
                 <form 
                   className="lg:col-span-2"
                   onSubmit={handleSubmit}

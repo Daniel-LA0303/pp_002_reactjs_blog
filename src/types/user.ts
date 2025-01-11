@@ -40,7 +40,7 @@ export interface UserUpdateInfoRequest{
     bio: string;
 }
 
-export interface UserUpdateInfoResponse{
+export interface UserUpdateInfoI{
     name: string;
     lastName: string;
     work: string;

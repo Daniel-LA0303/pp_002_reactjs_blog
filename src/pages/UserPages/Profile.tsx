@@ -1,19 +1,36 @@
+/**
+ * react
+ */
+import React, { useEffect, useState } from 'react';
 
+/**
+ * utils and types
+ */
+import { UserProfile } from '../../types/user';
+import { formatDate } from '../../utils/dateUtils';
+import axios from 'axios';
+
+/**
+ * react route domm
+ */
+import { Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+
+/**
+ * redux
+ */
 import { useDispatch } from 'react-redux';
 import { AppDispatch, RootState } from '../../redux/store';
 import { useSelector } from 'react-redux';
-import React, { useEffect, useState } from 'react';
-import { UserProfile } from '../../types/user';
 import { fetchGetProfileBack } from '../../slices/userSlice';
+
+/**
+ * components
+ */
+import NavBar from '../../components/NavBar';
+import BlogCard from '../../components/BlogCard';
 import Spinner from '../../components/Spinner/Spinner';
 import Error from '../../components/Error/Error';
-import { formatDate } from '../../utils/dateUtils';
-import { useParams } from 'react-router-dom';
-import BlogCard from '../../components/BlogCard';
-import axios from 'axios';
-
-import { Link } from 'react-router-dom';
-import NavBar from '../../components/NavBar';
 
 /**
  * icons

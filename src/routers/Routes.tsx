@@ -14,6 +14,7 @@ import UserSettings from '../pages/UserPages/UserSettings';
 import ViewCategories from '../pages/Category/ViewCategories';
 import Home from '../pages/Home/Home';
 import PrincipalDashBoard from '../pages/UserPages/Dashboard/PrincipalDashBoard';
+import BlogsByCategory from '../pages/Category/BlogsByCategory';
 
 
 const AppRoutes: React.FC = () => {
@@ -37,6 +38,7 @@ const AppRoutes: React.FC = () => {
       <Route path="/dashboard" element={<PrincipalDashBoard />} />  
 
       <Route path="/categories" element={<ViewCategories />} />
+      <Route path="/categoy-by-blog/:nameCategory" element={<BlogsByCategory />}/>
 
       <Route path='/home-dev' element={<Home />} />
 

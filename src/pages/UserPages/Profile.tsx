@@ -19,6 +19,7 @@ import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import TerminalOutlinedIcon from '@mui/icons-material/TerminalOutlined';
 import TagIcon from '@mui/icons-material/Tag';
 import { Link } from 'react-router-dom';
+import NavBar from '../../components/NavBar';
 
 const Profile: React.FC = () => {
   const { id } = useParams<{ id: string }>(); 
@@ -108,7 +109,8 @@ const Profile: React.FC = () => {
 
   return (
     <div className=''>
-        <section className="pt-8 sm:pt-8 ">
+        <NavBar />
+        <section className="pt-8 sm:pt-8 mt-16">
         <div className="w-full md:w-10/12 lg:w-8/12 mx-auto">
           <div className={`flex flex-col min-w-0 break-word w-full mb-6 shadow-lg rounded-lg mt-16`}>
             <div className="px-2 sm:px-6 ">

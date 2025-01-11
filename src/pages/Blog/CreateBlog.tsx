@@ -13,6 +13,7 @@ import Error from "../../components/Error/Error";
 import { fetchCreateBlog } from "../../slices/blogSlice";
 import Modal from "../../components/MultipleUtils/ModalError";
 import { useNavigate } from "react-router-dom";
+import NavBar from "../../components/NavBar";
 
 // modules of react quill
 const modules = {
@@ -157,7 +158,10 @@ const CreateBlog = () => {
   if (loadingCreateBlog) return <Spinner />
 
   return (
-    <div className="min-h-screen p-6 bg-gray-100 flex items-center justify-center">
+    <div>
+      <NavBar />
+
+    <div className="min-h-screen p-6 bg-gray-100 flex items-center justify-center mt-16">
       {modalInfo && (
         <Modal
           message={modalInfo.message}
@@ -308,6 +312,7 @@ const CreateBlog = () => {
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 };

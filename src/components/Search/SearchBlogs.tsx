@@ -3,11 +3,7 @@ import CardBlog from "../BlogCard"
 const SearchBlogs = () => {
   return (
     <div>
-        <CardBlog />
-        <CardBlog />
-        <CardBlog />
-        <CardBlog />
-        <CardBlog />
+      Blogs here
     </div>
   )
 }

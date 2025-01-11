@@ -157,8 +157,8 @@ const Home = () => {
                         <ul>
                             {homePageInfo.categoriesTop.map(category => (
                                 <li key={category.categoryId}>
-                                    <a
-                                        href={`/category/${category.categoryId}`}
+                                    <Link
+                                        to={`/categoy-by-blog/${category.name}`}
                                         className="mx-1 font-bold text-gray-700 hover:text-gray-600  flex"
                                          
                                     >   
@@ -173,7 +173,7 @@ const Home = () => {
                                                 {category.followers}
                                             </p>
                                         </div>
-                                    </a>
+                                    </Link>
                                 </li>
                             ))}
 

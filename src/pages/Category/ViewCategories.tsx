@@ -7,6 +7,8 @@ import CategoryCard from "../../components/Category/CategoryCard";
 import Spinner from "../../components/Spinner/Spinner";
 import Error from "../../components/Error/Error";
 import axios from "axios";
+import { div } from "framer-motion/client";
+import NavBar from "../../components/NavBar";
 
 const ViewCategories: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>(); 
@@ -88,12 +90,15 @@ const ViewCategories: React.FC = () => {
   if (!loadingCategories && categories.length === 0) return <Error />;
 
   return (
-    <div className="container mx-auto px-4 sm:px-8 w-10/12">
-        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div>
+      <NavBar />
+      <div className="container mx-auto px-4 sm:px-8 w-10/12">
+        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-14">
             {categories.map((category) => (
                 <CategoryCard key={category.categoryId} category={category} />
             ))}
         </div>
+    </div>
     </div>
 
   )

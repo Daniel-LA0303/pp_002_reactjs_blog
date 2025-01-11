@@ -27,13 +27,14 @@ const BlogCard: React.FC<BlogCardI>  = (props) => {
                 <p className="mt-1 text-gray-500">{props.description}</p>
                 <div className="mt-4 flex gap-2">
                     {props.categories.map((category: { name: string; color: string }, index: number) => (
-                        <span
+                        <Link
+                            to={`/categoy-by-blog/${category.name}`}
                             key={index}
                             className="inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold"
                             style={{ backgroundColor: `${category.color}20`, color: category.color }}
                         >
                             {category.name}
-                        </span>
+                        </Link>
                     ))}
                 </div>
             </div>

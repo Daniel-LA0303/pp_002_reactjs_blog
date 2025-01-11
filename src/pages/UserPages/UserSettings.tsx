@@ -7,6 +7,7 @@ import { fetchGetUpdateUserInfoThunk, fetchPutUpdatedUserInfoThunk } from "../..
 import Spinner from "../../components/Spinner/Spinner";
 import Error from "../../components/Error/Error";
 import { useParams } from "react-router-dom";
+import NavBar from "../../components/NavBar";
 
 
 const UserSettings = () => {
@@ -81,7 +82,8 @@ const UserSettings = () => {
 
   return (
     <div>
-      <div className="min-h-screen p-6 bg-gray-100 flex items-center justify-center">
+      <NavBar />
+      <div className="min-h-screen p-6 bg-gray-100 flex items-center justify-center mt-16">
         <div className="container max-w-screen-lg mx-auto">
           <div>
             <h2 className="font-semibold text-xl text-gray-600">

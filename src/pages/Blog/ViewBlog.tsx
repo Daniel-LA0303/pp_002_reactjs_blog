@@ -17,6 +17,7 @@ import Spinner from '../../components/Spinner/Spinner'
 import Error from '../../components/Error/Error'
 import { useParams } from 'react-router-dom'
 import { Link } from 'react-router-dom'
+import NavBar from '../../components/NavBar'
 
 
 const ViewBlog = () => {
@@ -55,15 +56,17 @@ const ViewBlog = () => {
     if (error) return <Error />;
 
   return (
-    <div className="max-w-screen-xl mx-auto flex flex-col justify-center sm:flex-row">
-        <div className="flex-col hidden sm:block sticky top-0 h-[90%] p-4">
+    <>
+    <NavBar />
+    <div className="max-w-screen-xl mx-auto flex flex-col justify-center sm:flex-row mt-16">
+        <div className="flex-col hidden sm:block sticky top-0 h-[90%] px-4 py-2">
  
-        <ActionsBlog
-            blogId={blog?.blogEngagement.blogId ?? 0}      
-            likesNumber={blog?.blogEngagement.likesNumber ?? 0}
-            commentsNumber={blog?.blogEngagement.commentsNumber ?? 0}
-            savedNumber={blog?.blogEngagement.savedNumber ?? 0}
-        />
+            <ActionsBlog
+                blogId={blog?.blogEngagement.blogId ?? 0}      
+                likesNumber={blog?.blogEngagement.likesNumber ?? 0}
+                commentsNumber={blog?.blogEngagement.commentsNumber ?? 0}
+                savedNumber={blog?.blogEngagement.savedNumber ?? 0}
+            />
 
         </div>
         <main className="w-full md:w-4/6 lg:w-7/12">
@@ -172,6 +175,7 @@ const ViewBlog = () => {
             </div>
         </div>
     </div>
+    </>
   )
 }
 

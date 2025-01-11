@@ -8,6 +8,7 @@ export interface Category {
   name: string;
   description: string;
   color: string;
+  postsNumber: number;
   createdAt: string;
 }
 

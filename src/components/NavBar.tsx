@@ -2,8 +2,12 @@ import React, { useState } from "react";
 import SearchIcon from '@mui/icons-material/Search';
 import ProfileButton from "./User/ProfileButton";
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
+import { Link, useNavigate } from "react-router-dom";
 
 const NavBar: React.FC = () => {
+
+  const route = useNavigate();
+
   const [atTop, setAtTop] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
   const [notificationOpen, setNotificationOpen] = useState(false);
@@ -20,6 +24,12 @@ const NavBar: React.FC = () => {
     };
   }, []);
 
+
+  const handleSearch = () => {
+    
+    route('/search');
+  }
+
   return (
     <>
       <div className={` bg-slate-200 w-full`}>
@@ -33,24 +43,26 @@ const NavBar: React.FC = () => {
               <button className="block md:hidden">
                 <MenuOutlinedIcon fontSize="medium"/>
               </button>
-              <a
-                href="#"
+              <Link
+                to={`/home-dev`}
                 className="tracking-widest rounded-lg focus:outline-none focus:shadow-outline mx-2"
               >
                 LOGO
-              </a>
+              </Link>
               <div className="searchBox">
                 <input className="searchInput" type="text" name="" placeholder="Search" />
-                <button className="searchButton" >
+                <button 
+                  onClick={() => handleSearch()}
+                  className="searchButton" >
                   <SearchIcon fontSize="small"/>
                 </button>
               </div>
             </div>
 
             <div className="flex items-center justify-center">
-              <button type="button" className="hidden md:block text-gray-900 hover:text-white border border-gray-800 hover:bg-gray-900 focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-800">
+              <Link to={`/create-blog`} type="button" className="hidden md:block text-gray-900 hover:text-white border border-gray-800 hover:bg-gray-900 focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-800">
                 Create Blog
-              </button>
+              </Link>
               <ProfileButton />
             </div>
           </div>

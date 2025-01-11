@@ -1,19 +1,37 @@
+/**
+ * react
+ */
 import React, { useEffect, useState } from "react";
+
+/**
+ * redux
+ */
+import { AppDispatch, RootState } from "../../redux/store";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchCategories } from "../../slices/categorySlice";
+import { fetchCreateBlog } from "../../slices/blogSlice";
+
+/**
+ * react router dom
+ */
+import { useNavigate } from "react-router-dom";
+
+/**
+ * types and dependencies
+ */
+import { ApiResponse, CategoriesSelect, CategoriesSelectedInterface } from "../../types/category"; 
+import { CreateBlogRequestI, CreateBlogValidationErrorResponseI } from "../../types/blog";
 import { MultiSelect } from "react-multi-select-component";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { useDispatch } from "react-redux";
-import { CategoriesSelect, CategoriesSelectedInterface } from "../../types/category"; 
-import { CreateBlogRequestI } from "../../types/blog";
-import { AppDispatch, RootState } from "../../redux/store";
-import { useSelector } from "react-redux";
-import { fetchCategories } from "../../slices/categorySlice";
+
+/**
+ * components
+ */
+import NavBar from "../../components/NavBar";
+import Modal from "../../components/MultipleUtils/ModalError";
 import Spinner from "../../components/Spinner/Spinner";
 import Error from "../../components/Error/Error";
-import { fetchCreateBlog } from "../../slices/blogSlice";
-import Modal from "../../components/MultipleUtils/ModalError";
-import { useNavigate } from "react-router-dom";
-import NavBar from "../../components/NavBar";
 
 // modules of react quill
 const modules = {
@@ -34,13 +52,16 @@ const modules = {
 const CreateBlog = () => {
 
   /**
+   * navigate
+   */
+  const navigate = useNavigate();
+
+  /**
    * state redux
    */
   const dispatch = useDispatch<AppDispatch>();
 
-  const navigate = useNavigate();
-
-  // redux categories
+  // redux category
   const loading = useSelector((state: RootState) => state.categories.loading);
   const error = useSelector((state: RootState) => state.categories.error);
 
@@ -69,6 +90,7 @@ const CreateBlog = () => {
     content: '',
     categories: []
   });
+  // modal
   const [modalInfo, setModalInfo] = useState<{ message: string; status: string } | null>(null);
 
   /**
@@ -192,7 +214,11 @@ const CreateBlog = () => {
                 <div className="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-5">
                   <div className="md:col-span-5">
                     <label htmlFor="title">Title</label>
-                    <p className=" text-red-400 font-bold">{errorCreateBlog?.data?.title ? errorCreateBlog?.data?.title : null}</p>
+                    <p className="text-red-400 font-bold">
+                      {errorCreateBlog && typeof errorCreateBlog === "object" && "data" in errorCreateBlog
+                        ? (errorCreateBlog as ApiResponse<CreateBlogValidationErrorResponseI>).data.title
+                        : null}
+                    </p>
                     
                     <input
                       type="text"
@@ -207,7 +233,13 @@ const CreateBlog = () => {
 
                   <div className="md:col-span-5">
                     <label htmlFor="description">Description</label>
-                    <p className=" text-red-400 font-bold">{errorCreateBlog?.data?.description ? errorCreateBlog?.data?.description : null}</p>
+                    <p className="text-red-400 font-bold">
+                      {errorCreateBlog && typeof errorCreateBlog === "object" && "data" in errorCreateBlog
+                        ? (errorCreateBlog as ApiResponse<CreateBlogValidationErrorResponseI>).data.description
+                        : null}
+                    </p>
+
+
                     
                     <input
                       type="text"
@@ -234,7 +266,11 @@ const CreateBlog = () => {
 
                   <div className="md:col-span-5">
                     <label htmlFor="email">Content Blog</label>
-                    <p className=" text-red-400 font-bold">{errorCreateBlog?.data?.content ? errorCreateBlog?.data?.content : null}</p>
+                    <p className="text-red-400 font-bold">
+                      {errorCreateBlog && typeof errorCreateBlog === "object" && "data" in errorCreateBlog
+                        ? (errorCreateBlog as ApiResponse<CreateBlogValidationErrorResponseI>).data.content
+                        : null}
+                    </p>
                     <ReactQuill 
                         theme="snow" 
                         value={content} 

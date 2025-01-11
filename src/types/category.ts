@@ -59,4 +59,11 @@ export interface CategorySmallInfo{
   createdAt: string;
 }
 
+export interface CategoryTop{
+  categoryId: number;
+  name: string;
+  color: string;
+  followers: number
+}
+
 

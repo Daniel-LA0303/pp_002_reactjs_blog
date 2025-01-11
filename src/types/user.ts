@@ -52,3 +52,10 @@ export interface UserUpdateInfoI{
     skills: string;
     bio: string;
 }
+
+export interface UserTop{
+    userId: number;
+    name: string;
+    profilePicture: string;
+    blogsCounts: number
+}

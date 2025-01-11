@@ -1,4 +1,4 @@
-import React from 'react'
+
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined';
 import RoundaboutRightOutlinedIcon from '@mui/icons-material/RoundaboutRightOutlined';
@@ -7,22 +7,32 @@ import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import PrivacyTipOutlinedIcon from '@mui/icons-material/PrivacyTipOutlined';
 import GavelOutlinedIcon from '@mui/icons-material/GavelOutlined';
+import { Link } from 'react-router-dom';
 
 const SideBarMenu = () => {
   return (
     <div className='flex flex-col'>
-        <p className='flex items-center mb-3'>
+        <Link 
+            to={`/home-dev`}
+            className='flex items-center mb-3'
+        >
             <HomeOutlinedIcon fontSize='small'/>
             <span className='ml-2'>Home</span>
-        </p>
-        <p className='flex items-center mb-3'>
+        </Link>
+        <Link 
+            to={`/categories`}
+            className='flex items-center mb-3'
+        >
             <LocalOfferOutlinedIcon fontSize='small'/>
             <span className='ml-2'>Tags/Categories</span>
-        </p>
-        <p className='flex items-center mb-3'>
+        </Link>
+        <Link 
+            to={`/about`}
+            className='flex items-center mb-3'
+        >
             <RoundaboutRightOutlinedIcon fontSize='small'/>
             <span className='ml-2'>About</span>
-        </p>
+        </Link>
         <p className='flex items-center mb-3'>
             <ContactPageOutlinedIcon fontSize='small'/>
             <span className='ml-2'>Contact</span>

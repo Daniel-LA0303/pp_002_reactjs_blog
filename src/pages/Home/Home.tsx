@@ -46,7 +46,8 @@ const Home = () => {
         const response = await axios.get(
           `http://127.0.0.1:8080/api/blog/pagination?page=${page}&size=10`
         );
-  
+        console.log(response);
+        
         const { content, last } = response.data.data; 
         setBlogs((prevBlogs) => [...prevBlogs, ...content]); 
         setPage((prevPage) => prevPage + 1); 
@@ -96,20 +97,7 @@ const Home = () => {
             <div className="w-full md:w-6/12 lg:w-7/12">
                 <div className="flex items-center justify-between">
                     <h1 className="text-xl font-bold text-gray-700 md:text-2xl">Post</h1>
-                    <ul>
-                        <li><Link to={"/user-settings"}>Profile settings</Link></li>
-                        <li><Link to={"/view-blog"}>View blog</Link></li>
-                        <li><Link to={"/profile"}>Profile</Link></li>
-                        <li><Link to={"/create-blog"}>Create a blog</Link></li>
-                        <li><Link to={"/dashboard"}>Dashboard</Link></li>
-                        <li><Link to={"/categories"}>Categories</Link></li>
-                    </ul>
-                    <div>
-                        <select className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                            <option>Latest</option>
-                            <option>Last Week</option>
-                        </select>
-                    </div>
+
                 </div>
 
                 {/* show blogs */}
@@ -129,29 +117,7 @@ const Home = () => {
 
 
 
-                <div className="mt-8">
-                    <div className="flex">
-                        <a href="#" className="px-3 py-2 mx-1 font-medium text-gray-500 bg-white rounded-md cursor-not-allowed">
-                            previous
-                        </a>
-                    
-                        <a href="#" className="px-3 py-2 mx-1 font-medium text-gray-700 bg-white rounded-md hover:bg-blue-500 hover:text-white">
-                            1
-                        </a>
-                    
-                        <a href="#" className="px-3 py-2 mx-1 font-medium text-gray-700 bg-white rounded-md hover:bg-blue-500 hover:text-white">
-                            2
-                        </a>
-                    
-                        <a href="#" className="px-3 py-2 mx-1 font-medium text-gray-700 bg-white rounded-md hover:bg-blue-500 hover:text-white">
-                            3
-                        </a>
-                    
-                        <a href="#" className="px-3 py-2 mx-1 font-medium text-gray-700 bg-white rounded-md hover:bg-blue-500 hover:text-white">
-                            Next
-                        </a>
-                    </div>
-                </div>
+                
             </div>
 
             {/* top autors/categories */}

@@ -3,6 +3,10 @@ import { BlogCardI } from '../types/blog'
 import { formatDate } from '../utils/dateUtils'
 import { Link } from 'react-router-dom'
 
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
+import BookmarkBorderOutlinedIcon from '@mui/icons-material/BookmarkBorderOutlined';
+
 const BlogCard: React.FC<BlogCardI>  = (props) => {
   return (
     <div>
@@ -22,18 +26,34 @@ const BlogCard: React.FC<BlogCardI>  = (props) => {
                 </h3>
                 <p className="mt-1 text-gray-500">{props.description}</p>
                 <div className="mt-4 flex gap-2">
-                {props.categories.map((category: { name: string; color: string }, index: number) => (
-                    <span
-                        key={index}
-                        className="inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold"
-                        style={{ backgroundColor: `${category.color}20`, color: category.color }}
-                    >
-                        {category.name}
-                    </span>
-                ))}
+                    {props.categories.map((category: { name: string; color: string }, index: number) => (
+                        <span
+                            key={index}
+                            className="inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold"
+                            style={{ backgroundColor: `${category.color}20`, color: category.color }}
+                        >
+                            {category.name}
+                        </span>
+                    ))}
                 </div>
             </div>
+            <div className='mt-5 flex justify-between mx-5 mb-3'>
+                <div className='flex items-center'>
+                    <p className='mr-4'>
+                        <FavoriteBorderIcon fontSize='small'/>
+                        <span>{props.blogEngagement.likesNumber}</span>
+                    </p>
+                    <p>
+                        <ChatBubbleOutlineOutlinedIcon fontSize='small'/>
+                        <span>{props.blogEngagement.commentsNumber}</span>
+                    </p>
+                </div>
+                <p className='flex items-center'>
+                    <BookmarkBorderOutlinedIcon fontSize='small'/>
+                    <span>{props.blogEngagement.savedNumber}</span>
+                </p>
             </div>
+        </div>
     </div>
   )
 }

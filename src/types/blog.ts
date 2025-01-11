@@ -63,4 +63,12 @@ export interface BlogCardI{
   userId: number;
   username: string;
   categories: CategorySmallInfo[];
+  blogEngagement: BlogEngagement;
+}
+
+export interface BlogEngagement{
+  blogId: number; 
+  commentsNumber: number;
+  likesNumber: number;
+  savedNumber: number;
 }

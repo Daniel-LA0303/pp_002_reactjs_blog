@@ -5,6 +5,7 @@ import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
+import { Link } from "react-router-dom";
 
 
 const ProfileButton = () => {
@@ -27,7 +28,7 @@ const ProfileButton = () => {
   }, []);
 
   return (
-    <div className="relative" ref={menuRef}>
+    <div className="relative " ref={menuRef}>
       {/* Botón del perfil */}
       <img
         alt="User Avatar"
@@ -44,18 +45,18 @@ const ProfileButton = () => {
        data-popover-placement="bottom"
        className="absolute right-1 top-14 z-10 flex min-w-[180px] flex-col gap-2 overflow-auto rounded-md border border-blue-gray-50 bg-white p-3 font-sans text-sm font-normal text-blue-gray-500 shadow-lg shadow-blue-gray-500/10 focus:outline-none"
      >
-       <button
-        
-         role="menuitem"
-         className="flex w-full cursor-pointer select-none items-center gap-2 rounded-md px-3 pt-[9px] pb-2 text-start leading-tight outline-none transition-all hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900"
+       <Link
+          to={`/profile/${1}`}
+          role="menuitem"
+          className="flex w-full cursor-pointer select-none items-center gap-2 rounded-md px-3 pt-[9px] pb-2 text-start leading-tight outline-none transition-all hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900"
        >
             <AccountCircleOutlinedIcon fontSize="small"/>
             <p className="block font-sans text-sm font-normal leading-normal text-inherit antialiased">
                 My Profile
             </p>
-       </button>
-       <button
-
+       </Link>
+       <Link
+          to={`/user-settings/${1}`}
          role="menuitem"
          className="flex w-full cursor-pointer select-none items-center gap-2 rounded-md px-3 pt-[9px] pb-2 text-start leading-tight outline-none transition-all hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900"
        >
@@ -63,25 +64,27 @@ const ProfileButton = () => {
             <p className="block font-sans text-sm font-normal leading-normal text-inherit antialiased">
                 Edit Profile
             </p>
-       </button>
-       <button
-         role="menuitem"
-         className="flex w-full cursor-pointer select-none items-center gap-2 rounded-md px-3 pt-[9px] pb-2 text-start leading-tight outline-none transition-all hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900"
+       </Link>
+       <Link
+          to={`/dashboard`}
+          role="menuitem"
+          className="flex w-full cursor-pointer select-none items-center gap-2 rounded-md px-3 pt-[9px] pb-2 text-start leading-tight outline-none transition-all hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900"
        >
             <DashboardOutlinedIcon fontSize="small"/>
             <p className="block font-sans text-sm font-normal leading-normal text-inherit antialiased">
                 Dahsboard
             </p>
-       </button>
-       <button
-         role="menuitem"
-         className="flex w-full cursor-pointer select-none items-center gap-2 rounded-md px-3 pt-[9px] pb-2 text-start leading-tight outline-none transition-all hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900"
+       </Link>
+       <Link
+          to={`/create-blog`}
+          role="menuitem"
+          className="flex w-full cursor-pointer select-none items-center gap-2 rounded-md px-3 pt-[9px] pb-2 text-start leading-tight outline-none transition-all hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900"
        >
             <AddCircleOutlineOutlinedIcon fontSize="small"/>
             <p className="block font-sans text-sm font-normal leading-normal text-inherit antialiased">
                 Create Blog
             </p>
-       </button>
+       </Link>
        <button
          role="menuitem"
          className="flex w-full cursor-pointer select-none items-center gap-2 rounded-md px-3 pt-[9px] pb-2 text-start leading-tight outline-none transition-all hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900"

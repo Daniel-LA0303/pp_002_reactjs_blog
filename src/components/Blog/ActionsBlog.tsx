@@ -2,14 +2,9 @@ import React from "react";
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
+import { BlogEngagement } from "../../types/blog";
 
-interface ActionsBlogProps{
-  likesNumber: number | undefined;
-  commentsNumber: number | undefined;
-  savedNumber: number | undefined;
-}
-
-const ActionsBlog: React.FC<ActionsBlogProps> = ({likesNumber, commentsNumber, savedNumber}) => {
+const ActionsBlog: React.FC<BlogEngagement> = ({likesNumber, commentsNumber, savedNumber, blogId}) => {
   return (
     <>
         <div className="my-3 text-2xl mx-10 sm:mx-0 flex flex-row sm:flex-col justify-center items-center">

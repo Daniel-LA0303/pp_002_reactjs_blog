@@ -57,11 +57,14 @@ const ViewBlog = () => {
   return (
     <div className="max-w-screen-xl mx-auto flex flex-col justify-center sm:flex-row">
         <div className="flex-col hidden sm:block sticky top-0 h-[90%] p-4">
-            <ActionsBlog 
-                likesNumber={blog?.blogEngagement.likesNumber}
-                savedNumber={blog?.blogEngagement.savedNumber}
-                commentsNumber={blog?.blogEngagement.commentsNumber}
-            />
+ 
+        <ActionsBlog
+            blogId={blog?.blogEngagement.blogId ?? 0}      
+            likesNumber={blog?.blogEngagement.likesNumber ?? 0}
+            commentsNumber={blog?.blogEngagement.commentsNumber ?? 0}
+            savedNumber={blog?.blogEngagement.savedNumber ?? 0}
+        />
+
         </div>
         <main className="w-full md:w-4/6 lg:w-7/12">
             <div className="mb-4 md:mb-0 w-full max-w-screen-md mx-auto relative" style={{height: '20em'}}>
@@ -160,10 +163,11 @@ const ViewBlog = () => {
 
         <div className="fixed z-1 bottom-0 w-full p-1 block sm:hidden bg-slate-500">
             <div className='flex justify-center'>
-                <ActionsBlog 
-                    likesNumber={blog?.blogEngagement.likesNumber}
-                    savedNumber={blog?.blogEngagement.savedNumber}
-                    commentsNumber={blog?.blogEngagement.commentsNumber}
+                <ActionsBlog
+                    blogId={blog?.blogEngagement.blogId ?? 0}      
+                    likesNumber={blog?.blogEngagement.likesNumber ?? 0}
+                    commentsNumber={blog?.blogEngagement.commentsNumber ?? 0}
+                    savedNumber={blog?.blogEngagement.savedNumber ?? 0}
                 />
             </div>
         </div>

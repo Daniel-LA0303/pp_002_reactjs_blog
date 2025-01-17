@@ -14,50 +14,50 @@ const SideBarMenu = () => {
     <div className='flex flex-col mt-10 md:mt-0 h-screen md:h-auto bg-white py-4 px-2 rounded-lg shadow-md'>
         <Link 
             to={`/home-dev`}
-            className='flex items-center mb-3 mx-4 md:mx-0'
+            className='flex items-center mb-3 px-4 md:px-0 py-2 hover:bg-gray-600 hover:text-white rounded-md'
         >
-            <HomeOutlinedIcon fontSize='small'/>
+            <HomeOutlinedIcon fontSize='small' className='ml-2'/>
             <span className='ml-2'>Home</span>
         </Link>
         <div className=" my-1 border-t border-0.5 text-center"></div>
         <Link 
             to={`/categories`}
-            className='flex items-center mb-3 mx-4 md:mx-0'
+            className='flex items-center mb-3 px-4 md:px-0 py-2 hover:bg-gray-600 hover:text-white rounded-md'
         >
-            <LocalOfferOutlinedIcon fontSize='small'/>
+            <LocalOfferOutlinedIcon fontSize='small' className='ml-2'/>
             <span className='ml-2'>Tags/Categories</span>
         </Link>
         <div className=" my-1 border-t border-0.5 text-center"></div>
         <Link 
             to={`/about`}
-            className='flex items-center mb-3 mx-4 md:mx-0'
+            className='flex items-center mb-3 px-4 md:px-0 py-2 hover:bg-gray-600 hover:text-white rounded-md'
         >
-            <RoundaboutRightOutlinedIcon fontSize='small'/>
+            <RoundaboutRightOutlinedIcon fontSize='small' className='ml-2'/>
             <span className='ml-2'>About</span>
         </Link>
         <div className=" my-1 border-t border-0.5 text-center"></div>
-        <p className='flex items-center mb-3 mx-4 md:mx-0'>
-            <ContactPageOutlinedIcon fontSize='small'/>
+        <p className='flex items-center mb-3 px-4 md:px-0 py-2 hover:bg-gray-600 hover:text-white rounded-md'>
+            <ContactPageOutlinedIcon fontSize='small' className='ml-2'/>
             <span className='ml-2'>Contact</span>
         </p>
         <div className=" my-1 border-t border-0.5 text-center"></div>
-        <p className='flex items-center mb-3 mx-4 md:mx-0'>
-            <HelpOutlineOutlinedIcon fontSize='small'/>
+        <p className='flex items-center mb-3 px-4 md:px-0 py-2 hover:bg-gray-600 hover:text-white rounded-md'>
+            <HelpOutlineOutlinedIcon fontSize='small' className='ml-2'/>
             <span className='ml-2'>Help</span>
         </p>
         <div className=" my-1 border-t border-0.5 text-center"></div>
-        <p className='flex items-center mb-3 mx-4 md:mx-0'>
-            <ThumbUpOutlinedIcon fontSize='small'/>
+        <p className='flex items-center mb-3 px-4 md:px-0 py-2 hover:bg-gray-600 hover:text-white rounded-md'>
+            <ThumbUpOutlinedIcon fontSize='small' className='ml-2'/>
             <span className='ml-2'>Code of Conduct</span>
         </p>
         <div className=" my-1 border-t border-0.5 text-center"></div>
-        <p className='flex items-center mb-3 mx-4 md:mx-0'>
-            <PrivacyTipOutlinedIcon fontSize='small'/>
+        <p className='flex items-center mb-3 px-4 md:px-0 py-2 hover:bg-gray-600 hover:text-white rounded-md'>
+            <PrivacyTipOutlinedIcon fontSize='small' className='ml-2'/>
             <span className='ml-2'>Privacy Policy</span>
         </p>
         <div className=" my-1 border-t border-0.5 text-center"></div>
-        <p className='flex items-center mb-3 mx-4 md:mx-0'>
-            <GavelOutlinedIcon fontSize='small'/>
+        <p className='flex items-center mb-3 px-4 md:px-0 py-2 hover:bg-gray-600 hover:text-white rounded-md'>
+            <GavelOutlinedIcon fontSize='small' className='ml-2'/>
             <span className='ml-2'>Terms of use</span>
         </p>
         <div className=" my-1 border-t border-0.5 text-center"></div>

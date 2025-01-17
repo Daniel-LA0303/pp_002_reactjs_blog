@@ -1,158 +1,160 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { UserFullEngagementDTO } from "../../../types/user";
+
+/**
+ * icons
+ */
+import PostAddOutlinedIcon from '@mui/icons-material/PostAddOutlined';
+import RecommendOutlinedIcon from '@mui/icons-material/RecommendOutlined';
+import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
+import BookmarkBorderOutlinedIcon from '@mui/icons-material/BookmarkBorderOutlined';
+import PersonAddAlt1OutlinedIcon from '@mui/icons-material/PersonAddAlt1Outlined';
+import HowToRegOutlinedIcon from '@mui/icons-material/HowToRegOutlined';
+import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined';
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
+import NavBar from "../../../components/NavBar";
+
+
 
 const PrincipalDashBoard = () => {
+
+    const [userEngagement, setUserEngagement] = useState<UserFullEngagementDTO>({
+        blogCount: 0,
+        likesCount: 0,
+        readBlogsCount: 0,
+        commentCount: 0,
+        followingUserCount: 0,
+        followersUserCount: 0,
+        followingCategoryCount: 0,
+    });
+    
+  useEffect(() => {
+    // if (isNaN(userIdNumber)) {
+    //   console.error("El ID de usuario no es válido");
+    //   return;
+    // }
+
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`http://127.0.0.1:8080/api/user/get-user-engagement/1`);
+        setUserEngagement(response.data.data);
+        console.log(response);
+        
+      } catch (error) {
+        console.log(error);
+        
+      }
+    }
+
+    fetchData();
+
+  }, []);
+
   return (
-        <div className=" mx-auto px-4 sm:px-8 w-10/12 mb-10">
+        <div className="mx-auto w-full bg-gray-100">
+            <NavBar />
+            <div className="flex flex-col justify-center items-center h-[100vh] pt-4">
+                <div className="mt-20 mb-10 md:mt-0 w-full md:w-8/12 xl:w-10/12 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-3 3xl:grid-cols-6">
 
-            <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                <div className="relative overflow-hidden rounded-lg bg-gray-600 px-4 pb-12 pt-5 shadow sm:px-6 sm:pt-6">
-                    <dt>
-                        <div className="absolute rounded-md bg-red-600 p-3">
-                        <svg className="h-6 w-6 text-gray-900" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
-                        </svg>
+                    <div className="relative flex flex-grow !flex-row flex-col items-center rounded-[10px] rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] ">
+                        <div className="ml-[18px] flex h-[90px] w-auto flex-row items-center">
+                            <div className="rounded-full bg-gray-600 p-3 text-gray-100">
+                                <PostAddOutlinedIcon />
+                            </div>
                         </div>
-                        <p className="ml-16 truncate text-sm font-medium text-gray-300">My Blogs</p>
-                    </dt>
-                    <dd className="ml-16 flex items-baseline pb-6 sm:pb-7">
-                        <p className="text-2xl font-semibold text-gray-100">1000</p>
-                        <div className="absolute inset-x-0 bottom-0 bg-gray-50 px-4 py-4 sm:px-6">
-                        <div className="text-sm">
-                            <a href="#" className="font-medium text-orange-400 hover:text-red-500">View all<span className="sr-only"> Total Subscribers stats</span></a>
+                        <div className="h-50 ml-4 flex w-auto flex-col justify-center">
+                            <p className="font-dm text-sm font-medium text-gray-600">Blogs Published</p>
+                            <h4 className="text-xl font-bold text-navy-700 ">{userEngagement.blogCount}</h4>
                         </div>
-                        </div>
-                    </dd>
-                
-                </div>
-                <div className="relative overflow-hidden rounded-lg bg-gray-600 px-4 pb-12 pt-5 shadow sm:px-6 sm:pt-6">
-                    <dt>
-                        <div className="absolute rounded-md bg-orange-500 p-3">
-                        <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 9v.906a2.25 2.25 0 01-1.183 1.981l-6.478 3.488M2.25 9v.906a2.25 2.25 0 001.183 1.981l6.478 3.488m8.839 2.51l-4.66-2.51m0 0l-1.023-.55a2.25 2.25 0 00-2.134 0l-1.022.55m0 0l-4.661 2.51m16.5 1.615a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V8.844a2.25 2.25 0 011.183-1.98l7.5-4.04a2.25 2.25 0 012.134 0l7.5 4.04a2.25 2.25 0 011.183 1.98V19.5z" />
-                        </svg>
-                        </div>
-                        <p className="ml-16 truncate text-sm font-medium text-gray-300">Like Blogs</p>
-                    </dt>
-                    <dd className="ml-16 flex items-baseline pb-6 sm:pb-7">
-                        <p className="text-2xl font-semibold text-gray-100">120</p>
+                    </div>
 
-                        <div className="absolute inset-x-0 bottom-0 bg-gray-50 px-4 py-4 sm:px-6">
-                        <div className="text-sm">
-                            <a href="#" className="font-medium text-yellow-600 hover:text-orange-500">View all<span className="sr-only"> Avg. Open Rate stats</span></a>
+                    <div className="relative flex flex-grow !flex-row flex-col items-center rounded-[10px] rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] ">
+                        <div className="ml-[18px] flex h-[90px] w-auto flex-row items-center">
+                            <div className="rounded-full bg-gray-600 p-3 text-gray-100">
+                                <RecommendOutlinedIcon />
+                            </div>
                         </div>
+                        <div className="h-50 ml-4 flex w-auto flex-col justify-center">
+                            <p className="font-dm text-sm font-medium text-gray-600">Likes on Blogs</p>
+                            <h4 className="text-xl font-bold text-navy-700 ">{userEngagement.likesCount}</h4>
                         </div>
-                    </dd>
-                </div>
-                <div className="relative overflow-hidden rounded-lg bg-gray-600 px-4 pb-12 pt-5 shadow sm:px-6 sm:pt-6">
-                    <dt>
-                        <div className="absolute rounded-md bg-blue-500 p-3">
-                        <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59" />
-                        </svg>
-                        </div>
-                        <p className="ml-16 truncate text-sm font-medium text-gray-300">Saved Blogs</p>
-                    </dt>
-                    <dd className="ml-16 flex items-baseline pb-6 sm:pb-7">
-                        <p className="text-2xl font-semibold text-gray-100">24</p>
+                    </div>
 
-                        <div className="absolute inset-x-0 bottom-0 bg-gray-50 px-4 py-4 sm:px-6">
-                        <div className="text-sm">
-                            <a href="#" className="font-medium text-cyan-600 hover:text-green-500">View all<span className="sr-only"> Avg. Click Rate stats</span></a>
+                    <div className="relative flex flex-grow !flex-row flex-col items-center rounded-[10px] rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] ">
+                        <div className="ml-[18px] flex h-[90px] w-auto flex-row items-center">
+                            <div className="rounded-full bg-gray-600 p-3 text-gray-100">
+                                <ChatBubbleOutlineOutlinedIcon /> 
+                            </div>
                         </div>
+                        <div className="h-50 ml-4 flex w-auto flex-col justify-center">
+                            <p className="font-dm text-sm font-medium text-gray-600">Comments on Blogs</p>
+                            <h4 className="text-xl font-bold text-navy-700 ">{userEngagement.commentCount}</h4>
                         </div>
-                    </dd>
-                </div>
-                <div className="relative overflow-hidden rounded-lg bg-gray-600 px-4 pb-12 pt-5 shadow sm:px-6 sm:pt-6">
-                    <dt>
-                        <div className="absolute rounded-md bg-blue-500 p-3">
-                        <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59" />
-                        </svg>
-                        </div>
-                        <p className="ml-16 truncate text-sm font-medium text-gray-300">Follows</p>
-                    </dt>
-                    <dd className="ml-16 flex items-baseline pb-6 sm:pb-7">
-                        <p className="text-2xl font-semibold text-gray-100">50</p>
+                    </div>
 
-                        <div className="absolute inset-x-0 bottom-0 bg-gray-50 px-4 py-4 sm:px-6">
-                        <div className="text-sm">
-                            <a href="#" className="font-medium text-cyan-600 hover:text-green-500">View all<span className="sr-only"> Avg. Click Rate stats</span></a>
+                    <div className="relative flex flex-grow !flex-row flex-col items-center rounded-[10px] rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] ">
+                        <div className="ml-[18px] flex h-[90px] w-auto flex-row items-center">
+                            <div className="rounded-full bg-gray-600 p-3 text-gray-100">
+                                <BookmarkBorderOutlinedIcon />
+                            </div>
                         </div>
+                        <div className="h-50 ml-4 flex w-auto flex-col justify-center">
+                            <p className="font-dm text-sm font-medium text-gray-600">Blogs Saved</p>
+                            <h4 className="text-xl font-bold text-navy-700 ">{userEngagement.readBlogsCount}</h4>
                         </div>
-                    </dd>
-                </div>
-                <div className="relative overflow-hidden rounded-lg bg-gray-600 px-4 pb-12 pt-5 shadow sm:px-6 sm:pt-6">
-                    <dt>
-                        <div className="absolute rounded-md bg-blue-500 p-3">
-                        <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59" />
-                        </svg>
-                        </div>
-                        <p className="ml-16 truncate text-sm font-medium text-gray-300">Followers</p>
-                    </dt>
-                    <dd className="ml-16 flex items-baseline pb-6 sm:pb-7">
-                        <p className="text-2xl font-semibold text-gray-100">100</p>
-                        <div className="absolute inset-x-0 bottom-0 bg-gray-50 px-4 py-4 sm:px-6">
-                        <div className="text-sm">
-                            <a href="#" className="font-medium text-cyan-600 hover:text-green-500">View all<span className="sr-only"> Avg. Click Rate stats</span></a>
-                        </div>
-                        </div>
-                    </dd>
-                </div>
-                <div className="relative overflow-hidden rounded-lg bg-gray-600 px-4 pb-12 pt-5 shadow sm:px-6 sm:pt-6">
-                    <dt>
-                        <div className="absolute rounded-md bg-blue-500 p-3">
-                        <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59" />
-                        </svg>
-                        </div>
-                        <p className="ml-16 truncate text-sm font-medium text-gray-300">Categories</p>
-                    </dt>
-                    <dd className="ml-16 flex items-baseline pb-6 sm:pb-7">
-                        <p className="text-2xl font-semibold text-gray-100">30</p>
+                    </div>
 
-                        <div className="absolute inset-x-0 bottom-0 bg-gray-50 px-4 py-4 sm:px-6">
-                        <div className="text-sm">
-                            <a href="#" className="font-medium text-cyan-600 hover:text-green-500">View all<span className="sr-only"> Avg. Click Rate stats</span></a>
+                    <div className="relative flex flex-grow !flex-row flex-col items-center rounded-[10px] rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] ">
+                        <div className="ml-[18px] flex h-[90px] w-auto flex-row items-center">
+                            <div className="rounded-full bg-gray-600 p-3 text-gray-100">
+                                <PersonAddAlt1OutlinedIcon />
+                            </div>
                         </div>
+                        <div className="h-50 ml-4 flex w-auto flex-col justify-center">
+                            <p className="font-dm text-sm font-medium text-gray-600">Followers</p>
+                            <h4 className="text-xl font-bold text-navy-700 ">{userEngagement.followersUserCount}</h4>
                         </div>
-                    </dd>
-                </div>
-                <div className="relative overflow-hidden rounded-lg bg-gray-600 px-4 pb-12 pt-5 shadow sm:px-6 sm:pt-6">
-                    <dt>
-                        <div className="absolute rounded-md bg-blue-500 p-3">
-                        <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59" />
-                        </svg>
+                    </div>
+
+                    <div className="relative flex flex-grow !flex-row flex-col items-center rounded-[10px] rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] ">
+                        <div className="ml-[18px] flex h-[90px] w-auto flex-row items-center">
+                            <div className="rounded-full bg-gray-600 p-3 text-gray-100">
+                                <HowToRegOutlinedIcon />
+                            </div>
                         </div>
-                        <p className="ml-16 truncate text-sm font-medium text-gray-300">Comments</p>
-                    </dt>
-                    <dd className="ml-16 flex items-baseline pb-6 sm:pb-7">
-                        <p className="text-2xl font-semibold text-gray-100">150</p>
-                        <div className="absolute inset-x-0 bottom-0 bg-gray-50 px-4 py-4 sm:px-6">
-                        <div className="text-sm">
-                            <a href="#" className="font-medium text-cyan-600 hover:text-green-500">View all<span className="sr-only"> Avg. Click Rate stats</span></a>
+                        <div className="h-50 ml-4 flex w-auto flex-col justify-center">
+                            <p className="font-dm text-sm font-medium text-gray-600">Following</p>
+                            <h4 className="text-xl font-bold text-navy-700 ">{userEngagement.followingUserCount}</h4>
                         </div>
+                    </div>
+
+                    <div className="relative flex flex-grow !flex-row flex-col items-center rounded-[10px] rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] ">
+                        <div className="ml-[18px] flex h-[90px] w-auto flex-row items-center">
+                            <div className="rounded-full bg-gray-600 p-3 text-gray-100">
+                                <LocalOfferOutlinedIcon />
+                            </div>
                         </div>
-                    </dd>
-                </div>
-                <div className="relative overflow-hidden rounded-lg bg-gray-600 px-4 pb-12 pt-5 shadow sm:px-6 sm:pt-6">
-                    <dt>
-                        <div className="absolute rounded-md bg-blue-500 p-3">
-                        <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59" />
-                        </svg>
+                        <div className="h-50 ml-4 flex w-auto flex-col justify-center mb-10">
+                            <p className="font-dm text-sm font-medium text-gray-600">Categories Followed</p>
+                            <h4 className="text-xl font-bold text-navy-700 ">{userEngagement.followingCategoryCount}</h4>
                         </div>
-                        <p className="ml-16 truncate text-2xl font-medium text-gray-300">Settings</p>
-                    </dt>
-                    <dd className="ml-16 flex items-baseline pb-6 sm:pb-7">
-                        {/* <div className="absolute inset-x-0 bottom-0 bg-gray-50 px-4 py-4 sm:px-6">
-                        <div className="text-sm">
-                            <a href="#" className="font-medium text-cyan-600 hover:text-green-500">View all<span className="sr-only"> Avg. Click Rate stats</span></a>
+                    </div>
+
+                    {/* <div className="relative flex flex-grow !flex-row flex-col items-center rounded-[10px] rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] mb-10">
+                        <div className="ml-[18px] flex h-[90px] w-auto flex-row items-center">
+                            <div className="rounded-full bg-gray-600 p-3 text-gray-100">
+                                <SettingsOutlinedIcon />
+                            </div>
                         </div>
-                        </div> */}
-                    </dd>
-                </div>
-            </dl>
+                        <div className="h-50 ml-4 flex w-auto flex-col justify-center">
+                            <p className="font-dm text-sm font-medium text-gray-600">Settings</p>
+                            <h4 className="text-xl font-bold text-navy-700 "></h4>
+                        </div>
+                    </div> */}
+
+                </div>            
+            </div>
         </div>
   )
 }

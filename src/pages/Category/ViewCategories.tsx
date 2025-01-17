@@ -1,19 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchCategories } from "../../slices/categorySlice";
-import { AppDispatch, RootState } from "../../redux/store";
+
 import { Category } from "../../types/category"; 
 import CategoryCard from "../../components/Category/CategoryCard";
 import Spinner from "../../components/Spinner/Spinner";
 import Error from "../../components/Error/Error";
 import axios from "axios";
-import { div } from "framer-motion/client";
+
 import NavBar from "../../components/NavBar";
 
 const ViewCategories: React.FC = () => {
-  const dispatch = useDispatch<AppDispatch>(); 
+  /*const dispatch = useDispatch<AppDispatch>(); 
   const loading = useSelector((state: RootState) => state.categories.loading);
-  const error = useSelector((state: RootState) => state.categories.error);
+  const error = useSelector((state: RootState) => state.categories.error);*/
 
   const [categories, setCategories] = useState<Category[]>([]);
 
@@ -53,6 +51,8 @@ const ViewCategories: React.FC = () => {
         `http://127.0.0.1:8080/api/category/pagination?page=${page}&size=10`
       );
 
+      console.log(response.data.data);
+      
       const { content, last } = response.data.data;
       setCategories((prevCategories) => [...prevCategories, ...content]);
       setPage((prevPage) => prevPage + 1);
@@ -92,10 +92,14 @@ const ViewCategories: React.FC = () => {
   return (
     <div>
       <NavBar />
-      <div className="container mx-auto px-4 sm:px-8 w-10/12">
+      <div className="container mx-auto px-4 sm:px-8 w-full">
         <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-14">
             {categories.map((category) => (
-                <CategoryCard key={category.categoryId} category={category} />
+                <CategoryCard 
+                  key={category.categoryId} 
+                  {...category}
+                  {...categories} 
+                />
             ))}
         </div>
     </div>

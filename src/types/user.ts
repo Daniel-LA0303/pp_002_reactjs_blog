@@ -59,3 +59,13 @@ export interface UserTop{
     profilePicture: string;
     blogsCounts: number
 }
+
+export interface UserFullEngagementDTO {
+    blogCount: number;
+    likesCount: number;
+    readBlogsCount: number;
+    commentCount: number;
+    followingUserCount: number;
+    followersUserCount: number;
+    followingCategoryCount: number;
+}

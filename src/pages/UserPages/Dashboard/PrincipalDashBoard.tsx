@@ -14,6 +14,7 @@ import HowToRegOutlinedIcon from '@mui/icons-material/HowToRegOutlined';
 import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import NavBar from "../../../components/NavBar";
+import { Link } from "react-router-dom";
 
 
 
@@ -57,89 +58,103 @@ const PrincipalDashBoard = () => {
             <div className="flex flex-col justify-center items-center h-[100vh] pt-4">
                 <div className="mt-20 mb-10 md:mt-0 w-full md:w-8/12 xl:w-10/12 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-3 3xl:grid-cols-6">
 
-                    <div className="relative flex flex-grow !flex-row flex-col items-center rounded-[10px] rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] ">
+                    <Link 
+                        to={`/blogs-published/1`}
+                        className="relative flex flex-grow !flex-row flex-col items-center rounded-[10px] rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] text-gray-600 hover:bg-gray-600 hover:text-white transition-all">
                         <div className="ml-[18px] flex h-[90px] w-auto flex-row items-center">
                             <div className="rounded-full bg-gray-600 p-3 text-gray-100">
                                 <PostAddOutlinedIcon />
                             </div>
                         </div>
                         <div className="h-50 ml-4 flex w-auto flex-col justify-center">
-                            <p className="font-dm text-sm font-medium text-gray-600">Blogs Published</p>
-                            <h4 className="text-xl font-bold text-navy-700 ">{userEngagement.blogCount}</h4>
+                            <p className="font-dm text-sm font-medium ">Blogs Published</p>
+                            <h4 className="text-xl font-bold ">{userEngagement.blogCount}</h4>
                         </div>
-                    </div>
+                    </Link>
 
-                    <div className="relative flex flex-grow !flex-row flex-col items-center rounded-[10px] rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] ">
+                    <Link 
+                        to={`/blogs-by-likes`}
+                        className="relative flex flex-grow !flex-row flex-col items-center rounded-[10px] rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] text-gray-600 hover:bg-gray-600 hover:text-white transition-all">
                         <div className="ml-[18px] flex h-[90px] w-auto flex-row items-center">
                             <div className="rounded-full bg-gray-600 p-3 text-gray-100">
                                 <RecommendOutlinedIcon />
                             </div>
                         </div>
                         <div className="h-50 ml-4 flex w-auto flex-col justify-center">
-                            <p className="font-dm text-sm font-medium text-gray-600">Likes on Blogs</p>
-                            <h4 className="text-xl font-bold text-navy-700 ">{userEngagement.likesCount}</h4>
+                            <p className="font-dm text-sm font-medium">Likes on Blogs</p>
+                            <h4 className="text-xl font-bold ">{userEngagement.likesCount}</h4>
                         </div>
-                    </div>
+                    </Link>
 
-                    <div className="relative flex flex-grow !flex-row flex-col items-center rounded-[10px] rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] ">
+                    <Link 
+                        to={`/blogs-by-comments`}
+                        className="relative flex flex-grow !flex-row flex-col items-center rounded-[10px] rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] text-gray-600 hover:bg-gray-600 hover:text-white transition-all">
                         <div className="ml-[18px] flex h-[90px] w-auto flex-row items-center">
                             <div className="rounded-full bg-gray-600 p-3 text-gray-100">
                                 <ChatBubbleOutlineOutlinedIcon /> 
                             </div>
                         </div>
                         <div className="h-50 ml-4 flex w-auto flex-col justify-center">
-                            <p className="font-dm text-sm font-medium text-gray-600">Comments on Blogs</p>
-                            <h4 className="text-xl font-bold text-navy-700 ">{userEngagement.commentCount}</h4>
+                            <p className="font-dm text-sm font-medium">Comments on Blogs</p>
+                            <h4 className="text-xl font-bold">{userEngagement.commentCount}</h4>
                         </div>
-                    </div>
+                    </Link>
 
-                    <div className="relative flex flex-grow !flex-row flex-col items-center rounded-[10px] rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] ">
+                    <Link 
+                        to={`/blogs-by-save`}
+                        className="relative flex flex-grow !flex-row flex-col items-center rounded-[10px] rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] text-gray-600 hover:bg-gray-600 hover:text-white transition-all">
                         <div className="ml-[18px] flex h-[90px] w-auto flex-row items-center">
                             <div className="rounded-full bg-gray-600 p-3 text-gray-100">
                                 <BookmarkBorderOutlinedIcon />
                             </div>
                         </div>
                         <div className="h-50 ml-4 flex w-auto flex-col justify-center">
-                            <p className="font-dm text-sm font-medium text-gray-600">Blogs Saved</p>
-                            <h4 className="text-xl font-bold text-navy-700 ">{userEngagement.readBlogsCount}</h4>
+                            <p className="font-dm text-sm font-medium">Blogs Saved</p>
+                            <h4 className="text-xl font-bold">{userEngagement.readBlogsCount}</h4>
                         </div>
-                    </div>
+                    </Link>
 
-                    <div className="relative flex flex-grow !flex-row flex-col items-center rounded-[10px] rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] ">
+                    <Link 
+                        to={`/users-followers`}                        
+                        className="relative flex flex-grow !flex-row flex-col items-center rounded-[10px] rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] text-gray-600 hover:bg-gray-600 hover:text-white transition-all">
                         <div className="ml-[18px] flex h-[90px] w-auto flex-row items-center">
                             <div className="rounded-full bg-gray-600 p-3 text-gray-100">
                                 <PersonAddAlt1OutlinedIcon />
                             </div>
                         </div>
                         <div className="h-50 ml-4 flex w-auto flex-col justify-center">
-                            <p className="font-dm text-sm font-medium text-gray-600">Followers</p>
-                            <h4 className="text-xl font-bold text-navy-700 ">{userEngagement.followersUserCount}</h4>
+                            <p className="font-dm text-sm font-medium">Followers</p>
+                            <h4 className="text-xl font-bold">{userEngagement.followersUserCount}</h4>
                         </div>
-                    </div>
+                    </Link>
 
-                    <div className="relative flex flex-grow !flex-row flex-col items-center rounded-[10px] rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] ">
+                    <Link 
+                        to={`/users-following`}
+                        className="relative flex flex-grow !flex-row flex-col items-center rounded-[10px] rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] text-gray-600 hover:bg-gray-600 hover:text-white transition-all">
                         <div className="ml-[18px] flex h-[90px] w-auto flex-row items-center">
                             <div className="rounded-full bg-gray-600 p-3 text-gray-100">
                                 <HowToRegOutlinedIcon />
                             </div>
                         </div>
                         <div className="h-50 ml-4 flex w-auto flex-col justify-center">
-                            <p className="font-dm text-sm font-medium text-gray-600">Following</p>
-                            <h4 className="text-xl font-bold text-navy-700 ">{userEngagement.followingUserCount}</h4>
+                            <p className="font-dm text-sm font-medium">Following</p>
+                            <h4 className="text-xl font-bold">{userEngagement.followingUserCount}</h4>
                         </div>
-                    </div>
+                    </Link>
 
-                    <div className="relative flex flex-grow !flex-row flex-col items-center rounded-[10px] rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] ">
+                    <Link 
+                        to={`/categories-following`}
+                        className="relative flex flex-grow !flex-row flex-col items-center rounded-[10px] rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] text-gray-600 hover:bg-gray-600 hover:text-white transition-all">
                         <div className="ml-[18px] flex h-[90px] w-auto flex-row items-center">
                             <div className="rounded-full bg-gray-600 p-3 text-gray-100">
                                 <LocalOfferOutlinedIcon />
                             </div>
                         </div>
                         <div className="h-50 ml-4 flex w-auto flex-col justify-center mb-10">
-                            <p className="font-dm text-sm font-medium text-gray-600">Categories Followed</p>
+                            <p className="font-dm text-sm font-medium">Categories Followed</p>
                             <h4 className="text-xl font-bold text-navy-700 ">{userEngagement.followingCategoryCount}</h4>
                         </div>
-                    </div>
+                    </Link>
 
                     {/* <div className="relative flex flex-grow !flex-row flex-col items-center rounded-[10px] rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] mb-10">
                         <div className="ml-[18px] flex h-[90px] w-auto flex-row items-center">

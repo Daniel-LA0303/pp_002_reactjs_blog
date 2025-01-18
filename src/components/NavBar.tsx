@@ -34,7 +34,7 @@ const NavBar: React.FC = () => {
 
   return (
     <>
-      <div className={` bg-slate-200 w-full`}>
+      <div className={` bg-slate-200 w-full shadow-md`}>
         <div
           className={`w-full text-gray-700 bg-white h-16 fixed top-0 z-40 transition-all px-2 md:px-5 ${
             !atTop ? "bg-black shadow-lg" : ""

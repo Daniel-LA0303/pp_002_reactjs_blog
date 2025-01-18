@@ -15,6 +15,13 @@ import ViewCategories from '../pages/Category/ViewCategories';
 import Home from '../pages/Home/Home';
 import PrincipalDashBoard from '../pages/UserPages/Dashboard/PrincipalDashBoard';
 import BlogsByCategory from '../pages/Category/BlogsByCategory';
+import BlogsByUserDashboard from '../pages/UserPages/Dashboard/BlogsByUserDashboard';
+import BlogsByLikeDashboard from '../pages/UserPages/Dashboard/BlogsByLikeDashboard';
+import BlogsByCommentDashboard from '../pages/UserPages/Dashboard/BlogsByCommentDashboard';
+import BlogsBySavedDashboard from '../pages/UserPages/Dashboard/BlogsBySavedDashboard';
+import CategoriesByUserDashboard from '../pages/UserPages/Dashboard/CategoriesByUserDashboard';
+import UserFollowersDashboard from '../pages/UserPages/Dashboard/UserFollowersDashboard';
+import UserFollowingDashboar from '../pages/UserPages/Dashboard/UserFollowingDashboar';
 
 
 const AppRoutes: React.FC = () => {
@@ -35,7 +42,16 @@ const AppRoutes: React.FC = () => {
 
       <Route path="/profile/:id" element={<Profile />} />
       <Route path="/user-settings/:id" element={<UserSettings />} />
+
       <Route path="/dashboard" element={<PrincipalDashBoard />} />  
+      <Route path="/blogs-published/:id" element={<BlogsByUserDashboard />} />
+      <Route path="/blogs-by-likes" element={<BlogsByLikeDashboard />} />
+      <Route path="/blogs-by-comments" element={<BlogsByCommentDashboard />} />
+      <Route path="/blogs-by-save" element={<BlogsBySavedDashboard />} />
+      <Route path="/categories-following" element={<CategoriesByUserDashboard />} />
+      <Route path="/users-followers" element={<UserFollowersDashboard />} />
+      <Route path="/users-following" element={<UserFollowingDashboar />} />
+
 
       <Route path="/categories" element={<ViewCategories />} />
       <Route path="/categoy-by-blog/:nameCategory" element={<BlogsByCategory />}/>

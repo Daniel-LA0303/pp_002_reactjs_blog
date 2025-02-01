@@ -6,12 +6,14 @@ import { ApiResponse } from "../types/category";
 
 interface BlogState {
     loading: boolean;
-    error: ApiResponse<CreateBlogValidationErrorResponseI> | string | null;
+    errorBlog: boolean;
+    errorMessage: ApiResponse<CreateBlogValidationErrorResponseI> | string | null;
 }
 
 const initialState: BlogState = {
     loading: false,
-    error: null
+    errorBlog: false,
+    errorMessage: null
 }
 
 export const fetchCreateBlog = createAsyncThunk(
@@ -46,29 +48,34 @@ const blogSlice =  createSlice({
         builder
         .addCase(fetchCreateBlog.pending, (state) => {
             state.loading = true;
-            state.error = null;
+            state.errorBlog = false;
+            state.errorMessage = null;
         })
         .addCase(fetchCreateBlog.fulfilled, (state) => {
             state.loading = false;
-            state.error = null;
+            state.errorBlog = false;
+            state.errorMessage = null
         })
         .addCase(fetchCreateBlog.rejected, (state, action) => {
             state.loading = false;
-            state.error = action.payload as ApiResponse<CreateBlogValidationErrorResponseI> || 'Failded to fecth create blog'
+            state.errorBlog = true;
+            state.errorMessage = action.payload as ApiResponse<CreateBlogValidationErrorResponseI> || 'Failded to fecth create blog'
         })
 
         .addCase(fecthGetOneBlogPage.pending, (state) => {
             state.loading = true;
-            state.error = null;
+            state.errorBlog = false;
+            state.errorMessage = null;
         })
         .addCase(fecthGetOneBlogPage.fulfilled, (state, action) => {
             state.loading = false;
-            // state.error = null;
-            //state.currentBlog = action.payload; // Ajustar según tu estado
+            state.errorBlog = false;
+            state.errorMessage = null;
         })
         .addCase(fecthGetOneBlogPage.rejected, (state, action) => {
             state.loading = false;
-            state.error = action.payload as string;
+            state.errorBlog = true;
+            state.errorMessage = action.payload as ApiResponse<CreateBlogValidationErrorResponseI> || 'Failded to fecth get one blog'
         });
     }
 });

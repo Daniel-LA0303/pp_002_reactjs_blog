@@ -1,7 +1,7 @@
 /**
  * react
  */
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 
 /**
  * redux
@@ -34,11 +34,15 @@ import ActionsBlog from '../../components/Blog/ActionsBlog'
 import AuthorBlogCard from '../../components/User/AuthorBlogCard'
 import RecommendBlog from '../../components/Blog/RecommendBlog'
 import Spinner from '../../components/Spinner/Spinner'
-import Error from '../../components/Error/Error'
 import NavBar from '../../components/NavBar'
+import { AppContext } from '../../context/AppContext'
+import ModalError from '../../components/Tools/ModalError/ModalError'
 
 
 const ViewBlog = () => {
+
+    // context when there is an error
+    const { showError, handleCloseModal, openErrorModal, errorModalMessage} = useContext(AppContext);
 
     // get id from params to get blog info
     const { id } = useParams<{ id: string }>();
@@ -46,7 +50,8 @@ const ViewBlog = () => {
     // redux
     const dispatch = useDispatch<AppDispatch>(); 
     const loading = useSelector((state: RootState) => state.blog.loading);
-    const error = useSelector((state: RootState) => state.blog.error);
+    const errorBlog = useSelector((state: RootState) => state.blog.errorBlog);
+    const errorMessage = useSelector((state: RootState) => state.blog.errorMessage);
 
     // state
     const [blog, setBlog] = useState<BlogPageResponse>();
@@ -57,7 +62,6 @@ const ViewBlog = () => {
     // useEffect stection
     // useEffect to get one blog info
     useEffect(() => {
-
         if (isNaN(userIdNumber)) {
             console.error("El ID de usuario no es válido");
             return;
@@ -76,11 +80,21 @@ const ViewBlog = () => {
         fetchData();
     }, [dispatch]);
 
+    useEffect(() => {
+        if (errorBlog) {
+            showError(errorMessage);
+        }
+    }, [errorBlog]);
+
     if (loading) return <Spinner />;
-    if (error) return <Error />;
 
   return (
     <>
+        <ModalError
+                open={openErrorModal}
+                message={errorModalMessage} // Pasar el mensaje al modal
+                onClose={handleCloseModal}
+            />
         <NavBar />
         <div className="flex flex-col justify-between md:flex-row mt-16 max-w-screen-lg px-0 md:px-2 lg:mx-auto gap-4">
             

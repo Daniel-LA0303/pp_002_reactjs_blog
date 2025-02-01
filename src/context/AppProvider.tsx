@@ -10,9 +10,12 @@ interface AppProviderProps {
 export const AppProvider = ({children}: AppProviderProps) => {
 
     // import hooks here
+
+    // hook to manage global error state
     const {
         showError,
         handleCloseModal,
+        resetErrorState,
         openErrorModal,
         errorModalMessage
     } = useGlobalError();
@@ -22,6 +25,7 @@ export const AppProvider = ({children}: AppProviderProps) => {
             value={{
                 showError,
                 handleCloseModal,
+                resetErrorState,
                 openErrorModal,
                 errorModalMessage
             }}

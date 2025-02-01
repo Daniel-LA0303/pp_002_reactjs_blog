@@ -6,7 +6,7 @@ import { useContext, useEffect, useState } from 'react'
 /**
  * redux
  */
-import { fecthGetOneBlogPage } from '../../slices/blogSlice'
+import { fecthGetOneBlogPage, resetError } from '../../slices/blogSlice'
 import { useDispatch } from 'react-redux'
 import { AppDispatch, RootState } from '../../redux/store'
 import { useSelector } from 'react-redux'
@@ -60,6 +60,7 @@ const ViewBlog = () => {
     const userIdNumber = id ? parseInt(id) : NaN;
 
     // useEffect stection
+
     // useEffect to get one blog info
     useEffect(() => {
         if (isNaN(userIdNumber)) {
@@ -80,12 +81,21 @@ const ViewBlog = () => {
         fetchData();
     }, [dispatch]);
 
+    // useEffect to show error when there is an error backend
     useEffect(() => {
         if (errorBlog) {
             showError(errorMessage);
         }
     }, [errorBlog]);
 
+    // reset error state redux
+    useEffect(() => {
+        if (!openErrorModal) {
+            dispatch(resetError());
+        }
+    }, [openErrorModal, dispatch]);
+
+    // loading data
     if (loading) return <Spinner />;
 
   return (

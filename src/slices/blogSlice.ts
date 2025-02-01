@@ -1,8 +1,7 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { CreateBlogRequestI, CreateBlogValidationErrorResponseI } from "../types/blog";
 import { fetchCreateBlogRequest, fetchGetOneBlog } from "../services/blogService";
 import { ApiResponse } from "../types/category";
-
 
 interface BlogState {
     loading: boolean;
@@ -15,6 +14,8 @@ const initialState: BlogState = {
     errorBlog: false,
     errorMessage: null
 }
+
+export const resetError = createAction('blog/resetError');
 
 export const fetchCreateBlog = createAsyncThunk(
     'blog/createBlog',
@@ -43,7 +44,13 @@ export const fecthGetOneBlogPage = createAsyncThunk(
 const blogSlice =  createSlice({
     name: 'blog',
     initialState,
-    reducers: {},
+    reducers: {
+        resetBlogState: (state) => {
+            state.loading = false;
+            state.errorBlog = false;
+            state.errorMessage = null;
+        }
+    },
     extraReducers: (builder) => {
         builder
         .addCase(fetchCreateBlog.pending, (state) => {
@@ -76,11 +83,19 @@ const blogSlice =  createSlice({
             state.loading = false;
             state.errorBlog = true;
             state.errorMessage = action.payload as ApiResponse<CreateBlogValidationErrorResponseI> || 'Failded to fecth get one blog'
+        })
+
+        .addCase(resetError, (state) => {
+            // reset the error state
+            state.errorBlog = false;
+            state.errorMessage = null;
         });
     }
 });
 
+export const { resetBlogState } = blogSlice.actions; 
 export default blogSlice.reducer;
 
 export const selectLoading = (state: any) => state.blog.loading;
-export const selectError = (state: any) => state.blog.error;
+export const selectError = (state: any) => state.blog.errorError;
+export const selectErrorMessage = (state: any) => state.blog.errorMessage;

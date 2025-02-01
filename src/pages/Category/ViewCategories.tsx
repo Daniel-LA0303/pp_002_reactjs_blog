@@ -92,7 +92,7 @@ const ViewCategories: React.FC = () => {
   return (
     <div>
       <NavBar />
-      <div className="container mx-auto px-4 sm:px-8 w-full">
+      <div className="container w-full max-w-screen-lg px-2 lg:px-0 lg:mx-auto flex flex-wrap gap-4 mt-5">
         <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-14">
             {categories.map((category) => (
                 <CategoryCard 

@@ -143,12 +143,12 @@ const Profile: React.FC = () => {
       <NavBar />
       <section className="pt-8 sm:pt-8 mt-16">
 
-        <div className="w-full md:w-10/12 lg:w-8/12 mx-auto">
+        <div className="w-full max-w-screen-lg px-2 lg:mx-auto flex flex-wrap gap-4">
           <div className={`flex flex-col min-w-0 break-word w-full mb-6 shadow-lg rounded-lg mt-16`}>
             <div className="px-2 sm:px-6 ">
 
               <div className="flex flex-wrap justify-center">
-                <div className="w-full ml-10 md:ml-0 px-4 flex justify-start sm:justify-center">
+                <div className="w-full ml-10 sm:ml-0 px-4 flex justify-start sm:justify-center">
                   <img alt="..." 
                     src={'/avatar.png'} 
                     className=" shadow-xl image_profile  h-auto align-middle border-none  -m-16  lg:-ml-16 max-w-150-px" />  
@@ -157,13 +157,13 @@ const Profile: React.FC = () => {
 
               <div className=" ">
 
-                <h3 className={`text-left md:text-center text-xl mt-10 md:mt-10 font-bold leading-normal mb-2`}>
+                <h3 className={`text-left sm:text-center text-xl mt-10 md:mt-10 font-bold leading-normal mb-2`}>
                   {user?.username}
                 </h3>
 
                 <div className="flex flex-wrap justify-center">
                   <div className="w-full lg:w-9/12">
-                    <p className=" text-left md:text-center text-sm mb-4 leading-relaxed text-blueGray-700">
+                    <p className=" text-left sm:text-center text-sm mb-4 leading-relaxed text-blueGray-700">
                       {user?.bio ? user?.bio : 'No data'}
                     </p>
                   </div>
@@ -171,7 +171,7 @@ const Profile: React.FC = () => {
 
                 <div className="flex flex-wrap justify-center">
                   <div className="w-full lg:w-9/12">
-                    <p className=" text-left md:text-center text-sm mb-4 leading-relaxed text-blueGray-700">
+                    <p className=" text-left sm:text-center text-sm mb-4 leading-relaxed text-blueGray-700">
                       Join in {user?.createdAt ? formatDate(user.createdAt) : 'Date not available'}
                     </p>
                   </div>
@@ -197,7 +197,7 @@ const Profile: React.FC = () => {
         </div>
 
         {/* Content here */}
-        <div className='block sm:flex mx-auto w-full md:w-10/12 lg:w-8/12'> 
+        <div className='block sm:flex w-full max-w-screen-lg px-2 lg:mx-auto '> 
           <div className='w-full sm:w-3/12 mr-0 sm:mr-2'>
 
             <div className= "flex flex-col min-w-0 break-word w-full my-1 shadow-lg  rounded-lg mt-4">

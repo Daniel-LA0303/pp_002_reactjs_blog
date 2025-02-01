@@ -109,12 +109,12 @@ const UserSettings = () => {
   return (
     <div>
       <NavBar />
-      <div className="min-h-screen p-6 bg-gray-100 flex items-center justify-center mt-16">
+      <div className="min-h-screen py-10 bg-gray-100 flex items-center justify-center mt-10">
 
-        <div className="container max-w-screen-lg mx-auto">
+        <div className="container w-full max-w-screen-lg px-2 lg:mx-auto md:flex md:flex-wrap gap-4">
           <div>
 
-            <div className="bg-white rounded shadow-lg p-4 px-4 md:p-8 mb-6">
+            <div className="bg-white rounded shadow-lg p-4 px-4 md:p-8 ">
               <div className="grid gap-4 gap-y-2 text-sm grid-cols-1 lg:grid-cols-3">
                 <div className="text-gray-600">
                   <p className="font-medium text-lg">Personal Details</p>

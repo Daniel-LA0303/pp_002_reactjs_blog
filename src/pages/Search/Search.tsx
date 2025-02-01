@@ -24,7 +24,7 @@ function TabMenu() {
     return (
         <div>
             <NavBar />
-            <div className="flex flex-col md:flex-row gap-4 w-10/12 font-[sans-serif] mx-auto mt-20">
+            <div className="w-full max-w-screen-lg px-2 lg:mx-auto flex flex-wrap gap-4 mt-20">
                 {/* Lista de pestañas */}
                 <ul className="w-full md:w-3/12 max-h-52 bg-gray-100 py-0 rounded-md flex md:flex-col flex-row justify-between">
                     <li

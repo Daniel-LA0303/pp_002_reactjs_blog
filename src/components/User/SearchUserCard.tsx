@@ -2,7 +2,7 @@
 
 const SearchUserCard = () => {
   return (
-    <div className="flex bg-white shadow-lg rounded-lg mx-4 md:mx-auto my-2 max-w-md md:max-w-2xl ">
+    <div className="flex bg-white shadow-lg rounded-lg mx-4 md:mx-full my-2 max-w-md md:w-full">    
         <div className="flex items-start px-4 py-6">
             <img className="w-12 h-12 rounded-full object-cover mr-4 shadow" src="https://images.unsplash.com/photo-1542156822-6924d1a71ace?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" alt="avatar" />
             <div className="">

@@ -105,7 +105,7 @@ const BlogsByCategory = () => {
   return (
     <div>
       <NavBar />
-      <div className='w-full md:w-5/6 lg:w-6/12 mx-auto mt-16'>
+      <div className='w-full sm:w-11/12 lg:w-8/12 mx-auto mt-16'>
         <CategoryCard 
             {...categoryInfo as Category}
         />

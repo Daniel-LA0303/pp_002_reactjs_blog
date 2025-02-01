@@ -55,8 +55,8 @@ const PrincipalDashBoard = () => {
   return (
         <div className="mx-auto w-full bg-gray-100">
             <NavBar />
-            <div className="flex flex-col justify-center items-center h-[100vh] pt-4">
-                <div className="mt-20 mb-10 md:mt-0 w-full md:w-8/12 xl:w-10/12 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-3 3xl:grid-cols-6">
+            <div className="max-w-screen-lg flex flex-col justify-center items-center h-[100vh] pt-4 w-full max-w-screen-lg px-2 lg:mx-auto flex-wrap gap-4">
+                <div className="mt-20 mb-10 md:mt-0 w-full grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-3 3xl:grid-cols-6">
 
                     <Link 
                         to={`/blogs-published/1`}

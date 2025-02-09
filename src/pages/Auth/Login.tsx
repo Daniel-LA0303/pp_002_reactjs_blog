@@ -1,14 +1,23 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { AuthLoginRequestI } from '../../types/auth';
+import { AppDispatch, RootState } from '../../redux/store';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import Spinner from '../../components/Spinner/Spinner';
+import { fetchLogin } from '../../slices/authSlice';
 
 const Login = () => {
 
-    interface LoginFormState {
-        email: string;
-        password: string;
-    }
+    /**
+     * state redux
+    */
+    const dispatch = useDispatch<AppDispatch>();
+    const loadingAuth = useSelector((state: RootState) => state.auth.loading);
+    const errorAuth = useSelector((state: RootState) => state.auth.errorAuth);
+    const errorMessage = useSelector((state: RootState) => state.auth.errorMessage);
 
-    const [formData, setFormData] = React.useState<LoginFormState>({
+    const [formData, setFormData] = useState<AuthLoginRequestI>({
         email: "",
         password: ""
     })
@@ -20,9 +29,22 @@ const Login = () => {
         })
     }
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         console.log(formData)
+
+        try {
+            const res = await dispatch(fetchLogin(formData));
+            console.log(res.payload);
+        } catch (error: any) {
+            console.log(error);
+            
+        }
+        
+    }
+
+    if (loadingAuth) {
+        return <Spinner />;
     }
 
     return (
@@ -36,7 +58,7 @@ const Login = () => {
 
                         <div className="mb-4">
                             <label htmlFor="email" className="block text-gray-600">Email</label>
-                            <input type="email" id="email" name="email" onChange={handleChange} value={formData.email} className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500" />
+                            <input type="text" id="email" name="email" onChange={handleChange} value={formData.email} className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500" />
                         </div>
 
                         <div className="mb-4">

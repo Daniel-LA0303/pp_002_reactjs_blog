@@ -152,7 +152,7 @@ const Profile: React.FC = () => {
   
 
   // prevent errors
-  if (loadingUser) return <Spinner />;
+  if (loadingUser || loadingBlogs) return <Spinner />;
 
 
   return (

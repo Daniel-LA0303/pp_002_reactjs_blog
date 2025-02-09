@@ -6,15 +6,14 @@ import { useEffect, useState } from 'react';
 /**
  * react router dom
  */
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 
 /**
- * types and dependencies
+ * types
  */
 import { BlogCardI } from '../../types/blog';
-import { UserTop } from '../../types/user';
-import { CategoryTop } from '../../types/category';
-import axios from 'axios';
+import { UserCategoryTop } from '../../types/global';
+
 
 /**
  * components
@@ -24,11 +23,11 @@ import SideBarMenu from '../../components/sidebar/SideBarMenu';
 import RecommendBlog from '../../components/Blog/RecommendBlog'
 import BlogCard from '../../components/BlogCard'
 
-
-interface UserCategoryTop{
-    usersTop: UserTop[];
-    categoriesTop: CategoryTop[];
-}
+/**
+ * services
+ */
+import { fetchBlogsHomePage } from '../../services/blogService';
+import { fetchHomePageInfo } from '../../services/globalService';
 
 const Home = () => {
 
@@ -36,7 +35,7 @@ const Home = () => {
 
     const [blogs, setBlogs] = useState<BlogCardI[]>([]);
     const [page, setPage] = useState(0);
-    const [loading, setLoading] = useState(false);
+    const [loadingBlogs, setLoadingBlogs] = useState(false);
     const [hasMore, setHasMore] = useState(true); 
 
     //temp state
@@ -48,7 +47,7 @@ const Home = () => {
     // functions section
     const handleScroll = () => {
         if (
-          !loading &&
+          !loadingBlogs &&
           hasMore &&
           window.innerHeight + document.documentElement.scrollTop + 50 >=
           document.documentElement.scrollHeight
@@ -57,38 +56,39 @@ const Home = () => {
         }
     };
 
+    // get blogs paginated
     const fetchBlogs = async () => {
-      if (loading || !hasMore) return;
-  
-      setLoading(true);
-      try {
-        const response = await axios.get(
-          `http://127.0.0.1:8080/api/blog/pagination?page=${page}&size=10`
-        );
-        console.log(response);
-        
-        const { content, last } = response.data.data; 
-        setBlogs((prevBlogs) => [...prevBlogs, ...content]); 
-        setPage((prevPage) => prevPage + 1); 
-        setHasMore(!last); 
-      } catch (error) {
-        console.error("Error fetching blogs:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+        if (loadingBlogs || !hasMore) return;
+      
+        setLoadingBlogs(true);
+        try {
+          const response = await fetchBlogsHomePage(page, 10);
+      
+          console.log("Home page blogs", response);
+      
+          const { content, last } = response.data;
+          setBlogs((prevBlogs) => [...prevBlogs, ...content]);
+          setPage((prevPage) => prevPage + 1);
+          setHasMore(!last); 
+        } catch (error) {
+          console.error("Error fetching blogs:", error);
+        } finally {
+          setLoadingBlogs(false);
+        }
+      };
   
     // useEffect section
     useEffect(() => {
         const fetchHomeInfo = async () => {
             try {            
-                const response = await axios.get(`http://127.0.0.1:8080/api/blog/home-page-info`)
-                console.log(response);
-                setHomePageInfo(response.data.data);
+                const response = await fetchHomePageInfo();
+                console.log("get top users and categories",response);
+                setHomePageInfo(response.data);
             } catch (error) {
-                console.log(error);         
+                console.error("Error fetching home page info:", error);         
             }
-        }
+        };
+        
         fetchHomeInfo();
     }, []);
 
@@ -99,7 +99,7 @@ const Home = () => {
     useEffect(() => {
       window.addEventListener("scroll", handleScroll);
       return () => window.removeEventListener("scroll", handleScroll); 
-    }, [loading, hasMore]);
+    }, [loadingBlogs, hasMore]);
     
 return (
     <div className="overflow-x-hidden bg-gray-100">
@@ -122,16 +122,17 @@ return (
                     </div>
 
                     {/* show blogs */}
-                    {blogs.map((b, index) => (
-                    <BlogCard 
-                            key={index} {...b} 
-                            {...blogs}
-
-                        />
-                    ))}
+                    {
+                        blogs.map((b, index) => (
+                        <BlogCard 
+                                key={index} {...b} 
+                                {...blogs}
+                            />
+                        ))
+                    }
 
                     {/* charge*/}
-                    {loading && <p>Cargando más blogs...</p>}               
+                    {loadingBlogs && <p>Charge more blogs...</p>}               
                 </div>
 
                 {/* aside top authors, tup categories and blogs recommended */}

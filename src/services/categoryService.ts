@@ -1,5 +1,5 @@
 import apiClient from './apiClient';
-import { ApiResponse, Category } from '../types/category';
+import { ApiResponse, Category, CategoryPageableResponseI } from '../types/category';
 
 // This file content category services
 
@@ -8,5 +8,10 @@ import { ApiResponse, Category } from '../types/category';
  */
 export const fetchAllCategories = async (): Promise<ApiResponse<Category[]>> => {
   const response = await apiClient.get<ApiResponse<Category[]>>('/category');
+  return response.data;
+};
+
+export const fetchCategoriesPaginated = async (page: number, size: number): Promise<ApiResponse<CategoryPageableResponseI>> => {
+  const response = await apiClient.get<ApiResponse<CategoryPageableResponseI>>(`/category/pagination?page=${page}&size=${size}`);
   return response.data;
 };

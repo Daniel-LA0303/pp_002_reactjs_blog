@@ -1,5 +1,7 @@
 // Categories Interfaces
 
+import { PageableI } from "./blog";
+
 /**
  * category
  */
@@ -66,4 +68,21 @@ export interface CategoryTop{
   followers: number
 }
 
+export interface CategoryPageableResponseI {
+  content: Category[];
+  pageable: PageableI;
+  last: boolean;
+  totalPages: number;
+  totalElements: number;
+  size: number;
+  number: number;
+  sort: {
+    empty: boolean;
+    sorted: boolean;
+    unsorted: boolean;
+  };
+  first: boolean;
+  numberOfElements: number;
+  empty: boolean;
+}
 

@@ -35,10 +35,8 @@ const NavBar: React.FC = () => {
     setMenuOpen((prev) => !prev);
   };
 
-  useEffect(() => {
-    console.log(accessToken);
-    
-  }, [accessToken]);
+  useEffect(() => {    
+  }, []);
 
 
   return (
@@ -93,7 +91,6 @@ const NavBar: React.FC = () => {
                   >
                     Login
                   </Link>
-
                   <Link
                     to={`/register`}
                     type="button"
@@ -101,7 +98,6 @@ const NavBar: React.FC = () => {
                   >
                     Register
                   </Link>
-
                 </>
               )}
             </div>

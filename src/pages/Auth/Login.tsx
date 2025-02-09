@@ -16,8 +16,8 @@ const Login = () => {
     */
     const dispatch = useDispatch<AppDispatch>();
     const loadingAuth = useSelector((state: RootState) => state.auth.loading);
-    const errorAuth = useSelector((state: RootState) => state.auth.errorAuth);
-    const errorMessage = useSelector((state: RootState) => state.auth.errorMessage);
+    // const errorAuth = useSelector((state: RootState) => state.auth.errorAuth);
+    // const errorMessage = useSelector((state: RootState) => state.auth.errorMessage);
 
     const [formData, setFormData] = useState<AuthLoginRequestI>({
         email: "",
@@ -37,12 +37,8 @@ const Login = () => {
 
         try {
             const res = await dispatch(fetchLogin(formData));
-
-            setTimeout(() => {
-                route('/home-dev');
-            }, 500);
-            
-            console.log(res.payload);
+            route('/home-dev');
+            console.log("res-auth", res);
         } catch (error: any) {
             console.log(error);
             

@@ -22,41 +22,43 @@ import BlogsBySavedDashboard from '../pages/UserPages/Dashboard/BlogsBySavedDash
 import CategoriesByUserDashboard from '../pages/UserPages/Dashboard/CategoriesByUserDashboard';
 import UserFollowersDashboard from '../pages/UserPages/Dashboard/UserFollowersDashboard';
 import UserFollowingDashboar from '../pages/UserPages/Dashboard/UserFollowingDashboar';
+import PrivateRoute from '../pages/Auth/PrivateRoute';
+import PublicAuthRoute from '../pages/Auth/PublicAuthRoute';
 
 
 const AppRoutes: React.FC = () => {
   return (
     <Routes>
-      <Route path="/about" element={<About />} />
 
-      <Route path="/register" element={<Register />} />
-      <Route path="/login" element={<Login />} />
+      <Route element={<PublicAuthRoute />}>
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+      </Route>
 
-
+      {/* general routes */}
       <Route path='/search' element={<Search />} />
-
-      <Route path="/create-blog" element={<CreateBlog />} />
+      <Route path="/about" element={<About />} />
       <Route path="/view-blog/:id" element={<ViewBlog />} />
-
-      
-
       <Route path="/profile/:id" element={<Profile />} />
-      <Route path="/user-settings/:id" element={<UserSettings />} />
-
-      <Route path="/dashboard" element={<PrincipalDashBoard />} />  
-      <Route path="/blogs-published/:id" element={<BlogsByUserDashboard />} />
-      <Route path="/blogs-by-likes" element={<BlogsByLikeDashboard />} />
-      <Route path="/blogs-by-comments" element={<BlogsByCommentDashboard />} />
-      <Route path="/blogs-by-save" element={<BlogsBySavedDashboard />} />
-      <Route path="/categories-following" element={<CategoriesByUserDashboard />} />
-      <Route path="/users-followers" element={<UserFollowersDashboard />} />
-      <Route path="/users-following" element={<UserFollowingDashboar />} />
-
-
       <Route path="/categories" element={<ViewCategories />} />
       <Route path="/categoy-by-blog/:nameCategory" element={<BlogsByCategory />}/>
-
       <Route path='/home-dev' element={<Home />} />
+
+      {/* private routes */}
+      <Route element={<PrivateRoute />}>
+        <Route path="/create-blog" element={<CreateBlog />} />
+        <Route path="/user-settings/:id" element={<UserSettings />} />
+
+        {/* Dashboard */}
+        <Route path="/dashboard" element={<PrincipalDashBoard />} />  
+        <Route path="/blogs-published/:id" element={<BlogsByUserDashboard />} />
+        <Route path="/blogs-by-likes" element={<BlogsByLikeDashboard />} />
+        <Route path="/blogs-by-comments" element={<BlogsByCommentDashboard />} />
+        <Route path="/blogs-by-save" element={<BlogsBySavedDashboard />} />
+        <Route path="/categories-following" element={<CategoriesByUserDashboard />} />
+        <Route path="/users-followers" element={<UserFollowersDashboard />} />
+        <Route path="/users-following" element={<UserFollowingDashboar />} />
+      </Route>
 
     </Routes>
   );

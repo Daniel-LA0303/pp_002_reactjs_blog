@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { AuthLoginRequestI } from '../../types/auth';
 import { AppDispatch, RootState } from '../../redux/store';
 import { useDispatch } from 'react-redux';
@@ -8,6 +8,8 @@ import Spinner from '../../components/Spinner/Spinner';
 import { fetchLogin } from '../../slices/authSlice';
 
 const Login = () => {
+
+    const route = useNavigate();
 
     /**
      * state redux
@@ -35,6 +37,11 @@ const Login = () => {
 
         try {
             const res = await dispatch(fetchLogin(formData));
+
+            setTimeout(() => {
+                route('/home-dev');
+            }, 500);
+            
             console.log(res.payload);
         } catch (error: any) {
             console.log(error);

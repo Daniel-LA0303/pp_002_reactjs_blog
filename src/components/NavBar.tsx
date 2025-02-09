@@ -1,12 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SearchIcon from '@mui/icons-material/Search';
 import ProfileButton from "./User/ProfileButton";
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
 import CloseIcon from '@mui/icons-material/Close';
 import { Link, useNavigate } from "react-router-dom";
 import SideBarMenu from "./sidebar/SideBarMenu";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 const NavBar: React.FC = () => {
+
+  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
 
   const route = useNavigate();
   const [atTop, setAtTop] = useState(true);
@@ -30,6 +34,11 @@ const NavBar: React.FC = () => {
   const toggleMenu = () => {
     setMenuOpen((prev) => !prev);
   };
+
+  useEffect(() => {
+    console.log(accessToken);
+    
+  }, [accessToken]);
 
 
   return (
@@ -64,14 +73,37 @@ const NavBar: React.FC = () => {
             </div>
   
             <div className="flex items-center justify-center mr-2 lg:mr-0">
-              <Link
-                to={`/create-blog`}
-                type="button"
-                className="hidden md:block text-gray-900 hover:text-white border border-gray-800 hover:bg-gray-900 focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-800"
-              >
-                Create Blog
-              </Link>
-              <ProfileButton />
+              {accessToken ? (
+                <>
+                  <Link
+                    to={`/create-blog`}
+                    type="button"
+                    className="hidden md:block text-gray-900 hover:text-white border border-gray-800 hover:bg-gray-900 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-800"
+                  >
+                    Create Blog
+                  </Link>
+                  <ProfileButton />
+                </>
+              ): (
+                <>
+                  <Link
+                    to={`/login`}
+                    type="button"
+                    className="text-gray-900 bg-white hover:bg-gray-900 border border-gray-800 hover:border-gray-900 hover:text-white font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 dark:bg-transparent dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white dark:border-gray-600 dark:focus:ring-gray-800"
+                  >
+                    Login
+                  </Link>
+
+                  <Link
+                    to={`/register`}
+                    type="button"
+                    className="hidden md:block text-white bg-gray-900 hover:bg-white border border-gray-800 hover:text-gray-900 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 dark:bg-gray-600 dark:text-white dark:hover:bg-white dark:hover:text-gray-400 dark:border-gray-600 dark:focus:ring-gray-800"
+                  >
+                    Register
+                  </Link>
+
+                </>
+              )}
             </div>
           </div>
         </div>

@@ -89,6 +89,16 @@ const CreateBlog: React.FC = () => {
     content: '',
     categories: []
   });
+  // max cats
+  // const [maxCats, setMaxCats] = useState(3);
+  // validate categories length
+  const [categoriesMax, setCategoriesMax] = useState({
+    isMax: false,
+    message: 'Please choose between 1 and 3 categories',
+    maxCats: 3
+  });
+
+
   // modal
 
 
@@ -138,6 +148,16 @@ const CreateBlog: React.FC = () => {
   const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    // check if user choose category between 1 and 3
+    if(categoriesSelected.length > categoriesMax.maxCats){
+      setCategoriesMax({
+        isMax: true,
+        message: 'Please choose between 1 and 3 categories',
+        maxCats: 3
+      });
+      return
+    }
+
     // check if user choose category
     if(categoriesSelected.length === 0){
       setCategoryIsEmpty(true);
@@ -163,6 +183,13 @@ const CreateBlog: React.FC = () => {
       
       } 
     }
+
+    // reset state of categories
+    setCategoriesMax({
+      isMax: false,
+      message: 'Please choose between 1 and 3 categories',
+      maxCats: 3
+    });
   }
 
   // set file in UI
@@ -246,8 +273,9 @@ const CreateBlog: React.FC = () => {
                   </div>
 
                   <div className="md:col-span-5">
-                    <label htmlFor="email">Categories</label>
+                    <label htmlFor="email">Categories (select max 3 categories)</label>
                     <p className=" text-red-400 font-bold">{categoriesIsEmpty ? 'Please choose a category' : null}</p>
+                    <p className=" text-red-400 font-bold">{categoriesMax.isMax ? categoriesMax.message : null}</p>
                     <MultiSelect
                         options={options}
                         value={categoriesSelected}

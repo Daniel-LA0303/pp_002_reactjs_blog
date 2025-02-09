@@ -16,3 +16,8 @@ export const fetchBlogsByUser = async (userId: number, page: number, size: numbe
     const response = await apiClient.get<ApiResponse<BlogsPageableResponseI>>(`/blog/pagination-by-user?userId=${userId}&page=${page}&size=${size}`);
     return response.data;
 };
+
+export const fetchBlogsHomePage = async (page: number, size: number): Promise<ApiResponse<BlogsPageableResponseI>> => {
+    const response = await apiClient.get<ApiResponse<BlogsPageableResponseI>>(`/blog/pagination?page=${page}&size=${size}`);
+    return response.data;
+};

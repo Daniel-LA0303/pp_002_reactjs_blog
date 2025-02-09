@@ -64,6 +64,9 @@ const CreateBlog: React.FC = () => {
    */
   const dispatch = useDispatch<AppDispatch>();
 
+  // redux auth
+  const userIdAuth = useSelector((state: RootState) => state.auth.userId);
+
   // redux category
   const loadingCategories = useSelector((state: RootState) => state.categories.loading);
   const errorCategory = useSelector((state: RootState) => state.categories.error);
@@ -88,7 +91,7 @@ const CreateBlog: React.FC = () => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   // data that we send to backend
   const [formData, setFormData] = useState<CreateBlogRequestI>({
-    userId: 4,
+    userId: userIdAuth as number,
     title: '',
     description: '',
     content: '',

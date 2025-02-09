@@ -102,5 +102,5 @@ export const { resetBlogState } = blogSlice.actions;
 export default blogSlice.reducer;
 
 export const selectLoading = (state: any) => state.blog.loading;
-export const selectError = (state: any) => state.blog.errorError;
+export const selectError = (state: any) => state.blog.errorBlog;
 export const selectErrorMessage = (state: any) => state.blog.errorMessage;

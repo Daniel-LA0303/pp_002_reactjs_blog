@@ -1,6 +1,6 @@
 import apiClient from "./apiClient";
 import { ApiResponse,  } from "../types/category";
-import { BlogPageResponse, CreateBlogRequestI, CreateBlogResponseI } from "../types/blog";
+import { BlogPageResponse, BlogsPageableResponseI, CreateBlogRequestI, CreateBlogResponseI } from "../types/blog";
 
 export const fetchCreateBlogRequest = async (post: CreateBlogRequestI): Promise<ApiResponse<CreateBlogResponseI>> => {
     const response = await apiClient.post<ApiResponse<CreateBlogResponseI>>('/blog', post);
@@ -11,3 +11,8 @@ export const fetchGetOneBlog = async (id: number): Promise<ApiResponse<BlogPageR
     const response = await apiClient.get<ApiResponse<BlogPageResponse>>(`/blog/${id}`);
     return response.data;
 }
+
+export const fetchBlogsByUser = async (userId: number, page: number, size: number): Promise<ApiResponse<BlogsPageableResponseI>> => {
+    const response = await apiClient.get<ApiResponse<BlogsPageableResponseI>>(`/blog/pagination-by-user?userId=${userId}&page=${page}&size=${size}`);
+    return response.data;
+};

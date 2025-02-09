@@ -9,7 +9,7 @@ import React, { useEffect, useState } from "react";
 import { AppDispatch, RootState } from "../../redux/store";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchCategories } from "../../slices/categorySlice";
-import { fetchCreateBlog } from "../../slices/blogSlice";
+import { fetchCreateBlog, resetError } from "../../slices/blogSlice";
 
 /**
  * react router dom
@@ -29,9 +29,7 @@ import 'react-quill/dist/quill.snow.css';
  * components
  */
 import NavBar from "../../components/NavBar";
-import Modal from "../../components/MultipleUtils/ModalError";
 import Spinner from "../../components/Spinner/Spinner";
-import Error from "../../components/Error/Error";
 
 // modules of react quill
 const modules = {
@@ -49,7 +47,7 @@ const modules = {
 
 
 
-const CreateBlog = () => {
+const CreateBlog: React.FC = () => {
 
   /**
    * navigate
@@ -62,12 +60,13 @@ const CreateBlog = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   // redux category
-  const loading = useSelector((state: RootState) => state.categories.loading);
-  const error = useSelector((state: RootState) => state.categories.error);
+  const loadingCategories = useSelector((state: RootState) => state.categories.loading);
+  const errorCategory = useSelector((state: RootState) => state.categories.error);
 
   // redux blog
   const loadingCreateBlog = useSelector((state: RootState) => state.blog.loading);
-  const errorCreateBlog = useSelector((state: RootState) => state.blog.error);
+  const errorCreateBlog = useSelector((state: RootState) => state.blog.errorBlog);
+  const errorMessageBlog = useSelector((state: RootState) => state.blog.errorMessage);
 
   /**
    * state section
@@ -91,7 +90,7 @@ const CreateBlog = () => {
     categories: []
   });
   // modal
-  const [modalInfo, setModalInfo] = useState<{ message: string; status: string } | null>(null);
+
 
   /**
    * useEffect section
@@ -115,6 +114,16 @@ const CreateBlog = () => {
     fetchData();
   }, [dispatch]);
 
+  useEffect(() => {
+    if (errorCategory) {
+      console.error('Error to get categories');
+    }
+  } , [errorCategory]);
+
+  // reset error
+  useEffect(() => {
+    dispatch(resetError());
+  }, []);
 
   /**
    * functions section
@@ -149,12 +158,9 @@ const CreateBlog = () => {
       
       if (error.data !== null) {
         // console.log(error.data);
-        console.log(errorCreateBlog);
+        console.log(errorMessageBlog);
       }else{
-        setModalInfo({
-          message: error.message,
-          status: error.status,
-        });
+      
       } 
     }
   }
@@ -173,8 +179,8 @@ const CreateBlog = () => {
   };
 
   // loading a errors category
-  if (loading) return <Spinner />;
-  if (error) return <Error />;
+  if (loadingCategories) return <Spinner />;
+  // if (error) return <Error />;
 
   // loading to create blog
   if (loadingCreateBlog) return <Spinner />
@@ -184,13 +190,6 @@ const CreateBlog = () => {
       <NavBar />
 
     <div className="min-h-screen py-10 bg-gray-100 flex items-center justify-center mt-10">
-      {modalInfo && (
-        <Modal
-          message={modalInfo.message}
-          status={modalInfo.status}
-          onClose={() => setModalInfo(null)}
-        />
-      )}
       <div className="container w-full max-w-screen-lg px-2 lg:mx-auto ">
         <div>
 
@@ -209,8 +208,8 @@ const CreateBlog = () => {
                   <div className="md:col-span-5">
                     <label htmlFor="title">Title</label>
                     <p className="text-red-400 font-bold">
-                      {errorCreateBlog && typeof errorCreateBlog === "object" && "data" in errorCreateBlog
-                        ? (errorCreateBlog as ApiResponse<CreateBlogValidationErrorResponseI>).data.title
+                      {errorCreateBlog 
+                        ? (errorMessageBlog as ApiResponse<CreateBlogValidationErrorResponseI>).data.title
                         : null}
                     </p>
                     
@@ -228,8 +227,8 @@ const CreateBlog = () => {
                   <div className="md:col-span-5">
                     <label htmlFor="description">Description</label>
                     <p className="text-red-400 font-bold">
-                      {errorCreateBlog && typeof errorCreateBlog === "object" && "data" in errorCreateBlog
-                        ? (errorCreateBlog as ApiResponse<CreateBlogValidationErrorResponseI>).data.description
+                      {errorCreateBlog
+                        ? (errorMessageBlog as ApiResponse<CreateBlogValidationErrorResponseI>).data.description
                         : null}
                     </p>
 
@@ -261,8 +260,8 @@ const CreateBlog = () => {
                   <div className="md:col-span-5">
                     <label htmlFor="email">Content Blog</label>
                     <p className="text-red-400 font-bold">
-                      {errorCreateBlog && typeof errorCreateBlog === "object" && "data" in errorCreateBlog
-                        ? (errorCreateBlog as ApiResponse<CreateBlogValidationErrorResponseI>).data.content
+                      {errorCreateBlog
+                        ? (errorMessageBlog as ApiResponse<CreateBlogValidationErrorResponseI>).data.content
                         : null}
                     </p>
                     <ReactQuill 

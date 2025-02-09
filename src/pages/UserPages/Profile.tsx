@@ -1,14 +1,13 @@
 /**
  * react
  */
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 /**
  * utils and types
  */
 import { UserProfile } from '../../types/user';
 import { formatDate } from '../../utils/dateUtils';
-import axios from 'axios';
 
 /**
  * react route domm
@@ -22,7 +21,7 @@ import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { AppDispatch, RootState } from '../../redux/store';
 import { useSelector } from 'react-redux';
-import { fetchGetProfileBack } from '../../slices/userSlice';
+import { fetchGetProfileBackToolkit, resetUserError } from '../../slices/userSlice';
 
 /**
  * components
@@ -30,7 +29,6 @@ import { fetchGetProfileBack } from '../../slices/userSlice';
 import NavBar from '../../components/NavBar';
 import BlogCard from '../../components/BlogCard';
 import Spinner from '../../components/Spinner/Spinner';
-import Error from '../../components/Error/Error';
 
 /**
  * icons
@@ -43,16 +41,24 @@ import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import TerminalOutlinedIcon from '@mui/icons-material/TerminalOutlined';
 import TagIcon from '@mui/icons-material/Tag';
 import { BlogCardI } from '../../types/blog';
+import { AppContext } from '../../context/AppContext';
+import ModalError from '../../components/Tools/ModalError/ModalError';
+import { fetchBlogsByUser } from '../../services/blogService';
 
 const Profile: React.FC = () => {
+
+  // context when there is an error
+  const { showError, handleCloseModal, openErrorModal, errorModalMessage} = useContext(AppContext);
 
   // get id from params to get a user info
   const { id } = useParams<{ id: string }>(); 
 
   // redux
   const dispatch = useDispatch<AppDispatch>();
-  const loading = useSelector((state: RootState) => state.user.loading);
-  const error = useSelector((state: RootState) => state.user.error);
+  const loadingUser = useSelector((state: RootState) => state.user.loading);
+  const errorUser = useSelector((state: RootState) => state.user.errorUser);
+  const errorUserMessage = useSelector((state: RootState) => state.user.errorMessage);
+  
 
   // page state
   const [user, setUser] = React.useState<UserProfile | null>(null);
@@ -67,18 +73,16 @@ const Profile: React.FC = () => {
   // functions section
   // function to get more blogs with infinite scroll
   const fetchBlogs = async () => {
-
     if (loadingBlogs || !hasMore) return;
     setLoadingBlogs(true);
     
     try {
-      const response = await axios.get(
-        `http://127.0.0.1:8080/api/blog/pagination-by-user?userId=${userIdNumber}&page=${page}&size=5`
-      );
-      const { content, last } = response.data.data;
-      setBlogs((prevBlogs) => [...prevBlogs, ...content]);
-      setPage((prevPage) => prevPage + 1);
-      setHasMore(!last);
+      const response = await fetchBlogsByUser(userIdNumber, page, 5);
+      const { content, last } = response.data;
+  
+      setBlogs((prevBlogs) => [...prevBlogs, ...content]);  
+      setPage((prevPage) => prevPage + 1); 
+      setHasMore(!last);  
     } catch (error) {
       console.error("Error fetching blogs:", error);
     } finally {
@@ -110,7 +114,7 @@ const Profile: React.FC = () => {
     const fetchData = async () => {
       try {
         
-        const response = await dispatch(fetchGetProfileBack(userIdNumber)).unwrap();
+        const response = await dispatch(fetchGetProfileBackToolkit(userIdNumber)).unwrap();
         setUser(response); 
         console.log("response", response);
       } catch (err) {
@@ -133,12 +137,32 @@ const Profile: React.FC = () => {
     return () => window.removeEventListener("scroll", handleScroll); 
   }, [loadingBlogs, hasMore]);
 
+  useEffect(() => {
+    if (errorUser) {
+      showError(errorUserMessage);
+    }
+  }, [errorUser]);
+  
+      // reset error state redux
+  useEffect(() => {
+    if (!openErrorModal) {
+      dispatch(resetUserError());
+    }
+  }, [openErrorModal, dispatch]);
+  
+
   // prevent errors
-  if (loading) return <Spinner />;
-  if (error) return <Error />;
+  if (loadingUser) return <Spinner />;
+
 
   return (
     <div className=''>
+      <ModalError
+        open={openErrorModal}
+        message={errorModalMessage} 
+        onClose={handleCloseModal}
+      />
+
       {/* navbaer */}
       <NavBar />
       <section className="pt-8 sm:pt-8 mt-16">

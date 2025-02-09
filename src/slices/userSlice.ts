@@ -1,19 +1,24 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, createAction } from '@reduxjs/toolkit';
 import { fetchGetProfile, fetchGetUpdateUserInfo, fetchPutUpdateUserInfo } from '../services/userService';
 import { UserUpdateInfoRequest } from '../types/user';
+import { ApiResponse } from '../types/category';
 
 
 interface UserState {
     loading: boolean;
-    error: string | null;
+    errorUser: boolean;
+    errorMessage: ApiResponse<any> | string | null;
 }
 
 const initialState: UserState = {
     loading: false,
-    error: null,
+    errorUser: false,
+    errorMessage: null,
 };
 
-export const fetchGetProfileBack = createAsyncThunk(
+export const resetUserError = createAction('user/resetUserError');
+
+export const fetchGetProfileBackToolkit = createAsyncThunk(
     'user/getProfile',
     async (id: number, { rejectWithValue }) => {
       try {
@@ -25,7 +30,7 @@ export const fetchGetProfileBack = createAsyncThunk(
     }
 );
 
-export const fetchGetUpdateUserInfoThunk = createAsyncThunk(
+export const fetchGetUpdateUserInfoToolkit = createAsyncThunk(
   'user/getUpdateUserInfo',
   async (id: number, { rejectWithValue }) => {
     try {
@@ -37,7 +42,7 @@ export const fetchGetUpdateUserInfoThunk = createAsyncThunk(
   }
 );
 
-export const fetchPutUpdatedUserInfoThunk = createAsyncThunk(
+export const fetchPutUpdatedUserInfoToolkit = createAsyncThunk(
   'user/putUpdatedUserInfo',
   async ({ id, userInfoUpdated }: { id: number; userInfoUpdated: UserUpdateInfoRequest }, { rejectWithValue }) => {
     console.log(id, userInfoUpdated);
@@ -55,48 +60,69 @@ export const fetchPutUpdatedUserInfoThunk = createAsyncThunk(
 const userProfileSlice = createSlice({
     name: 'user',
     initialState,
-    reducers: {},
+    reducers: {
+      resetUserState: (state) => {
+          state.loading = false;
+          state.errorUser = false;
+          state.errorMessage = null;
+      }
+    },
     extraReducers: (builder) => {
       builder
-        .addCase(fetchGetProfileBack.pending, (state) => {
+        .addCase(fetchGetProfileBackToolkit.pending, (state) => {
           state.loading = true;
-          state.error = null; 
+          state.errorUser = false; 
+          state.errorMessage = null;
         })
-        .addCase(fetchGetProfileBack.fulfilled, (state, action) => {
+        .addCase(fetchGetProfileBackToolkit.fulfilled, (state) => {
           state.loading = false;
-          state.error = null;
+          state.errorUser = false;
+          state.errorMessage = null;
         })
-        .addCase(fetchGetProfileBack.rejected, (state, action) => {
+        .addCase(fetchGetProfileBackToolkit.rejected, (state, action) => {
           state.loading = false;
-          state.error = action.payload as string || 'Failed to fetch user profile'; 
+          state.errorUser = true;
+          state.errorMessage = action.payload as ApiResponse<any> || 'Failded to fetch to get user profile';
         })
 
         // when we get update user info
-        .addCase(fetchGetUpdateUserInfoThunk.pending, (state) => {
+        .addCase(fetchGetUpdateUserInfoToolkit.pending, (state) => {
           state.loading = true;
-          state.error = null; 
+          state.errorUser = false;
+          state.errorMessage = null; 
         })
-        .addCase(fetchGetUpdateUserInfoThunk.fulfilled, (state, action) => {
+        .addCase(fetchGetUpdateUserInfoToolkit.fulfilled, (state) => {
           state.loading = false;
-          state.error = null;
+          state.errorUser = false;
+          state.errorMessage = null;
         })
-        .addCase(fetchGetUpdateUserInfoThunk.rejected, (state, action) => {
+        .addCase(fetchGetUpdateUserInfoToolkit.rejected, (state, action) => {
           state.loading = false;
-          state.error = action.payload as string || 'Failed to fetch user profile'; 
+          state.errorUser = true;
+          state.errorMessage = action.payload as ApiResponse<any> || 'Failded to fetch to get user profile';
         })
 
         // when we put user info
-        .addCase(fetchPutUpdatedUserInfoThunk.pending, (state) => {
+        .addCase(fetchPutUpdatedUserInfoToolkit.pending, (state) => {
           state.loading = true;
-          state.error = null; 
+          state.errorUser = false;
+          state.errorMessage = null; 
         })
-        .addCase(fetchPutUpdatedUserInfoThunk.fulfilled, (state, action) => {
+        .addCase(fetchPutUpdatedUserInfoToolkit.fulfilled, (state) => {
           state.loading = false;
-          state.error = null;
+          state.errorUser = false;
+          state.errorMessage= null;
         })
-        .addCase(fetchPutUpdatedUserInfoThunk.rejected, (state, action) => {
+        .addCase(fetchPutUpdatedUserInfoToolkit.rejected, (state, action) => {
           state.loading = false;
-          state.error = action.payload as string || 'Failed to fetch user profile'; 
+          state.errorUser = true;
+          state.errorMessage = action.payload as ApiResponse<any> || 'Failded to fetch to get user profile';
+        })
+
+        // reset error
+        .addCase(resetUserError, (state) => {
+          state.errorUser = false;
+          state.errorMessage = null;
         });
     },
 });
@@ -106,4 +132,5 @@ const userProfileSlice = createSlice({
 export default userProfileSlice.reducer;
 
 export const selectLoading = (state: any) => state.user.loading;
-export const selectError = (state: any) => state.user.error;
+export const selectError = (state: any) => state.user.errorUser;
+export const selectErrorMessage = (state: any) => state.user.errorMessage;

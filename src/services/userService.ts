@@ -1,5 +1,5 @@
 import apiClient from "./apiClient";
-import { UserProfile, UserUpdateInfoRequest, UserUpdateInfoResponse } from "../types/user";
+import { UserProfile, UserUpdateInfoRequest, UserUpdateInfoI} from "../types/user";
 import { ApiResponse } from "../types/category";
 
 
@@ -9,8 +9,8 @@ export const fetchGetProfile = async (id: number): Promise<ApiResponse<UserProfi
 };
 
 
-export const fetchGetUpdateUserInfo = async (id: number): Promise<ApiResponse<UserUpdateInfoResponse>> => {
-  const response = await apiClient.get<ApiResponse<UserUpdateInfoResponse>>(`/user/get-user-info-to-update/${id}`);
+export const fetchGetUpdateUserInfo = async (id: number): Promise<ApiResponse<UserUpdateInfoI>> => {
+  const response = await apiClient.get<ApiResponse<UserUpdateInfoI>>(`/user/get-user-info-to-update/${id}`);
   return response.data;
 }
 

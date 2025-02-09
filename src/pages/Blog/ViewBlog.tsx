@@ -39,7 +39,7 @@ import { AppContext } from '../../context/AppContext'
 import ModalError from '../../components/Tools/ModalError/ModalError'
 
 
-const ViewBlog = () => {
+const ViewBlog: React.FC = () => {
 
     // context when there is an error
     const { showError, handleCloseModal, openErrorModal, errorModalMessage} = useContext(AppContext);
@@ -51,7 +51,7 @@ const ViewBlog = () => {
     const dispatch = useDispatch<AppDispatch>(); 
     const loading = useSelector((state: RootState) => state.blog.loading);
     const errorBlog = useSelector((state: RootState) => state.blog.errorBlog);
-    const errorMessage = useSelector((state: RootState) => state.blog.errorMessage);
+    const errorMessageBlog = useSelector((state: RootState) => state.blog.errorMessage);
 
     // state
     const [blog, setBlog] = useState<BlogPageResponse>();
@@ -64,7 +64,7 @@ const ViewBlog = () => {
     // useEffect to get one blog info
     useEffect(() => {
         if (isNaN(userIdNumber)) {
-            console.error("El ID de usuario no es válido");
+            console.error("The id is not a number");
             return;
         }
         const fetchData = async () => {
@@ -76,7 +76,6 @@ const ViewBlog = () => {
             } catch (error) {
                 console.log(error);
             }
-
         } 
         fetchData();
     }, [dispatch]);
@@ -84,7 +83,7 @@ const ViewBlog = () => {
     // useEffect to show error when there is an error backend
     useEffect(() => {
         if (errorBlog) {
-            showError(errorMessage);
+            showError(errorMessageBlog);
         }
     }, [errorBlog]);
 
@@ -101,10 +100,10 @@ const ViewBlog = () => {
   return (
     <>
         <ModalError
-                open={openErrorModal}
-                message={errorModalMessage} // Pasar el mensaje al modal
-                onClose={handleCloseModal}
-            />
+            open={openErrorModal}
+            message={errorModalMessage} 
+            onClose={handleCloseModal}
+        />
         <NavBar />
         <div className="flex flex-col justify-between md:flex-row mt-16 max-w-screen-lg px-0 md:px-2 lg:mx-auto gap-4">
             

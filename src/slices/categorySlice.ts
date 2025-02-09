@@ -1,15 +1,19 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { fetchAllCategories } from '../services/categoryService';
+import { ApiResponse } from '../types/category';
 
 // Estado inicial
 interface CategoryState {
   loading: boolean;
-  error: string | null;
+  error: boolean;
+  errorMessageCategory: ApiResponse<any> | string | null;
+  
 }
 
 const initialState: CategoryState = {
   loading: false,
-  error: null,
+  error: false,
+  errorMessageCategory: null,
 };
 
 // Thunk para obtener categorías
@@ -37,16 +41,20 @@ const categorySlice = createSlice({
         // when the fetchCategories is pending
       .addCase(fetchCategories.pending, (state) => {
         state.loading = true;
-        state.error = null;
+        state.error = false;
+        state.errorMessageCategory = null;
       })
         // when the fetchCategories is fulfilled
       .addCase(fetchCategories.fulfilled, (state) => {
         state.loading = false;
+        state.error = false;
+        state.errorMessageCategory = null;
       })
         // when the fetchCategories is rejected or there was an error
-      .addCase(fetchCategories.rejected, (state, action) => {
+      .addCase(fetchCategories.rejected, (state) => {
         state.loading = false;
-        state.error = action.payload as string;
+        state.error = true;
+        state.errorMessageCategory = null;
       });
   },
 });

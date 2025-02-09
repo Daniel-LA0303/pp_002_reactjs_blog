@@ -1,7 +1,7 @@
 /**
  * react
  */
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 /**
  * redux
@@ -9,7 +9,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
 import { useSelector } from "react-redux";
-import { fetchGetUpdateUserInfoThunk, fetchPutUpdatedUserInfoThunk } from "../../slices/userSlice";
+import { fetchGetUpdateUserInfoToolkit, fetchPutUpdatedUserInfoToolkit, resetUserError } from "../../slices/userSlice";
 
 /**
  * react router dom
@@ -26,17 +26,22 @@ import { UserUpdateInfoI } from "../../types/user";
  */
 import NavBar from "../../components/NavBar";
 import Spinner from "../../components/Spinner/Spinner";
-import Error from "../../components/Error/Error";
+import { AppContext } from "../../context/AppContext";
+import ModalError from "../../components/Tools/ModalError/ModalError";
 
-const UserSettings = () => {
+const UserSettings: React.FC = () => {
+
+  // context when there is an error
+  const { showError, handleCloseModal, openErrorModal, errorModalMessage} = useContext(AppContext);
 
   // id to get user info to update
   const { id } = useParams<{ id: string }>();
 
   // redux
   const dispatch = useDispatch<AppDispatch>();
-  const loading = useSelector((state: RootState) => state.user.loading);
-  const error = useSelector((state: RootState) => state.user.error);
+  const loadingUser = useSelector((state: RootState) => state.user.loading);
+  const errorUser = useSelector((state: RootState) => state.user.errorUser);
+  const errorMessageUser = useSelector((state: RootState) => state.user.errorMessage);
 
   // state section
   // form state
@@ -61,15 +66,18 @@ const UserSettings = () => {
   // to get one user info
   useEffect(() => {
     if (isNaN(userIdNumber)) {
-      console.error("El ID de usuario no es válido");
+      console.error("This id is not a number");
       return;
     }
 
     const fetchData = async () => {
       try {
-        const response = await dispatch(fetchGetUpdateUserInfoThunk(userIdNumber)).unwrap();
+        const response = await dispatch(fetchGetUpdateUserInfoToolkit(userIdNumber)).unwrap();
         setFormData(response);
-        console.log(response);
+        console.log(
+          "User info to update:",
+          response
+        );
         
       } catch (error) {
         console.log(error);
@@ -81,6 +89,21 @@ const UserSettings = () => {
 
   }, [dispatch]);
 
+  // useEffect to show error when there is an error backend
+  useEffect(() => {
+    if (errorUser) {
+        showError(errorMessageUser);
+    }
+  }, [errorUser]);
+
+  // reset error state redux
+  useEffect(() => {
+    if (!openErrorModal) {
+      dispatch(resetUserError());
+    }
+  }, [openErrorModal, dispatch]);
+  
+
   // function section
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const {name, value} = e.target;
@@ -90,10 +113,13 @@ const UserSettings = () => {
   // submit to backend
   const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
       e.preventDefault();
-      console.log(formData);
+      console.log(
+        "Submit form with data update profile:",
+        formData
+      );
       
       try {
-        const response = await dispatch(fetchPutUpdatedUserInfoThunk({ id: 100, userInfoUpdated: formData })).unwrap();
+        const response = await dispatch(fetchPutUpdatedUserInfoToolkit({ id: 100, userInfoUpdated: formData })).unwrap();
         console.log(response);
         
       } catch (error) {
@@ -103,11 +129,17 @@ const UserSettings = () => {
     }
 
   // prevent errors
-  if (loading) return <Spinner />;
-  if (error) return <Error />;
+  if (loadingUser) return <Spinner />;
 
   return (
     <div>
+
+      <ModalError
+        open={openErrorModal}
+        message={errorModalMessage} // Pasar el mensaje al modal
+        onClose={handleCloseModal}
+      />
+
       <NavBar />
       <div className="min-h-screen py-10 bg-gray-100 flex items-center justify-center mt-10">
 

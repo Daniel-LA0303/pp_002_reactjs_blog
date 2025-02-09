@@ -76,13 +76,16 @@ const ViewCategories: React.FC = () => {
       <NavBar />
       <div className="container w-full max-w-screen-lg px-2 lg:px-0 lg:mx-auto flex flex-wrap gap-4 mt-5">
         <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-14">
-            {categories.map((category) => (
-                <CategoryCard 
-                  key={category.categoryId} 
-                  {...category}
-                  {...categories} 
-                />
-            ))}
+          {categories.length > 0 ? (
+            categories.map((category) => (
+              <CategoryCard 
+                key={category.categoryId} 
+                {...category} 
+              />
+            ))
+          ) : (
+            <p className="text-gray-500 text-center">No categories available yet.</p>
+          )}
         </div>
     </div>
     </div>

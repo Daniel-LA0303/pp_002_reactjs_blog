@@ -4,6 +4,8 @@ import { BlogPageResponse, BlogsPageableResponseI, CreateBlogRequestI, CreateBlo
 
 export const fetchCreateBlogRequest = async (post: CreateBlogRequestI): Promise<ApiResponse<CreateBlogResponseI>> => {
     const response = await apiClient.post<ApiResponse<CreateBlogResponseI>>('/blog', post);
+    console.log("response-create-service-blog", response.data);
+    
     return response.data;
 }
 

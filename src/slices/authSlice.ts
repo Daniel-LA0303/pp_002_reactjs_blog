@@ -8,6 +8,9 @@ interface AuthState {
     errorAuth: boolean;
     errorMessage: ApiResponse<any> | string | null;
     accessToken: string | null;
+    userId: number | null;
+    userName: string | null;
+    email: string | null;
 }
 
 const initialState: AuthState = {
@@ -15,6 +18,9 @@ const initialState: AuthState = {
     errorAuth: false,
     errorMessage: null,
     accessToken: localStorage.getItem('authToken'),
+    userId: localStorage.getItem('userId') ? parseInt(localStorage.getItem('userId') as string) : null,
+    userName: localStorage.getItem('userName'),
+    email: localStorage.getItem('email'),
 };
 
 export const fetchLogin = createAsyncThunk(
@@ -44,6 +50,9 @@ const authSlice = createSlice({
             state.errorAuth = false;
             state.errorMessage = null;
             state.accessToken = null;
+            state.userId = null;
+            state.userName = null;
+            state.email = null;
         },
         setToken(state, action: PayloadAction<string>) {
             state.accessToken = action.payload;
@@ -64,8 +73,14 @@ const authSlice = createSlice({
             state.loading = false;
             state.errorAuth = false;
             state.errorMessage = null;
-            state.accessToken = action.payload.accessToken;
-            localStorage.setItem('authToken', action.payload.accessToken as string);
+            state.accessToken = action.payload.data.tokenInfo.accessToken;
+            localStorage.setItem('authToken', action.payload.data.tokenInfo.accessToken as string);
+            state.userId = action.payload.data.userId;
+            localStorage.setItem('userId', action.payload.data.userId.toString());
+            state.userName = action.payload.data.username;
+            localStorage.setItem('userName', action.payload.data.username as string);
+            state.email = action.payload.data.email;
+            localStorage.setItem('email', action.payload.data.email as string);
         })
         .addCase(fetchLogin.rejected, (state, action) => {
             state.loading = false;
@@ -78,6 +93,9 @@ const authSlice = createSlice({
             // reset the error state
             state.errorAuth = false;
             state.errorMessage = null;
+            state.userId = null;
+            state.userName = null;
+            state.email = null;
         });
     }
 });

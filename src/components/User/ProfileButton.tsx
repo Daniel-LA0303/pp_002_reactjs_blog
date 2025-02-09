@@ -5,20 +5,40 @@ import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { AppDispatch } from "../../redux/store";
+import { useDispatch } from "react-redux";
+import { logout } from "../../slices/authSlice";
 
 
 const ProfileButton = () => {
+
+  const dispatch = useDispatch<AppDispatch>(); 
+  
+  const navigate = useNavigate();
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
-  // Cierra el menú al hacer clic fuera
+  // functions section
+
+  // function to handle click outside the menu
   const handleClickOutside = (event) => {
     if (menuRef.current && !menuRef.current.contains(event.target)) {
       setIsMenuOpen(false);
     }
+  };
+
+  // function to handle logout
+  const handleLogout = () => {
+    dispatch(logout()); 
+    localStorage.removeItem("authToken"); 
+    localStorage.removeItem("userId");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("email");
+    navigate("/login"); 
   };
 
   // Agregar evento al documento
@@ -96,8 +116,9 @@ const ProfileButton = () => {
        </button>
        <hr className="my-2 border-blue-gray-50"  role="menuitem" />
        <button
-         role="menuitem"
-         className="flex w-full cursor-pointer select-none items-center gap-2 rounded-md px-3 pt-[9px] pb-2 text-start leading-tight outline-none transition-all hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900 hover:bg-gray-600 hover:text-white"
+          onClick={handleLogout}
+          role="menuitem"
+          className="flex w-full cursor-pointer select-none items-center gap-2 rounded-md px-3 pt-[9px] pb-2 text-start leading-tight outline-none transition-all hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900 hover:bg-gray-600 hover:text-white"
        >
             <LoginOutlinedIcon fontSize="small"/> 
             <p className="block font-sans text-sm font-normal leading-normal text-inherit antialiased">

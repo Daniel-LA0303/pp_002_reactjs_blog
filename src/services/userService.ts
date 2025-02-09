@@ -15,8 +15,6 @@ export const fetchGetUpdateUserInfo = async (id: number): Promise<ApiResponse<Us
 }
 
 export const fetchPutUpdateUserInfo = async (id: number, userUpdated: UserUpdateInfoRequest): Promise<ApiResponse<string>> => {
-  console.log(id, userUpdated);
-  
   const response = await apiClient.put<ApiResponse<string>>(`/user/${id}`, userUpdated);
   return response.data;
 }

@@ -22,8 +22,12 @@ export const fetchCreateBlog = createAsyncThunk(
     async (blog: CreateBlogRequestI, {rejectWithValue}) => {
         try {            
             const response = await fetchCreateBlogRequest(blog);
-            return response;
+            console.log("response-create-blog-redux", response);
+            
+            return response.data;
         } catch (error: any) {
+            console.log();
+            
             return rejectWithValue(error.response?.data || 'Error creating the blog')
         }
     }

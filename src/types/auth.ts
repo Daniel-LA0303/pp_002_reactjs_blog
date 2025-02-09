@@ -5,9 +5,16 @@ export interface AuthLoginRequestI {
     password: string;
 }
 
-export interface AuthLoginResponseI {
+export interface AuthTokenInfoI {
     accessToken: string | null;
     tokenType: string | null;
+}
+
+export interface AuthLoginResponseI {
+    userId: number;
+    username: string;
+    email: string;
+    tokenInfo: AuthTokenInfoI;
 }
 
 export interface AuthUserSessionI {

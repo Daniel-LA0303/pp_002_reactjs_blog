@@ -35,7 +35,7 @@ const AppRoutes: React.FC = () => {
         <Route path="/login" element={<Login />} />
       </Route>
 
-      {/* general routes */}
+      {/* public routes */}
       <Route path='/search' element={<Search />} />
       <Route path="/about" element={<About />} />
       <Route path="/view-blog/:id" element={<ViewBlog />} />

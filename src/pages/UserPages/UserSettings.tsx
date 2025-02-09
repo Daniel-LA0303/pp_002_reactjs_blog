@@ -136,7 +136,7 @@ const UserSettings: React.FC = () => {
 
       <ModalError
         open={openErrorModal}
-        message={errorModalMessage} // Pasar el mensaje al modal
+        message={errorModalMessage}
         onClose={handleCloseModal}
       />
 

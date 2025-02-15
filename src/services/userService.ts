@@ -1,6 +1,7 @@
 import apiClient from "./apiClient";
 import { UserProfile, UserUpdateInfoRequest, UserUpdateInfoI} from "../types/user";
 import { ApiResponse } from "../types/category";
+import apiAuthClient from "./apiAuthClient";
 
 
 export const fetchGetProfile = async (id: number): Promise<ApiResponse<UserProfile>> => {
@@ -15,6 +16,6 @@ export const fetchGetUpdateUserInfo = async (id: number): Promise<ApiResponse<Us
 }
 
 export const fetchPutUpdateUserInfo = async (id: number, userUpdated: UserUpdateInfoRequest): Promise<ApiResponse<string>> => {
-  const response = await apiClient.put<ApiResponse<string>>(`/user/${id}`, userUpdated);
+  const response = await apiAuthClient.put<ApiResponse<string>>(`/user/${id}`, userUpdated);
   return response.data;
 }

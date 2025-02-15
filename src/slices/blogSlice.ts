@@ -6,7 +6,7 @@ import { ApiResponse } from "../types/category";
 interface BlogState {
     loading: boolean;
     errorBlog: boolean;
-    errorMessage: ApiResponse<any> | string | null;
+    errorMessage: ApiResponse<any> | null;
 }
 
 const initialState: BlogState = {

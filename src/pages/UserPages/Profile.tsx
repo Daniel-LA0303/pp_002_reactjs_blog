@@ -55,6 +55,9 @@ const Profile: React.FC = () => {
 
   // redux
   const dispatch = useDispatch<AppDispatch>();
+  
+  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
+
   const loadingUser = useSelector((state: RootState) => state.user.loading);
   const errorUser = useSelector((state: RootState) => state.user.errorUser);
   const errorUserMessage = useSelector((state: RootState) => state.user.errorMessage);
@@ -165,10 +168,10 @@ const Profile: React.FC = () => {
 
       {/* navbaer */}
       <NavBar />
-      <section className="pt-8 sm:pt-8 mt-16">
+      <section className="pt-8 sm:pt-8 mt-8">
 
         <div className="w-full max-w-screen-lg px-2 lg:mx-auto flex flex-wrap gap-4">
-          <div className={`flex flex-col min-w-0 break-word w-full mb-6 shadow-lg rounded-lg mt-16`}>
+          <div className={`flex flex-col min-w-0 break-word w-full mb-6 shadow-lg rounded-lg mt-16 bg-white`}>
             <div className="px-2 sm:px-6 ">
 
               <div className="flex flex-wrap justify-center">
@@ -224,7 +227,7 @@ const Profile: React.FC = () => {
         <div className='block sm:flex w-full max-w-screen-lg px-2 lg:mx-auto '> 
           <div className='w-full sm:w-3/12 mr-0 sm:mr-2'>
 
-            <div className= "flex flex-col min-w-0 break-word w-full my-1 shadow-lg  rounded-lg mt-4">
+            <div className= "flex flex-col min-w-0 break-word w-full mb-1 shadow-lg  rounded-lg  bg-white">
               <div className=" px-2 mb-2 mt-4 text-left block sm:text-center  sm:justify-center">
                 <h2 className=' text-sm sm:text-xs font-bold flex justify-center items-center'>
                   <TerminalOutlinedIcon fontSize='small'/>
@@ -235,7 +238,7 @@ const Profile: React.FC = () => {
               </div>
             </div>
 
-            <div className= "flex flex-col min-w-0 break-word w-full my-1 shadow-lg  rounded-lg mt-4">
+            <div className= "flex flex-col min-w-0 break-word w-full my-1 shadow-lg  rounded-lg mt-4 bg-white">
               <div className=" px-2 mb-2 mt-4 text-left block sm:text-center  sm:justify-center">
                 <h2 className=' text-sm sm:text-xs font-bold flex justify-center items-center'>
                   <LocationOnIcon fontSize='small'/>
@@ -246,7 +249,7 @@ const Profile: React.FC = () => {
               </div>
             </div>
 
-            <div className= "flex flex-col min-w-0 break-word w-full my-1 shadow-lg  rounded-lg mt-4">
+            <div className= "flex flex-col min-w-0 break-word w-full my-1 shadow-lg  rounded-lg mt-4 bg-white">
               <div className=" px-2 mb-2 mt-4 text-left block sm:text-center  sm:justify-center">
                 <h2 className=' text-sm sm:text-xs font-bold flex justify-center items-center'>
                   <LanguageIcon fontSize='small'/>
@@ -259,7 +262,7 @@ const Profile: React.FC = () => {
 
             {/* user engagement */}
             <div>
-              <div className=" flex flex-col min-w-0 break-word w-full mb-6 shadow-lg  rounded-lg text-center ">
+              <div className=" flex flex-col min-w-0 break-word w-full my-4 shadow-lg  rounded-lg text-center bg-white">
                 <div className=" py-4 lg:pt-4 px-2">
 
                   <div className="flex items-center  text-center">
@@ -317,13 +320,22 @@ const Profile: React.FC = () => {
                   {...blogs}
                 />
               )) : 
-              <div className='flex flex-col justify-center items-center '>
-                <p className='text-center text-2xl mt-10'>You do not have blogs yet</p>
-                <p className='text-lg mt-5 mb-3'>You can create a blog here</p>
-                <Link to={`/create-blog`} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                  Create Blog
-                  </Link>
-              </div>
+
+              accessToken ? 
+                <>
+                  <div className='flex flex-col justify-center items-center '>
+                    <p className='text-center text-2xl mt-10'>You do not have blogs yet</p>
+                    <p className='text-lg mt-5 mb-3'>You can create a blog here</p>
+                    <Link to={`/create-blog`} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                      Create Blog
+                    </Link>
+                  </div>
+                </> : 
+                <>
+                  <div className='flex flex-col justify-center items-center '>
+                    <p className='text-center text-2xl mt-10'>This user does not have blogs yet</p>
+                  </div>
+                </>
               }
               {loadingBlogs && <p>Cargando más blogs...</p>}
             </div>

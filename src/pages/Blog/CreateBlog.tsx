@@ -144,7 +144,7 @@ const CreateBlog: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (errorCreateBlog) {
+    if (errorCreateBlog && errorMessageBlog?.status as number === 401) {
       console.log(errorMessageBlog);
       
       showError(errorMessageBlog);

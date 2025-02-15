@@ -1,12 +1,12 @@
 import { createAction, createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { fetchLoginRequest } from "../services/authService";
+import { fetchLoginRequest, fetchRegisterRequest } from "../services/authService";
 import { ApiResponse } from "../types/category";
 
 
 interface AuthState {
     loading: boolean;
     errorAuth: boolean;
-    errorMessage: ApiResponse<any> | string | null;
+    errorMessage: ApiResponse<any> | null;
     accessToken: string | null;
     userId: number | null;
     userName: string | null;
@@ -28,6 +28,21 @@ export const fetchLogin = createAsyncThunk(
     async ({ email, password }: { email: string; password: string }, { rejectWithValue }) => {
         try {
             const response = await fetchLoginRequest({ email, password });
+
+            console.log(response);
+            
+            return response;
+        } catch (error: any) {
+            return rejectWithValue(error.response?.data || 'Error during login');
+        }
+    }
+);
+
+export const fetchRegister = createAsyncThunk(
+    'auth/register',
+    async ({ username, email, password }: {username: string ,email: string; password: string }, { rejectWithValue }) => {
+        try {
+            const response = await fetchRegisterRequest({ username, email, password });
 
             console.log(response);
             
@@ -83,6 +98,31 @@ const authSlice = createSlice({
             localStorage.setItem('email', action.payload.data.email as string);
         })
         .addCase(fetchLogin.rejected, (state, action) => {
+            state.loading = false;
+            state.errorAuth = true;
+            state.errorMessage = action.payload as ApiResponse<any> || 'Failded to fecth login';        
+            state.accessToken = null;
+        })
+        // Register
+        .addCase(fetchRegister.pending, (state) => {
+            state.loading = true;
+            state.errorAuth = false;
+            state.errorMessage = null;
+        })
+        .addCase(fetchRegister.fulfilled, (state, action) => {
+            state.loading = false;
+            state.errorAuth = false;
+            state.errorMessage = null;
+            state.accessToken = action.payload.data.tokenInfo.accessToken;
+            localStorage.setItem('authToken', action.payload.data.tokenInfo.accessToken as string);
+            state.userId = action.payload.data.userId;
+            localStorage.setItem('userId', action.payload.data.userId.toString());
+            state.userName = action.payload.data.username;
+            localStorage.setItem('userName', action.payload.data.username as string);
+            state.email = action.payload.data.email;
+            localStorage.setItem('email', action.payload.data.email as string);
+        })
+        .addCase(fetchRegister.rejected, (state, action) => {
             state.loading = false;
             state.errorAuth = true;
             state.errorMessage = action.payload as ApiResponse<any> || 'Failded to fecth login';        

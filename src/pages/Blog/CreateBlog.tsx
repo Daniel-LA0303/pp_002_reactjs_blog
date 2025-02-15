@@ -197,7 +197,7 @@ const CreateBlog: React.FC = () => {
       const res = await dispatch(fetchCreateBlog(formData)).unwrap();
       console.log("res-create-blog-ui", res);
       
-      navigate('/profile/1');
+      navigate(`/profile/${userIdAuth}`);
     } catch (error: any) {
       console.log(error);
 

@@ -24,6 +24,7 @@ import UserFollowersDashboard from '../pages/UserPages/Dashboard/UserFollowersDa
 import UserFollowingDashboar from '../pages/UserPages/Dashboard/UserFollowingDashboar';
 import PrivateRoute from '../pages/Auth/PrivateRoute';
 import PublicAuthRoute from '../pages/Auth/PublicAuthRoute';
+import WrappedBlogsByCategory from '../pages/Category/WrappedBlogsByCategory ';
 
 
 const AppRoutes: React.FC = () => {
@@ -41,7 +42,12 @@ const AppRoutes: React.FC = () => {
       <Route path="/view-blog/:id" element={<ViewBlog />} />
       <Route path="/profile/:id" element={<Profile />} />
       <Route path="/categories" element={<ViewCategories />} />
-      <Route path="/categoy-by-blog/:nameCategory" element={<BlogsByCategory />}/>
+      {/* <Route path="/categoy-by-blog/:nameCategory" element={<BlogsByCategory />}/> */}
+
+      {/* <Routes> */}
+  <Route path="/categoy-by-blog/:nameCategory" element={<WrappedBlogsByCategory />} />
+{/* </Routes> */}
+
       <Route path='/home-dev' element={<Home />} />
 
       {/* private routes */}

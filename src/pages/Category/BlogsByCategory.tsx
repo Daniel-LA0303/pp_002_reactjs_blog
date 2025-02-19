@@ -1,37 +1,56 @@
 import axios from 'axios';
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import CategoryCard from '../../components/Category/CategoryCard';
 import { useParams } from 'react-router-dom';
 import BlogCard from '../../components/BlogCard';
 import NavBar from '../../components/NavBar';
 import { BlogCardI } from '../../types/blog';
 import { Category } from '../../types/category';
+import CardBlogSkeleton from '../../components/Skeletons/Blog/CardBlogSkeleton';
 
 const BlogsByCategory = () => {
 
   const { nameCategory } = useParams<{ nameCategory: string }>();
-
-  const [categoryInfo, setCategoryInfo] = useState<Category>();
+  
+  const [categoryInfo, setCategoryInfo] = useState<Category | null>(null);
   const [blogs, setBlogs] = useState<BlogCardI[]>([]);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [loadingBlogs, setLoadingBlogs] = useState(false);
+  const [initialLoad, setInitialLoad] = useState(false);  
+  
+  const abortController = useRef<AbortController | null>(null);
+  const currentCategory = useRef<string | null | undefined>(undefined);
+  const fetchingInProgress = useRef<boolean>(false); 
 
-  // Reinicia estado al cambiar la categoría
+
   useEffect(() => {
     console.log("Category changed to:", nameCategory);
-    setBlogs([]);
-    setPage(0);
-    setHasMore(true);
-    fetchCategoryInfo();
-    const delayFetchBlogs = setTimeout(() => {
-      fetchBlogs(); // Inicia con la primera página
-    }, 400);
-    return () => clearTimeout(delayFetchBlogs);
-  }, [nameCategory]);
+    setBlogs([]);  
+    setPage(0);    
+    setHasMore(true);  
+    setInitialLoad(false); 
+    fetchCategoryInfo();  
+    
+    console.log("page:", page);
+    
+    currentCategory.current = nameCategory;
   
+    if (abortController.current) {
+      abortController.current.abort();
+    }
 
-  // Cargar información de la categoría
+    abortController.current = new AbortController(); 
+
+    const timeoutId = setTimeout(() => {
+      fetchBlogs(0); 
+      setInitialLoad(true); 
+    }, 200);  
+    
+    return () => clearTimeout(timeoutId);
+
+  }, [nameCategory]);  
+
   const fetchCategoryInfo = async () => {
     try {
       const response = await axios.get(
@@ -44,51 +63,60 @@ const BlogsByCategory = () => {
     }
   };
 
-  // Cargar blogs
-  const fetchBlogs = async () => {
-    if (loadingBlogs || !hasMore) return;
+  const fetchBlogs = async (page: number) => {
+    if (loadingBlogs || fetchingInProgress.current || !hasMore) return;
+
     setLoadingBlogs(true);
+    fetchingInProgress.current = true;  
+
+    if (currentCategory.current !== nameCategory) {
+      setLoadingBlogs(false);
+      fetchingInProgress.current = false;  
+      return;
+    }
 
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8080/api/blog/${nameCategory}/blogs?page=${page}&size=5`
+        `http://127.0.0.1:8080/api/blog/${nameCategory}/blogs?page=${page}&size=5`,
+        { signal: abortController.current?.signal }  
       );
+
+      if (currentCategory.current !== nameCategory) {
+        setLoadingBlogs(false);
+        fetchingInProgress.current = false;  
+        return;
+      }
+
       console.log("Blogs:", response);
 
       const { content, last } = response.data;
       setBlogs((prevBlogs) => {
-        // Evitar duplicados al comparar la longitud actual y la nueva
         if (page === 0) {
-          return [...content]; // Si es la primera página, reemplazamos los blogs
+          return [...content];
         } else {
-          return [...prevBlogs, ...content]; // Si no es la primera página, agregamos más
+          return [...prevBlogs, ...content];
         }
       });
-      setHasMore(!last);
+      setHasMore(!last);  
     } catch (error) {
       console.error("Error fetching blogs:", error);
     } finally {
       setLoadingBlogs(false);
+      fetchingInProgress.current = false;  
     }
   };
 
-  // Disparar la carga de blogs al cambiar `page` o `nameCategory`
-  useEffect(() => {
-    // if (page > 0) {
-      fetchBlogs(); // Solo llamamos a fetchBlogs si la página no es 0
-    // }
-  }, [page]);
-
-
-  // Manejar scroll para cargar más blogs
   const handleScroll = () => {
-    if (
-      !loadingBlogs &&
-      hasMore &&
-      window.innerHeight + document.documentElement.scrollTop + 50 >=
-        document.documentElement.scrollHeight
-    ) {
-      setPage((prevPage) => prevPage + 1);
+    const scrollPosition = window.innerHeight + document.documentElement.scrollTop;
+    const documentHeight = document.documentElement.scrollHeight;
+
+    
+    if (!loadingBlogs && hasMore && scrollPosition + 50 >= documentHeight) {
+      setPage((prevPage) => {
+        const nextPage = prevPage + 1;
+        fetchBlogs(nextPage); 
+        return nextPage;
+      });
     }
   };
 
@@ -97,35 +125,30 @@ const BlogsByCategory = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [loadingBlogs, hasMore]);
 
-  
-
-    // TODO this cause a bug
-    // if(loadingBlogs) return <Spinner />
-
   return (
     <div>
       <NavBar />
-      <div className='w-full sm:w-11/12 lg:w-8/12 mx-auto mt-16'>
-        <CategoryCard 
-            {...categoryInfo as Category}
-        />
+      <div className="w-full sm:w-11/12 lg:w-8/12 mx-auto mt-16">
+        <CategoryCard {...categoryInfo as Category} />
 
-
-        <div className="mt-4">
-          {blogs.length > 0 ? (
-            blogs.map((blog, index) => (
+        {loadingBlogs ? (
+          <>
+            <CardBlogSkeleton />
+          </>
+        ) : blogs.length > 0 ? (
+          <div className="mt-4">
+            {blogs.map((blog, index) => (
               <BlogCard key={index} {...blog} />
-            ))
-          ) : (
-            <p className="text-center text-2xl mt-10">
-              No blogs available for this category
-            </p>
-          )}
-        </div>
-      {loadingBlogs && <p className="text-center mt-4">Loading more blogs...</p>}
+            ))}
+          </div>
+        ) : (
+          initialLoad && !loadingBlogs && blogs.length === 0 && (
+            <p className="text-center text-gray-500 font-bold mt-10">There are no blogs in this category</p>
+          )
+        )}
+      </div>
     </div>
-    </div>
-  )
-}
+  );
+};
 
 export default BlogsByCategory

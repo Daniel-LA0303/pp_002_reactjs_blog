@@ -53,6 +53,14 @@ export interface UserUpdateInfoI{
     bio: string;
 }
 
+export interface UserSimpleInfoI{
+    userId: number;
+    username: string;
+    email: string;
+    profilePicture: string;
+    createdAt: string;
+}
+
 export interface UserTop{
     userId: number;
     name: string;

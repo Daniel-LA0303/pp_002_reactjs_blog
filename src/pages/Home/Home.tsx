@@ -29,6 +29,7 @@ import BlogCard from '../../components/BlogCard'
 import { fetchBlogsHomePage } from '../../services/blogService';
 import { fetchHomePageInfo } from '../../services/globalService';
 import CardBlogSkeleton from '../../components/Skeletons/Blog/CardBlogSkeleton';
+import { Avatar, Tooltip } from '@mui/material';
 
 const Home = () => {
 
@@ -179,14 +180,24 @@ return (
                             <ul className="-mx-4">
                                 {homePageInfo?.usersTop.map(user => (
                                     <li key={user.userId} className="flex items-center mb-4">
-                                        <Link  to={`/profile/${user.userId}`}>
-                                            <img
-                                                src="https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=731&amp;q=80"
-                                                alt="avatar"
-                                                className="object-cover w-10 h-10 mx-1 rounded-full"
-                                            />
-                                        </Link>
-                                        <p>
+                                                <Tooltip title={user.name} arrow>
+                                                <Link to={`/profile/${user.userId}`} style={{ textDecoration: 'none' }}>
+                                                    <Avatar
+                                                        src="https://i.pravatar.cc/150?img=3" 
+                                                        alt="User"
+                                                        sx={{
+                                                            width: 40,  
+                                                            height: 40, 
+                                                            cursor: "pointer",
+                                                            transition: "transform 0.2s ease-in-out",
+                                                            "&:hover": {
+                                                                transform: "scale(1.01)",
+                                                            },
+                                                        }}
+                                                    />
+                                                </Link>
+                                            </Tooltip>
+                                            <p>
                                             <Link
                                             to={`/profile/${user.userId}`}
                                             className="mx-1 font-bold text-gray-700 hover:underline"

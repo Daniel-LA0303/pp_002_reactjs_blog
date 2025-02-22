@@ -1,6 +1,7 @@
 // Categories Interfaces
 
 import { PageableI } from "./blog";
+import { UserSimpleInfoI } from "./user";
 
 /**
  * category
@@ -11,7 +12,13 @@ export interface Category {
   description: string;
   color: string;
   postsNumber: number;
+  longDescription: string;
   createdAt: string;
+}
+
+export interface BlogsByCatgoryInfoI {
+  categoryFullInfoDTO: Category;
+  follewersCategory: UserSimpleInfoI[];
 }
 
 /**

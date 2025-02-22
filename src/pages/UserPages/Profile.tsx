@@ -1,7 +1,7 @@
 /**
  * react
  */
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 
 /**
  * utils and types
@@ -44,6 +44,7 @@ import { BlogCardI } from '../../types/blog';
 import { AppContext } from '../../context/AppContext';
 import ModalError from '../../components/Tools/ModalError/ModalError';
 import { fetchBlogsByUser } from '../../services/blogService';
+import CardBlogSkeleton from '../../components/Skeletons/Blog/CardBlogSkeleton';
 
 const Profile: React.FC = () => {
 
@@ -55,6 +56,9 @@ const Profile: React.FC = () => {
 
   // redux
   const dispatch = useDispatch<AppDispatch>();
+
+  const userId = useSelector((state: RootState) => state.auth.userId);
+
   const loadingUser = useSelector((state: RootState) => state.user.loading);
   const errorUser = useSelector((state: RootState) => state.user.errorUser);
   const errorUserMessage = useSelector((state: RootState) => state.user.errorMessage);
@@ -66,9 +70,14 @@ const Profile: React.FC = () => {
   const [page, setPage] = useState(0);
   const [loadingBlogs, setLoadingBlogs] = useState(false);
   const [hasMore, setHasMore] = useState(true); 
+  const [count, setCount] = useState(0);
+
+  const scrollTimeout = useRef<number | null>(null);
     
   // verify id from params
   const userIdNumber = id ? parseInt(id) : NaN;
+
+  
 
   // functions section
   // function to get more blogs with infinite scroll
@@ -77,9 +86,13 @@ const Profile: React.FC = () => {
     setLoadingBlogs(true);
     
     try {
+      
       const response = await fetchBlogsByUser(userIdNumber, page, 5);
       const { content, last } = response.data;
-  
+      
+      setCount(count + 1);
+      console.log("count", count);
+      
       setBlogs((prevBlogs) => [...prevBlogs, ...content]);  
       setPage((prevPage) => prevPage + 1); 
       setHasMore(!last);  
@@ -98,7 +111,13 @@ const Profile: React.FC = () => {
       window.innerHeight + document.documentElement.scrollTop + 50 >=
       document.documentElement.scrollHeight
     ) {
-      fetchBlogs();
+      if (scrollTimeout.current) {
+        clearTimeout(scrollTimeout.current);  // Limpia cualquier timeout anterior
+      }
+
+      scrollTimeout.current = setTimeout(() => {
+        fetchBlogs();
+      }, 100); 
     }
   };
 
@@ -128,8 +147,31 @@ const Profile: React.FC = () => {
   
   // fecth get blogs
   useEffect(() => {
-    fetchBlogs();
-  }, []);
+    let isMounted = true; // Para evitar actualizaciones si el componente se desmonta
+    setLoadingBlogs(true);
+  
+    const delayFetchBlogs = setTimeout(async () => {
+      try {
+        const response = await fetchBlogsByUser(userIdNumber, 0, 5);
+        if (isMounted) {
+          setBlogs(response.data.content);
+          setPage(1);
+          setHasMore(!response.data.last);
+        }
+      } catch (error) {
+        console.error("Error fetching blogs:", error);
+      } finally {
+        if (isMounted) {
+          setLoadingBlogs(false);
+        }
+      }
+    }, 10); // Reducimos el tiempo del timeout sin eliminarlo
+  
+    return () => {
+      isMounted = false;
+      clearTimeout(delayFetchBlogs);
+    };
+  }, [id]);
 
   // activate scroll
   useEffect(() => {
@@ -152,7 +194,7 @@ const Profile: React.FC = () => {
   
 
   // prevent errors
-  if (loadingUser || loadingBlogs) return <Spinner />;
+  if (loadingUser) return <Spinner />;
 
 
   return (
@@ -165,10 +207,10 @@ const Profile: React.FC = () => {
 
       {/* navbaer */}
       <NavBar />
-      <section className="pt-8 sm:pt-8 mt-16">
+      <section className="pt-8 sm:pt-8 mt-8">
 
         <div className="w-full max-w-screen-lg px-2 lg:mx-auto flex flex-wrap gap-4">
-          <div className={`flex flex-col min-w-0 break-word w-full mb-6 shadow-lg rounded-lg mt-16`}>
+          <div className={`flex flex-col min-w-0 break-word w-full mb-6 shadow-lg rounded-lg mt-16 bg-white`}>
             <div className="px-2 sm:px-6 ">
 
               <div className="flex flex-wrap justify-center">
@@ -224,7 +266,7 @@ const Profile: React.FC = () => {
         <div className='block sm:flex w-full max-w-screen-lg px-2 lg:mx-auto '> 
           <div className='w-full sm:w-3/12 mr-0 sm:mr-2'>
 
-            <div className= "flex flex-col min-w-0 break-word w-full my-1 shadow-lg  rounded-lg mt-4">
+            <div className= "flex flex-col min-w-0 break-word w-full mb-1 shadow-lg  rounded-lg  bg-white">
               <div className=" px-2 mb-2 mt-4 text-left block sm:text-center  sm:justify-center">
                 <h2 className=' text-sm sm:text-xs font-bold flex justify-center items-center'>
                   <TerminalOutlinedIcon fontSize='small'/>
@@ -235,7 +277,7 @@ const Profile: React.FC = () => {
               </div>
             </div>
 
-            <div className= "flex flex-col min-w-0 break-word w-full my-1 shadow-lg  rounded-lg mt-4">
+            <div className= "flex flex-col min-w-0 break-word w-full my-1 shadow-lg  rounded-lg mt-4 bg-white">
               <div className=" px-2 mb-2 mt-4 text-left block sm:text-center  sm:justify-center">
                 <h2 className=' text-sm sm:text-xs font-bold flex justify-center items-center'>
                   <LocationOnIcon fontSize='small'/>
@@ -246,7 +288,7 @@ const Profile: React.FC = () => {
               </div>
             </div>
 
-            <div className= "flex flex-col min-w-0 break-word w-full my-1 shadow-lg  rounded-lg mt-4">
+            <div className= "flex flex-col min-w-0 break-word w-full my-1 shadow-lg  rounded-lg mt-4 bg-white">
               <div className=" px-2 mb-2 mt-4 text-left block sm:text-center  sm:justify-center">
                 <h2 className=' text-sm sm:text-xs font-bold flex justify-center items-center'>
                   <LanguageIcon fontSize='small'/>
@@ -259,7 +301,7 @@ const Profile: React.FC = () => {
 
             {/* user engagement */}
             <div>
-              <div className=" flex flex-col min-w-0 break-word w-full mb-6 shadow-lg  rounded-lg text-center ">
+              <div className=" flex flex-col min-w-0 break-word w-full my-4 shadow-lg  rounded-lg text-center bg-white">
                 <div className=" py-4 lg:pt-4 px-2">
 
                   <div className="flex items-center  text-center">
@@ -308,26 +350,35 @@ const Profile: React.FC = () => {
           </div>
 
           {/* blogs by user */}
-          <div className='w-full sm:w-9/12'>
-            <div className='w-full items-center'>
-              {blogs.length !== 0 ? blogs.map((b, index) => (
-                <BlogCard 
-                  key={index} 
-                  {...b} 
-                  {...blogs}
-                />
-              )) : 
-              <div className='flex flex-col justify-center items-center '>
-                <p className='text-center text-2xl mt-10'>You do not have blogs yet</p>
-                <p className='text-lg mt-5 mb-3'>You can create a blog here</p>
-                <Link to={`/create-blog`} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                  Create Blog
-                  </Link>
-              </div>
-              }
-              {loadingBlogs && <p>Cargando más blogs...</p>}
+          <div className="w-full sm:w-9/12">
+            <div className="w-full items-center">
+              {loadingBlogs && blogs.length === 0 ? (
+                <CardBlogSkeleton /> 
+              ) : blogs.length > 0 ? (
+                blogs.map((b, index) => (
+                  <BlogCard key={index} {...b} />
+                ))
+              ) : (
+                userId === userIdNumber ? (
+                  <div className="flex flex-col justify-center items-center">
+                    <p className="text-center text-2xl mt-10">You do not have blogs yet</p>
+                    <p className="text-lg mt-5 mb-3">You can create a blog here</p>
+                    <Link
+                      to={`/create-blog`}
+                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    >
+                      Create Blog
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="flex flex-col justify-center items-center">
+                    <p className="text-center text-2xl mt-10">This user does not have blogs yet</p>
+                  </div>
+                )
+              )}
             </div>
           </div>
+
 
         </div>
       

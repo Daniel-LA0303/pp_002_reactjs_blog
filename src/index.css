@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+body{
+  background-color: #f3f4f6; /* light theme*/
+  /* background-color: #171717; */ /* dark theme*/
+}
+
 .image_profile{
     /* border-radius: 10%; */
     height: 100px;

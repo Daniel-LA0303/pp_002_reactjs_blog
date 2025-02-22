@@ -6,7 +6,7 @@ import { ApiResponse } from "../types/category";
 interface BlogState {
     loading: boolean;
     errorBlog: boolean;
-    errorMessage: ApiResponse<any> | string | null;
+    errorMessage: ApiResponse<any> | null;
 }
 
 const initialState: BlogState = {
@@ -22,8 +22,12 @@ export const fetchCreateBlog = createAsyncThunk(
     async (blog: CreateBlogRequestI, {rejectWithValue}) => {
         try {            
             const response = await fetchCreateBlogRequest(blog);
-            return response;
+            console.log("response-create-blog-redux", response);
+            
+            return response.data;
         } catch (error: any) {
+            console.log();
+            
             return rejectWithValue(error.response?.data || 'Error creating the blog')
         }
     }
@@ -98,5 +102,5 @@ export const { resetBlogState } = blogSlice.actions;
 export default blogSlice.reducer;
 
 export const selectLoading = (state: any) => state.blog.loading;
-export const selectError = (state: any) => state.blog.errorError;
+export const selectError = (state: any) => state.blog.errorBlog;
 export const selectErrorMessage = (state: any) => state.blog.errorMessage;

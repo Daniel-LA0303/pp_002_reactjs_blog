@@ -1,7 +1,7 @@
 /**
  * react
  */
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 /**
  * redux
@@ -30,6 +30,8 @@ import 'react-quill/dist/quill.snow.css';
  */
 import NavBar from "../../components/NavBar";
 import Spinner from "../../components/Spinner/Spinner";
+import { AppContext } from "../../context/AppContext";
+import ModalError from "../../components/Tools/ModalError/ModalError";
 
 import { load } from 'cheerio';
 
@@ -51,6 +53,9 @@ const modules = {
 
 const CreateBlog: React.FC = () => {
 
+  // context when there is an error
+  const { showError, handleCloseModal, openErrorModal, errorModalMessage} = useContext(AppContext);
+
   /**
    * navigate
    */
@@ -60,6 +65,9 @@ const CreateBlog: React.FC = () => {
    * state redux
    */
   const dispatch = useDispatch<AppDispatch>();
+
+  // redux auth
+  const userIdAuth = useSelector((state: RootState) => state.auth.userId);
 
   // redux category
   const loadingCategories = useSelector((state: RootState) => state.categories.loading);
@@ -85,7 +93,7 @@ const CreateBlog: React.FC = () => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   // data that we send to backend
   const [formData, setFormData] = useState<CreateBlogRequestI>({
-    userId: 4,
+    userId: userIdAuth as number,
     title: '',
     description: '',
     content: '',
@@ -146,6 +154,23 @@ const CreateBlog: React.FC = () => {
     }
   }, [content]);
 
+  useEffect(() => {
+
+    if (errorCreateBlog && errorMessageBlog?.status as number === 401) {
+      console.log(errorMessageBlog);
+      
+      showError(errorMessageBlog);
+    }
+  }, [errorCreateBlog]);
+
+    // reset error state redux
+  useEffect(() => {
+    if (!openErrorModal) {
+      dispatch(resetError());
+    }
+  }, [openErrorModal, dispatch]);
+
+
   /**
    * functions section
    */
@@ -197,19 +222,20 @@ const CreateBlog: React.FC = () => {
     // request to backend
     try {
       // fetch with redux
+
       console.log(readTime);
       
       // await dispatch(fetchCreateBlog(formData)).unwrap();
       // navigate('/profile/1');
+
+      const res = await dispatch(fetchCreateBlog(formData)).unwrap();
+      console.log("res-create-blog-ui", res);
+      
+      navigate(`/profile/${userIdAuth}`);
+
     } catch (error: any) {
       console.log(error);
-      
-      if (error.data !== null) {
-        // console.log(error.data);
-        console.log(errorMessageBlog);
-      }else{
-      
-      } 
+
     }
 
     // reset state of categories
@@ -242,6 +268,13 @@ const CreateBlog: React.FC = () => {
 
   return (
     <div>
+
+      <ModalError
+        open={openErrorModal}
+        message={errorModalMessage} // Pasar el mensaje al modal
+        onClose={handleCloseModal}
+      />
+
       <NavBar />
 
     <div className="min-h-screen py-10 bg-gray-100 flex items-center justify-center mt-10">
@@ -263,9 +296,13 @@ const CreateBlog: React.FC = () => {
                   <div className="md:col-span-5">
                     <label htmlFor="title">Title</label>
                     <p className="text-red-400 font-bold">
-                      {errorCreateBlog 
-                        ? (errorMessageBlog as ApiResponse<CreateBlogValidationErrorResponseI>).data.title
-                        : null}
+                      {errorCreateBlog && errorMessageBlog && 
+                        typeof errorMessageBlog === "object" && "data" in errorMessageBlog
+                          ? (errorMessageBlog as ApiResponse<CreateBlogValidationErrorResponseI>).data.title
+                          : errorCreateBlog && typeof errorMessageBlog === "object" && errorMessageBlog?.status === 401
+                          ? errorMessageBlog?.message
+                          : null
+                      }
                     </p>
                     
                     <input
@@ -282,9 +319,13 @@ const CreateBlog: React.FC = () => {
                   <div className="md:col-span-5">
                     <label htmlFor="description">Description</label>
                     <p className="text-red-400 font-bold">
-                      {errorCreateBlog
-                        ? (errorMessageBlog as ApiResponse<CreateBlogValidationErrorResponseI>).data.description
-                        : null}
+                      {errorCreateBlog && errorMessageBlog && 
+                          typeof errorMessageBlog === "object" && "data" in errorMessageBlog
+                            ? (errorMessageBlog as ApiResponse<CreateBlogValidationErrorResponseI>).data.description
+                            : errorCreateBlog && typeof errorMessageBlog === "object" && errorMessageBlog?.status === 401
+                            ? errorMessageBlog?.message
+                            : null
+                        }
                     </p>
 
 
@@ -316,9 +357,13 @@ const CreateBlog: React.FC = () => {
                   <div className="md:col-span-5">
                     <label htmlFor="email">Content Blog</label>
                     <p className="text-red-400 font-bold">
-                      {errorCreateBlog
-                        ? (errorMessageBlog as ApiResponse<CreateBlogValidationErrorResponseI>).data.content
-                        : null}
+                      {errorCreateBlog && errorMessageBlog && 
+                        typeof errorMessageBlog === "object" && "data" in errorMessageBlog
+                          ? (errorMessageBlog as ApiResponse<CreateBlogValidationErrorResponseI>).data.content
+                          : errorCreateBlog && typeof errorMessageBlog === "object" && errorMessageBlog?.status === 401
+                          ? errorMessageBlog?.message
+                          : null
+                      }
                     </p>
                     <ReactQuill 
                         theme="snow" 

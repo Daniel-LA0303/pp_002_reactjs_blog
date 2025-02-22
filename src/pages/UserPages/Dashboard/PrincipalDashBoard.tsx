@@ -15,10 +15,18 @@ import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import NavBar from "../../../components/NavBar";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../redux/store";
+import { useDispatch } from "react-redux";
 
 
 
 const PrincipalDashBoard = () => {
+
+    const dispatch = useDispatch<AppDispatch>();
+
+    // redux auth
+    const userIdAuth = useSelector((state: RootState) => state.auth.userId);
 
     const [userEngagement, setUserEngagement] = useState<UserFullEngagementDTO>({
         blogCount: 0,
@@ -38,7 +46,7 @@ const PrincipalDashBoard = () => {
 
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://127.0.0.1:8080/api/user/get-user-engagement/1`);
+        const response = await axios.get(`http://127.0.0.1:8080/api/user/get-user-engagement/${userIdAuth}`);
         setUserEngagement(response.data.data);
         console.log(response);
         

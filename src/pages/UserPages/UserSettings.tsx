@@ -14,7 +14,7 @@ import { fetchGetUpdateUserInfoToolkit, fetchPutUpdatedUserInfoToolkit, resetUse
 /**
  * react router dom
  */
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 /**
  * types
@@ -36,9 +36,11 @@ const UserSettings: React.FC = () => {
 
   // id to get user info to update
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
 
   // redux
   const dispatch = useDispatch<AppDispatch>();
+
   const loadingUser = useSelector((state: RootState) => state.user.loading);
   const errorUser = useSelector((state: RootState) => state.user.errorUser);
   const errorMessageUser = useSelector((state: RootState) => state.user.errorMessage);
@@ -119,8 +121,10 @@ const UserSettings: React.FC = () => {
       );
       
       try {
-        const response = await dispatch(fetchPutUpdatedUserInfoToolkit({ id: 100, userInfoUpdated: formData })).unwrap();
-        console.log(response);
+        const response = await dispatch(fetchPutUpdatedUserInfoToolkit({ id: userIdNumber, userInfoUpdated: formData })).unwrap();
+        
+        navigate(`/profile/${userIdNumber}`);
+        console.log("Response update user info:", response);
         
       } catch (error) {
         console.log(error);
@@ -136,12 +140,12 @@ const UserSettings: React.FC = () => {
 
       <ModalError
         open={openErrorModal}
-        message={errorModalMessage} // Pasar el mensaje al modal
+        message={errorModalMessage}
         onClose={handleCloseModal}
       />
-
+      
       <NavBar />
-      <div className="min-h-screen py-10 bg-gray-100 flex items-center justify-center mt-10">
+      <div className="md:min-h-screen flex items-center justify-center mt-20 md:mt-0">
 
         <div className="container w-full max-w-screen-lg px-2 lg:mx-auto md:flex md:flex-wrap gap-4">
           <div>

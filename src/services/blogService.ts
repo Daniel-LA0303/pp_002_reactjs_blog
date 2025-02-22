@@ -1,9 +1,10 @@
 import apiClient from "./apiClient";
 import { ApiResponse,  } from "../types/category";
 import { BlogPageResponse, BlogsPageableResponseI, CreateBlogRequestI, CreateBlogResponseI } from "../types/blog";
+import apiAuthClient from "./apiAuthClient";
 
 export const fetchCreateBlogRequest = async (post: CreateBlogRequestI): Promise<ApiResponse<CreateBlogResponseI>> => {
-    const response = await apiClient.post<ApiResponse<CreateBlogResponseI>>('/blog', post);
+    const response = await apiAuthClient.post<ApiResponse<CreateBlogResponseI>>('/blog', post);
     return response.data;
 }
 

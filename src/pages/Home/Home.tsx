@@ -1,7 +1,7 @@
 /**
  * react
  */
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 /**
  * react router dom
@@ -28,77 +28,111 @@ import BlogCard from '../../components/BlogCard'
  */
 import { fetchBlogsHomePage } from '../../services/blogService';
 import { fetchHomePageInfo } from '../../services/globalService';
+import CardBlogSkeleton from '../../components/Skeletons/Blog/CardBlogSkeleton';
+import { Avatar, Tooltip } from '@mui/material';
 
 const Home = () => {
 
     // state section
-
     const [blogs, setBlogs] = useState<BlogCardI[]>([]);
     const [page, setPage] = useState(0);
     const [loadingBlogs, setLoadingBlogs] = useState(false);
-    const [hasMore, setHasMore] = useState(true); 
-
-    //temp state
+    const [hasMore, setHasMore] = useState(true);
+  
+    // Estado para la información de la página de inicio
     const [homePageInfo, setHomePageInfo] = useState<UserCategoryTop>({
-        usersTop: [],
-        categoriesTop: []
+      usersTop: [],
+      categoriesTop: [],
     });
   
-    // functions section
-    const handleScroll = () => {
-        if (
-          !loadingBlogs &&
-          hasMore &&
-          window.innerHeight + document.documentElement.scrollTop + 50 >=
-          document.documentElement.scrollHeight
-        ) {
-          fetchBlogs();
-        }
-    };
-
-    // get blogs paginated
+    const scrollTimeout = useRef<number | null>(null);
+  
+    // Función para obtener los blogs paginados
     const fetchBlogs = async () => {
-        if (loadingBlogs || !hasMore) return;
-      
-        setLoadingBlogs(true);
+      if (loadingBlogs || !hasMore) return;
+  
+      setLoadingBlogs(true);
+      try {
+        const response = await fetchBlogsHomePage(page, 10);
+  
+        console.log("Home page blogs", response);
+  
+        const { content, last } = response.data;
+        setBlogs((prevBlogs) => [...prevBlogs, ...content]);
+        setPage((prevPage) => prevPage + 1);
+        setHasMore(!last);
+      } catch (error) {
+        console.error("Error fetching blogs:", error);
+      } finally {
+        setLoadingBlogs(false);
+      }
+    };
+  
+    // Manejador de scroll
+    const handleScroll = () => {
+      if (
+        !loadingBlogs &&
+        hasMore &&
+        window.innerHeight + document.documentElement.scrollTop + 50 >=
+          document.documentElement.scrollHeight
+      ) {
+        if (scrollTimeout.current) {
+          clearTimeout(scrollTimeout.current);
+        }
+  
+        scrollTimeout.current = window.setTimeout(() => {
+          fetchBlogs();
+        }, 100);
+      }
+    };
+  
+    // Llamado inicial para obtener la información de la página
+    useEffect(() => {
+      const fetchHomeInfo = async () => {
         try {
-          const response = await fetchBlogsHomePage(page, 10);
-      
-          console.log("Home page blogs", response);
-      
-          const { content, last } = response.data;
-          setBlogs((prevBlogs) => [...prevBlogs, ...content]);
-          setPage((prevPage) => prevPage + 1);
-          setHasMore(!last); 
+          const response = await fetchHomePageInfo();
+          console.log("Get top users and categories", response);
+          setHomePageInfo(response.data);
         } catch (error) {
-          console.error("Error fetching blogs:", error);
-        } finally {
-          setLoadingBlogs(false);
+          console.error("Error fetching home page info:", error);
         }
       };
   
-    // useEffect section
-    useEffect(() => {
-        const fetchHomeInfo = async () => {
-            try {            
-                const response = await fetchHomePageInfo();
-                console.log("get top users and categories",response);
-                setHomePageInfo(response.data);
-            } catch (error) {
-                console.error("Error fetching home page info:", error);         
-            }
-        };
-        
-        fetchHomeInfo();
-    }, []);
-
-    useEffect(() => {
-      fetchBlogs();
+      fetchHomeInfo();
     }, []);
   
+    // Llamado inicial con retraso para obtener los blogs
+    useEffect(() => {
+      let isMounted = true;
+      setLoadingBlogs(true);
+  
+      const delayFetchBlogs = setTimeout(async () => {
+        try {
+          const response = await fetchBlogsHomePage(0, 10);
+          if (isMounted) {
+            setBlogs(response.data.content);
+            setPage(1);
+            setHasMore(!response.data.last);
+          }
+        } catch (error) {
+          console.error("Error fetching blogs:", error);
+        } finally {
+          if (isMounted) {
+            setLoadingBlogs(false);
+          }
+        }
+      }, 10); // Retraso de 10 ms para evitar la doble petición inicial
+  
+      return () => {
+        isMounted = false;
+        clearTimeout(delayFetchBlogs);
+      };
+    }, []); // Este useEffect solo se ejecuta una vez al inicio
+  
+    // Evento de scroll
     useEffect(() => {
       window.addEventListener("scroll", handleScroll);
-      return () => window.removeEventListener("scroll", handleScroll); 
+      return () => window.removeEventListener("scroll", handleScroll);
     }, [loadingBlogs, hasMore]);
     
 return (
@@ -123,12 +157,14 @@ return (
 
                     {/* show blogs */}
                     {
-                        blogs.map((b, index) => (
-                        <BlogCard 
-                                key={index} {...b} 
-                                {...blogs}
-                            />
-                        ))
+                        blogs.length === 0 
+                        ? <CardBlogSkeleton />
+                        :  blogs.map((b, index) => (
+                            <BlogCard 
+                                    key={index} {...b} 
+                                    {...blogs}
+                                />
+                            ))
                     }
 
                     {/* charge*/}
@@ -144,14 +180,24 @@ return (
                             <ul className="-mx-4">
                                 {homePageInfo?.usersTop.map(user => (
                                     <li key={user.userId} className="flex items-center mb-4">
-                                        <Link  to={`/profile/${user.userId}`}>
-                                            <img
-                                                src="https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=731&amp;q=80"
-                                                alt="avatar"
-                                                className="object-cover w-10 h-10 mx-1 rounded-full"
-                                            />
-                                        </Link>
-                                        <p>
+                                                <Tooltip title={user.name} arrow>
+                                                <Link to={`/profile/${user.userId}`} style={{ textDecoration: 'none' }}>
+                                                    <Avatar
+                                                        src="https://i.pravatar.cc/150?img=3" 
+                                                        alt="User"
+                                                        sx={{
+                                                            width: 40,  
+                                                            height: 40, 
+                                                            cursor: "pointer",
+                                                            transition: "transform 0.2s ease-in-out",
+                                                            "&:hover": {
+                                                                transform: "scale(1.01)",
+                                                            },
+                                                        }}
+                                                    />
+                                                </Link>
+                                            </Tooltip>
+                                            <p>
                                             <Link
                                             to={`/profile/${user.userId}`}
                                             className="mx-1 font-bold text-gray-700 hover:underline"

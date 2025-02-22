@@ -31,6 +31,8 @@ import 'react-quill/dist/quill.snow.css';
 import NavBar from "../../components/NavBar";
 import Spinner from "../../components/Spinner/Spinner";
 
+import { load } from 'cheerio';
+
 // modules of react quill
 const modules = {
   toolbar: {
@@ -98,6 +100,8 @@ const CreateBlog: React.FC = () => {
     maxCats: 3
   });
 
+  const [readTime, setReadTime] = useState(0);
+
 
   // modal
 
@@ -135,6 +139,13 @@ const CreateBlog: React.FC = () => {
     dispatch(resetError());
   }, []);
 
+  useEffect(() => {
+    if (content) {
+      const time = calculateReadTime(content);
+      setReadTime(time);
+    }
+  }, [content]);
+
   /**
    * functions section
    */
@@ -143,6 +154,21 @@ const CreateBlog: React.FC = () => {
     const {name, value} = e.target;
     setFormData(prevData => ({...prevData, [name]: value}))
   }
+
+  const calculateReadTime = (htmlContent: any) => {
+    // Usar cheerio para extraer solo el texto
+    const $ = load(htmlContent); // Usar la función load
+    const text = $("body").text(); // Extrae todo el texto dentro del body
+
+    // Eliminar espacios en blanco y contar palabras
+    const wordCount = text.trim().split(/\s+/).length;
+
+    // Calcular el tiempo de lectura (asumiendo 200 palabras por minuto)
+    const wordsPerMinute = 200;
+    const time = Math.ceil(wordCount / wordsPerMinute);
+
+    return time;
+  };
 
   // handle submit prepare info to backend
   const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
@@ -171,8 +197,10 @@ const CreateBlog: React.FC = () => {
     // request to backend
     try {
       // fetch with redux
-      await dispatch(fetchCreateBlog(formData)).unwrap();
-      navigate('/profile/1');
+      console.log(readTime);
+      
+      // await dispatch(fetchCreateBlog(formData)).unwrap();
+      // navigate('/profile/1');
     } catch (error: any) {
       console.log(error);
       

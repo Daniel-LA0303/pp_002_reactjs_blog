@@ -95,19 +95,14 @@ const CommentBlog: React.FC<CommentBlogProps> = ({blogId}) => {
     setRemovingCommentId(commentId);
   
     try {
-      // Intentamos realizar la eliminación del comentario con el dispatch
       await dispatch(fetchDeleteComment({ commentId, userId, blogId })).unwrap();
   
-      // Si la eliminación fue exitosa, eliminamos el comentario del estado local (UI)
       setComments((prevComments) =>
         prevComments.filter((c) => c.commentId !== commentId)
       );
     } catch (error) {
-      // Si ocurre un error, mostramos el mensaje de error en consola o en la UI
       console.error('Error deleting comment:', error);
-      // Aquí podrías establecer algún mensaje de error en el estado local si lo deseas
     } finally {
-      // Finalmente reseteamos el estado de animación
       setRemovingCommentId(null);
     }
   };
@@ -184,21 +179,21 @@ const CommentBlog: React.FC<CommentBlogProps> = ({blogId}) => {
     
           {comments.map((comment, index) => (
             <motion.div
-              key={comment.commentId} // Usa el ID único
+              key={comment.commentId} // we use the commentId as the key to not open all the comments when a new comment is added
               initial={{ opacity: 0, y: 10 }}
               animate={{
-                opacity: removingCommentId === comment.commentId ? 0 : 1, // Desaparece solo si es el comentario a eliminar
-                y: removingCommentId === comment.commentId ? -10 : 0, // Se mueve un poco hacia arriba para simular la desaparición
+                opacity: removingCommentId === comment.commentId ? 0 : 1,
+                y: removingCommentId === comment.commentId ? -10 : 0,
               }}
               transition={{ duration: 0.3, ease: "easeOut" }}
               className="flex items-center space-x-2"
               onAnimationComplete={() => {
-                // Cuando la animación termina, eliminamos el comentario
+                // to remove the comment from the UI after the animation
                 if (removingCommentId === comment.commentId) {
                   setComments((prevComments) =>
                     prevComments.filter((c) => c.commentId !== comment.commentId)
                   );
-                  setRemovingCommentId(null); // Reseteamos el estado de la animación
+                  setRemovingCommentId(null); 
                 }
               }}
             >

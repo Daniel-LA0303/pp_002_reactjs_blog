@@ -105,7 +105,7 @@ const ViewBlog: React.FC = () => {
             onClose={handleCloseModal}
         />
         <NavBar />
-        <div className="flex flex-col justify-between md:flex-row mt-16 max-w-screen-lg px-0 md:px-2 lg:mx-auto gap-4">
+        <div className="flex flex-col justify-between md:flex-row mt-16 max-w-screen-lg px-0 md:px-2 lg:mx-auto gap-4 ">
             
             <div className="flex w-full lg:w-9/12 mx-0 sm:mx-1 ">
                 <div className="flex-col hidden sm:block sticky top-12 h-[90%] px-4 py-2">

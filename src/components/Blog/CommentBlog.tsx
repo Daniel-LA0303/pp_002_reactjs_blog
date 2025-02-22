@@ -1,9 +1,19 @@
 import { useSelector } from "react-redux";
 import ReplyComment from "./ReplyComment";
 import { AppDispatch, RootState } from "../../redux/store";
-import { useState } from "react";
-import { fetchCreateComment } from "../../slices/commentSlice";
+import { useEffect, useState } from "react";
+import { fetchCreateComment, fetchDeleteComment } from "../../slices/commentSlice";
 import { useDispatch } from "react-redux";
+import { fecthGetCommentsByBlogId } from "../../services/commentService";
+import { commentResponseI } from "../../types/comment";
+import { formatDateTime } from "../../utils/dateUtils";
+import { motion } from "framer-motion";
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { Button, IconButton, Menu, MenuItem } from "@mui/material";
+import { Link } from "react-router-dom";
+
 
 interface CommentBlogProps {
   blogId: number; 
@@ -17,43 +27,104 @@ const CommentBlog: React.FC<CommentBlogProps> = ({blogId}) => {
 
 
   const [newComment, setNewComment] = useState<string>('');
+  const [anchorEl, setAnchorEl] = useState<{ [key: number]: HTMLElement | null }>({});
 
-  // Función para manejar el cambio en el input
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const [removingCommentId, setRemovingCommentId] = useState<number | null>(null);
 
 
+  const [comments, setComments] = useState<commentResponseI[]>([]);
+  const [page, setPage] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const pageSize = 5;
 
-    setNewComment(event.target.value); // Actualiza el estado con el valor del input
+  const fetchComments = async () => {
+    if (loading || !hasMore) return;
+    setLoading(true);
+    try {
+      const response = await fecthGetCommentsByBlogId(blogId, page, pageSize);
+      console.log('Response:', response);
+      const { content, last } = response.data;
+      setComments((prevComments) => [...prevComments, ...content]);
+      setPage((prevPage) => prevPage + 1);
+      setHasMore(!last);
+    } catch (error) {
+      console.error("Error fetching comments:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // Función para guardar el valor
+  useEffect(() => {
+    if (blogId && blogId !== 0) {
+      fetchComments();
+    }
+  }, [blogId]);
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setNewComment(event.target.value); 
+  };
+
   const handleSave = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+  
+    if (!newComment.trim()) return; 
+  
     const newCommentRequest = {
-      blogId: blogId,
+      blogId,
       userId: userIdAuth,
       content: newComment
-    }
-
-    console.log(newCommentRequest);
-    
-    
+    };
+  
     try {
       const res = await dispatch(fetchCreateComment(newCommentRequest)).unwrap();
-      console.log('Response:', res);
-      
+  
+      if (res) {
+        setComments((prevComments) => [{ ...res, isNew: true }, ...prevComments]);
+      }
+  
     } catch (error: any) {
-      console.log('Error:', error);
-      
+      console.error('Error al agregar el comentario:', error);
     }
-
-    console.log('Valor guardado:', newComment); // Aquí puedes hacer algo con el valor, como enviarlo a una API
+  
     setNewComment(''); 
-    
   };
 
+  const handleDeleteComment = async (commentId: number, userId: number, blogId: number) => {
+    console.log('Delete comment:', commentId);
+    setRemovingCommentId(commentId);
+  
+    try {
+      // Intentamos realizar la eliminación del comentario con el dispatch
+      await dispatch(fetchDeleteComment({ commentId, userId, blogId })).unwrap();
+  
+      // Si la eliminación fue exitosa, eliminamos el comentario del estado local (UI)
+      setComments((prevComments) =>
+        prevComments.filter((c) => c.commentId !== commentId)
+      );
+    } catch (error) {
+      // Si ocurre un error, mostramos el mensaje de error en consola o en la UI
+      console.error('Error deleting comment:', error);
+      // Aquí podrías establecer algún mensaje de error en el estado local si lo deseas
+    } finally {
+      // Finalmente reseteamos el estado de animación
+      setRemovingCommentId(null);
+    }
+  };
 
+  const handleClick = (event: React.MouseEvent<HTMLElement>, commentId: number) => {
+    setAnchorEl((prevState) => ({
+      ...prevState,
+      [commentId]: event.currentTarget, 
+    }));
+  };
+
+  const handleClose = (commentId: number) => {
+    setAnchorEl((prevState: any) => ({
+      ...prevState,
+      [commentId]: null, 
+    }));
+  };
 
   return (
     <div className="flex flex-col w-full">
@@ -111,87 +182,123 @@ const CommentBlog: React.FC<CommentBlogProps> = ({blogId}) => {
       <div className=" flex justify-start ">
         <div className="w-full  ">
     
-          <div className="flex items-center space-x-2">
-            <div className="flex flex-shrink-0 self-start cursor-pointer">
-              <img
-                src="https://images.unsplash.com/photo-1551122089-4e3e72477432?ixid=MXwxMjA3fDB8MHxzZWFyY2h8M3x8cnVieXxlbnwwfHwwfA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
-                alt=""
-                className="h-8 w-8 object-fill rounded-full"
-              />
-            </div>
+          {comments.map((comment, index) => (
+            <motion.div
+              key={comment.commentId} // Usa el ID único
+              initial={{ opacity: 0, y: 10 }}
+              animate={{
+                opacity: removingCommentId === comment.commentId ? 0 : 1, // Desaparece solo si es el comentario a eliminar
+                y: removingCommentId === comment.commentId ? -10 : 0, // Se mueve un poco hacia arriba para simular la desaparición
+              }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              className="flex items-center space-x-2"
+              onAnimationComplete={() => {
+                // Cuando la animación termina, eliminamos el comentario
+                if (removingCommentId === comment.commentId) {
+                  setComments((prevComments) =>
+                    prevComments.filter((c) => c.commentId !== comment.commentId)
+                  );
+                  setRemovingCommentId(null); // Reseteamos el estado de la animación
+                }
+              }}
+            >
+              <div className="flex flex-shrink-0 self-start cursor-pointer">
+                <img
+                  src="https://images.unsplash.com/photo-1551122089-4e3e72477432?ixid=MXwxMjA3fDB8MHxzZWFyY2h8M3x8cnVieXxlbnwwfHwwfA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                  alt=""
+                  className="h-8 w-8 object-fill rounded-full"
+                />
+              </div>
 
-            <div className="flex items-center justify-center space-x-2">
-              <div className="block">
-                <div className="bg-gray-100 w-auto rounded-xl px-2 pb-2">
-                  <div className="font-medium">
-                    <a href="#" className="hover:underline text-sm">
-                      <small>Nirmala</small>
-                    </a>
+              <div className="flex items-center justify-center space-x-2 w-full">
+                <div className="w-full">
+                  <div className="bg-gray-100 w-auto rounded-xl px-2 pb-2">
+                    <div className="flex justify-between">
+
+                      <div>
+                        <Link 
+                          to={`/profile/${comment.userId}`}
+                          className="hover:underline text-lg font-medium">
+                          <small>{comment.username}</small>
+                        </Link>
+                      </div>
+
+                      <div>
+                        {
+                          accessToken ? (
+                            userIdAuth === comment.userId && (
+                              <div key={comment.commentId} className="flex">
+                                <motion.div
+                                  whileHover={{ scale: 1.1 }}
+                                  transition={{ duration: 0.3 }}
+                                  className="mx-1"
+                                >
+
+                                  <IconButton 
+                                    size="small"
+                                    color="primary"
+                                    onClick={(e) => handleClick(e, comment.commentId)} 
+                                  >
+                                    <MoreVertIcon fontSize="small" />
+                                  </IconButton>
+                                  <Menu
+                                    anchorEl={anchorEl[comment.commentId] || null} 
+                                    open={Boolean(anchorEl[comment.commentId])} 
+                                    onClose={() => handleClose(comment.commentId)} 
+                                    disableScrollLock
+                                  >
+                                    <MenuItem onClick={() => handleClose(comment.commentId)}>
+                                      <Button variant="text" size="small" startIcon={<EditIcon fontSize="small" />}>
+                                        Editar
+                                      </Button>
+                                    </MenuItem>
+
+                                    <MenuItem onClick={() => handleClose(comment.commentId)}>
+                                      <Button
+                                        variant="text"
+                                        size="small"
+                                        startIcon={<DeleteIcon fontSize="small" />}
+                                        onClick={() => handleDeleteComment(comment.commentId, userIdAuth, blogId)} 
+                                      >
+                                        Eliminar
+                                      </Button>
+                                    </MenuItem>
+                                  </Menu>
+                                </motion.div>
+                              </div>
+                            )
+                          ) : null
+                        }
+                      </div>
+                    </div>
+                    <div className="text-xs w-full">
+                      {comment.content}
+                    </div>
                   </div>
-                  <div className="text-xs">
-                    Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                    Expedita, maiores!
-                  </div>
-                </div>
-                <div className="flex justify-start items-center text-xs w-full">
-                  <div className="font-semibold text-gray-700 px-2 flex items-center justify-center space-x-1">
-                    <a href="#" className="hover:underline">
-                      <small>Like</small>
-                    </a>
-                    <small className="self-center">.</small>
-                    <a href="#" className="hover:underline">
-                      <small>Reply</small>
-                    </a>
-                    <small className="self-center">.</small>
-                    <a href="#" className="hover:underline">
-                      <small>15 hour</small>
-                    </a>
+                  <div className="flex justify-start items-center text-xs w-full">
+                    <div className="font-semibold text-gray-700 px-2 flex items-center justify-center space-x-1">
+                      <a href="#" className="hover:underline">
+                        <small>Reply</small>
+                      </a>
+                      <small className="self-center">.</small>
+                      <a href="#" className="hover:underline">
+                        <small>{formatDateTime(comment?.updatedAt)}</small>
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-
-          <div className="flex items-center space-x-2">
-            <div className="flex flex-shrink-0 self-start cursor-pointer">
-              <img
-                src="https://images.unsplash.com/photo-1609349744982-0de6526d978b?ixid=MXwxMjA3fDB8MHx0b3BpYy1mZWVkfDU5fHRvd0paRnNrcEdnfHxlbnwwfHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
-                alt=""
-                className="h-8 w-8 object-cover rounded-full"
-              />
-            </div>
-
-            <div className="flex items-center justify-center space-x-2">
-              <div className="block">
-                <div className="bg-gray-100 w-auto rounded-xl px-2 pb-2">
-                  <div className="font-medium">
-                    <a href="#" className="hover:underline text-sm">
-                      <small>Arkadewi</small>
-                    </a>
-                  </div>
-                  <div className="text-xs">
-                    Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                    Expedita, maiores!
-                  </div>
-                </div>
-                <div className="flex justify-start items-center text-xs w-full">
-                  <div className="font-semibold text-gray-700 px-2 flex items-center justify-center space-x-1">
-                    <a href="#" className="hover:underline">
-                      <small>Like</small>
-                    </a>
-                    <small className="self-center">.</small>
-                    <a href="#" className="hover:underline">
-                      <small>Reply</small>
-                    </a>
-                    <small className="self-center">.</small>
-                    <a href="#" className="hover:underline">
-                      <small>15 hour</small>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+            </motion.div>
+          ))}
+          {hasMore && (
+            <button
+              onClick={fetchComments}
+              disabled={loading}
+              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-400"
+            >
+              {loading ? "Cargando..." : "Cargar más comentarios"}
+            </button>
+          )}
 
             {/* reply */}
           <ReplyComment />

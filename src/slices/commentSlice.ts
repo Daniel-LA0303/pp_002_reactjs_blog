@@ -1,7 +1,7 @@
 import { createAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { ApiResponse } from "../types/category";
 import { newCommentRequestI } from "../types/comment";
-import { fetchCreateCommentRequest } from "../services/commentService";
+import { fetchCreateCommentRequest, fetchDeleteCommentRequest } from "../services/commentService";
 
 interface CommentState {
     loading: boolean;
@@ -26,6 +26,19 @@ export const fetchCreateComment = createAsyncThunk(
             return response.data;
         } catch (error: any) {
             return rejectWithValue(error.response?.data || 'Error to create comment');
+        }
+    }
+);
+
+export const fetchDeleteComment = createAsyncThunk(
+    'comment/deleteComment',
+    async (params: { commentId: number, userId: number, blogId: number }, { rejectWithValue }) => {
+        try {
+            const { commentId, userId, blogId } = params;
+            const response = await fetchDeleteCommentRequest(commentId, userId, blogId); // Asumiendo que ya tienes esta función
+            return response.data;
+        } catch (error: any) {
+            return rejectWithValue(error.response?.data || 'Error to delete comment');
         }
     }
 );
@@ -55,6 +68,22 @@ const commentSlice = createSlice({
             state.loading = false;
             state.errorComment = true;
             state.errorMessage = action.payload as ApiResponse<any> || 'Failded to create comment';
+        });
+
+        builder.addCase(fetchDeleteComment.pending, (state) => {
+            state.loading = true;
+            state.errorComment = false;
+            state.errorMessage = null;
+        });
+        builder.addCase(fetchDeleteComment.fulfilled, (state) => {
+            state.loading = false;
+            state.errorComment = false;
+            state.errorMessage = null;
+        });
+        builder.addCase(fetchDeleteComment.rejected, (state, action) => {
+            state.loading = false;
+            state.errorComment = true;
+            state.errorMessage = action.payload as ApiResponse<any> || 'Failed to delete comment';
         });
 
         builder.addCase(resetCommentError, (state) => {

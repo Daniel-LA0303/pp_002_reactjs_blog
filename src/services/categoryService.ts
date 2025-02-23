@@ -1,5 +1,6 @@
 import apiClient from './apiClient';
 import { ApiResponse, Category, CategoryPageableResponseI } from '../types/category';
+import apiAuthClient from './apiAuthClient';
 
 // This file content category services
 
@@ -13,5 +14,16 @@ export const fetchAllCategories = async (): Promise<ApiResponse<Category[]>> => 
 
 export const fetchCategoriesPaginated = async (page: number, size: number): Promise<ApiResponse<CategoryPageableResponseI>> => {
   const response = await apiClient.get<ApiResponse<CategoryPageableResponseI>>(`/category/pagination?page=${page}&size=${size}`);
+  return response.data;
+};
+
+
+export const followCategory = async (categoryId: number, userId: number): Promise<ApiResponse<string>> => {
+  const response = await apiAuthClient.post<ApiResponse<string>>(`/category/${categoryId}/follow?userId=${userId}`);
+  return response.data;
+};
+
+export const unfollowCategory = async (categoryId: number, userId: number): Promise<ApiResponse<string>> => {
+  const response = await apiAuthClient.delete<ApiResponse<string>>(`/category/${categoryId}/unfollow?userId=${userId}`);
   return response.data;
 };

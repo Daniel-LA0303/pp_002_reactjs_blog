@@ -45,6 +45,8 @@ import { AppContext } from '../../context/AppContext'
 import ModalError from '../../components/Tools/ModalError/ModalError'
 import { likeBlog, savedBlog, unlikeBlog, unsavedBlog } from '../../services/blogService'
 
+import { motion } from "framer-motion";
+
 
 const ViewBlog: React.FC = () => {
 
@@ -233,33 +235,53 @@ const ViewBlog: React.FC = () => {
                 <div className="flex-col hidden sm:block sticky top-12 h-[90%] px-4 py-2">
                     <div className="flex flex-row sm:flex-col">
                         <div className="my-3 text-2xl mx-10 sm:mx-0 flex flex-row sm:flex-col justify-center items-center">
-                            <button 
+                            <motion.button 
                                 className="cursor-pointer" 
                                 onClick={handleLikeToggle}
                                 disabled={!accessToken}
+                                initial={{ scale: 1 }} // Escala inicial
+                                animate={{ scale: isLiked ? 1.2 : 1 }} // Aumentar la escala cuando se le da like
+                                transition={{ type: "spring", stiffness: 300 }} // Transición suave
                             >
                                 {isLiked ? <FavoriteBorderIcon color="error" /> : <FavoriteBorderIcon />}
-                            </button>
-                            <p
-                                className={`${isLiked ? 'text-red-500' : 'text-black'}`}
-                            >{likeCount}</p>
+                            </motion.button>
+
+                            <motion.p 
+                                className={`${isLiked ? 'text-red-500' : 'text-black'}`} 
+                                initial={{ opacity: 0 }} // Inicializa con opacidad 0
+                                animate={{ opacity: 1 }} // Aumenta opacidad al mostrarse
+                                transition={{ duration: 0.3 }} // Transición suave
+                            >
+                                {likeCount}
+                            </motion.p>
                         </div>
+
                         <div className="my-3 text-2xl mx-10 sm:mx-0 flex flex-row sm:flex-col justify-center items-center">
                             <p><ChatBubbleOutlineIcon /></p>
                             <p>{blog?.blogEngagement.commentsNumber ? blog?.blogEngagement.commentsNumber : '0'}</p>
                         </div>
                         <div className="my-3 text-2xl mx-10 sm:mx-0 flex flex-row sm:flex-col justify-center items-center">
-                            <button 
+                            <motion.button 
                                 className="cursor-pointer" 
                                 onClick={handleSavedToggle}
                                 disabled={!accessToken}
+                                initial={{ scale: 1 }} // Escala inicial
+                                animate={{ scale: isSaved ? 1.2 : 1 }} // Aumentar la escala cuando se guarda
+                                transition={{ type: "spring", stiffness: 300 }} // Transición suave
                             >
                                 {isSaved ? <BookmarkBorderIcon color="primary" /> : <BookmarkBorderIcon />}
-                            </button>
-                            <p className={`${isSaved ? 'text-blue-500' : 'text-black'}`}>
+                            </motion.button>
+
+                            <motion.p 
+                                className={`${isSaved ? 'text-blue-500' : 'text-black'}`} 
+                                initial={{ opacity: 0 }} // Inicializa con opacidad 0
+                                animate={{ opacity: 1 }} // Aumenta opacidad al mostrarse
+                                transition={{ duration: 0.3 }} // Transición suave
+                            >
                                 {savedCount ? savedCount : '0'}
-                            </p>
+                            </motion.p>
                         </div>
+
 
                     </div>
                 </div>
@@ -351,32 +373,51 @@ const ViewBlog: React.FC = () => {
                 <div className='flex justify-center'>
                     <div className="flex flex-row sm:flex-col">
                         <div className="my-3 text-2xl mx-10 sm:mx-0 flex flex-row sm:flex-col justify-center items-center">
-                            <button 
+                            <motion.button 
                                 className="cursor-pointer" 
                                 onClick={handleLikeToggle}
                                 disabled={!accessToken}
+                                initial={{ scale: 1 }} // Escala inicial
+                                animate={{ scale: isLiked ? 1.2 : 1 }} // Aumentar la escala cuando se le da like
+                                transition={{ type: "spring", stiffness: 300 }} // Transición suave
                             >
                                 {isLiked ? <FavoriteBorderIcon color="error" /> : <FavoriteBorderIcon />}
-                            </button>
-                            <p
-                                className={`${isLiked ? 'text-red-500' : 'text-black'}`}
-                            >{likeCount}</p>
+                            </motion.button>
+
+                            <motion.p 
+                                className={`${isLiked ? 'text-red-500' : 'text-black'} mt-1`} 
+                                initial={{ opacity: 0 }} // Inicializa con opacidad 0
+                                animate={{ opacity: 1 }} // Aumenta opacidad al mostrarse
+                                transition={{ duration: 0.3 }} // Transición suave
+                            >
+                                {likeCount}
+                            </motion.p>
                         </div>
+
                         <div className="my-3 text-2xl mx-10 sm:mx-0 flex flex-row sm:flex-col justify-center items-center">
                             <p><ChatBubbleOutlineIcon /></p>
                             <p>{blog?.blogEngagement.commentsNumber ? blog?.blogEngagement.commentsNumber : '0'}</p>
                         </div>
                         <div className="my-3 text-2xl mx-10 sm:mx-0 flex flex-row sm:flex-col justify-center items-center">
-                            <button 
+                            <motion.button 
                                 className="cursor-pointer" 
                                 onClick={handleSavedToggle}
                                 disabled={!accessToken}
+                                initial={{ scale: 1 }} // Escala inicial
+                                animate={{ scale: isSaved ? 1.2 : 1 }} // Aumentar la escala cuando se guarda
+                                transition={{ type: "spring", stiffness: 300 }} // Transición suave
                             >
                                 {isSaved ? <BookmarkBorderIcon color="primary" /> : <BookmarkBorderIcon />}
-                            </button>
-                            <p className={`${isSaved ? 'text-blue-500' : 'text-black'}`}>
+                            </motion.button>
+
+                            <motion.p 
+                                className={`${isSaved ? 'text-blue-500' : 'text-black'} mt-1`} 
+                                initial={{ opacity: 0 }} // Inicializa con opacidad 0
+                                animate={{ opacity: 1 }} // Aumenta opacidad al mostrarse
+                                transition={{ duration: 0.3 }} // Transición suave
+                            >
                                 {savedCount ? savedCount : '0'}
-                            </p>
+                            </motion.p>
                         </div>
                     </div>
                 </div>

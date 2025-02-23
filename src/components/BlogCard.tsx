@@ -10,6 +10,8 @@ import { RootState } from '../redux/store';
 import { useSelector } from 'react-redux';
 import { likeBlog, savedBlog, unlikeBlog, unsavedBlog } from '../services/blogService';
 
+import { motion } from "framer-motion";
+
 const BlogCard: React.FC<BlogCardI>  = (props) => {
 
     const userIdAuth = useSelector((state: RootState) => state.auth.userId);
@@ -113,13 +115,16 @@ const BlogCard: React.FC<BlogCardI>  = (props) => {
             {/* Sección de interacción */}
             <div className="mt-5 flex justify-between mx-5 mb-3">
                 <div className="flex items-center">
-                    <button 
+                    <motion.button 
                         onClick={handleLikeToggle} 
                         className="cursor-pointer" 
                         disabled={!accessToken}  
+                        initial={{ scale: 1 }} // Escala inicial
+                        animate={{ scale: isLiked ? 1.0 : 1.1 }} // Escala aumentada cuando se da like
+                        transition={{ type: "spring", stiffness: 300 }} // Transición con efecto 'spring'
                     >
                         {isLiked ? <FavoriteBorderIcon color="error" fontSize="small"/> : <FavoriteBorderIcon fontSize="small" />}
-                    </button>
+                    </motion.button>
                     <span className="ml-1 text-sm">{likeCount}</span>
 
                     <p className="ml-4 ">
@@ -129,13 +134,17 @@ const BlogCard: React.FC<BlogCardI>  = (props) => {
                 </div>
 
                 <div className='flex items-center'>
-                    <button 
+                    <motion.button 
                         onClick={handleSavedToggle} 
                         className="cursor-pointer" 
                         disabled={!accessToken} 
+                        initial={{ scale: 1 }} // Escala inicial
+                        animate={{ scale: isSaved ? 1.0 : 1.1 }} // Aumentar la escala cuando se guarda
+                        transition={{ type: "spring", stiffness: 300 }} // Transición suave
                     >
                         {isSaved ? <BookmarkBorderOutlinedIcon color="primary" fontSize="small" /> : <BookmarkBorderOutlinedIcon fontSize="small" />}
-                    </button>
+                    </motion.button>
+
                     <span className='text-sm'>{savedCount}</span>
                 </div>
             </div>

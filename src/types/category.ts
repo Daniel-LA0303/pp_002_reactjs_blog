@@ -19,6 +19,7 @@ export interface Category {
 export interface BlogsByCatgoryInfoI {
   categoryFullInfoDTO: Category;
   follewersCategory: UserSimpleInfoI[];
+  usersFollowersIds: number[];
 }
 
 /**

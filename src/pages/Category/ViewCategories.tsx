@@ -4,11 +4,6 @@
 import React, { useEffect, useRef, useState } from "react";
 
 /**
- * types 
- */
-import { Category } from "../../types/category"; 
-
-/**
  * components
  */
 import NavBar from "../../components/NavBar";
@@ -23,7 +18,7 @@ import CardCategorySkeleton from "../../components/Skeletons/Category/CardCatego
 const ViewCategories: React.FC = () => {
 
   //state section
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<any[]>([]);
   const [page, setPage] = useState(0);
   const [loadingCategories, setLoadingCategories] = useState(false);
   const [hasMoreCategories, setHasMoreCategories] = useState(true);
@@ -36,7 +31,7 @@ const ViewCategories: React.FC = () => {
     setLoadingCategories(true);
 
     try {
-      const response = await fetchCategoriesPaginated(page, 10);
+      const response = await fetchCategoriesPaginated(page, 10);      
       const { content, last } = response.data;
 
       setCategories((prevCategories) => [...prevCategories, ...content]);
@@ -116,8 +111,17 @@ const ViewCategories: React.FC = () => {
     {categories.length > 0 && (
       <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-14">
         {categories.map((category) => (
-          <CategoryCard key={category.categoryId} {...category} />
+          <CategoryCard
+            key={category?.categoryFullInfoDTO?.categoryId} // Usando categoryId como key
+            categoryId={category.categoryFullInfoDTO.categoryId ?? null}
+            nameCategory={category.categoryFullInfoDTO.name ?? ''}
+            color={category.categoryFullInfoDTO.color ?? ''}
+            postsNumber={category.categoryFullInfoDTO.postsNumber ?? 0}
+            description={category.categoryFullInfoDTO.description ?? ''}
+            usersFollowersIds={category.usersFollowersIds || []}
+          />
         ))}
+
       </div>
     )}
   </div>

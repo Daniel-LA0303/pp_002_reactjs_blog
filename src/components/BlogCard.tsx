@@ -116,7 +116,7 @@ const BlogCard: React.FC<BlogCardI>  = (props) => {
                     <button 
                         onClick={handleLikeToggle} 
                         className="cursor-pointer" 
-                        disabled={!accessToken}  // Deshabilitar si no existe accessToken
+                        disabled={!accessToken}  
                     >
                         {isLiked ? <FavoriteBorderIcon color="error" fontSize="small"/> : <FavoriteBorderIcon fontSize="small" />}
                     </button>
@@ -132,7 +132,7 @@ const BlogCard: React.FC<BlogCardI>  = (props) => {
                     <button 
                         onClick={handleSavedToggle} 
                         className="cursor-pointer" 
-                        disabled={!accessToken}  // Deshabilitar si no existe accessToken
+                        disabled={!accessToken} 
                     >
                         {isSaved ? <BookmarkBorderOutlinedIcon color="primary" fontSize="small" /> : <BookmarkBorderOutlinedIcon fontSize="small" />}
                     </button>

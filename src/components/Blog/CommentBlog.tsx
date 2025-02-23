@@ -244,7 +244,7 @@ const CommentBlog: React.FC<CommentBlogProps> = ({blogId}) => {
                                   >
                                     <MenuItem onClick={() => handleClose(comment.commentId)}>
                                       <Button variant="text" size="small" startIcon={<EditIcon fontSize="small" />}>
-                                        Editar
+                                        Edit
                                       </Button>
                                     </MenuItem>
 
@@ -255,7 +255,7 @@ const CommentBlog: React.FC<CommentBlogProps> = ({blogId}) => {
                                         startIcon={<DeleteIcon fontSize="small" />}
                                         onClick={() => handleDeleteComment(comment.commentId, userIdAuth, blogId)} 
                                       >
-                                        Eliminar
+                                        Delete
                                       </Button>
                                     </MenuItem>
                                   </Menu>

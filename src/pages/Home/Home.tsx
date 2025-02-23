@@ -204,9 +204,9 @@ return (
                                             >
                                             {user.name}
                                             </Link>
-                                            <p className="mx-1 text-xs font-light text-gray-700">
+                                            <span className="mx-1 text-xs font-light text-gray-700">
                                             Created {user.blogsCounts} Posts
-                                            </p>
+                                            </span>
                                         </p>
                                     </li>
                                 ))}

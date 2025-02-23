@@ -14,6 +14,7 @@ export interface UserProfile {
     createdAt: string | null; 
     webSite: string;
     categoryFollows: number;
+    usersFollowers: number[];
 }
 
 export interface UserInfoCard{
@@ -24,6 +25,7 @@ export interface UserInfoCard{
     blogsByUser: number;
     followers: number;
     following: number;
+    usersFollowers: number[];
 }
 
 

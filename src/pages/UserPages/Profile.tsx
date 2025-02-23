@@ -45,6 +45,8 @@ import { AppContext } from '../../context/AppContext';
 import ModalError from '../../components/Tools/ModalError/ModalError';
 import { fetchBlogsByUser } from '../../services/blogService';
 import CardBlogSkeleton from '../../components/Skeletons/Blog/CardBlogSkeleton';
+import { fetchDeleteUnfollowUser, fetchPostFollowUser } from '../../services/userService';
+import { CircularProgress } from '@mui/material';
 
 const Profile: React.FC = () => {
 
@@ -58,6 +60,7 @@ const Profile: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const userId = useSelector((state: RootState) => state.auth.userId);
+  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
 
   const loadingUser = useSelector((state: RootState) => state.user.loading);
   const errorUser = useSelector((state: RootState) => state.user.errorUser);
@@ -72,14 +75,46 @@ const Profile: React.FC = () => {
   const [hasMore, setHasMore] = useState(true); 
   const [count, setCount] = useState(0);
 
+  const [isFollowing, setIsFollowing] = useState(
+    userId !== null && user?.usersFollowers.includes(userId)
+  );
+  const [loadingFollow, setLoadingFollow] = useState(false);
+
   const scrollTimeout = useRef<number | null>(null);
     
   // verify id from params
   const userIdNumber = id ? parseInt(id) : NaN;
 
-  
-
   // functions section
+
+  const handleFollow = async () => {
+    if (!accessToken || userId === userIdNumber || userId === null) return;
+    
+    try {
+      setLoadingFollow(true);
+      await fetchPostFollowUser(userId, userIdNumber);
+      setIsFollowing(true);
+    } catch (error) {
+      console.error("Error al seguir al usuario:", error);
+    } finally {
+      setLoadingFollow(false);
+    }
+  };
+  
+  const handleUnfollow = async () => {
+    if (!accessToken || userId === userIdNumber || userId === null) return;
+  
+    try {
+      setLoadingFollow(true);
+      await fetchDeleteUnfollowUser(userId, userIdNumber);
+      setIsFollowing(false); 
+    } catch (error) {
+      console.error("Error al dejar de seguir al usuario:", error);
+    } finally {
+      setLoadingFollow(false);
+    }
+  };
+
   // function to get more blogs with infinite scroll
   const fetchBlogs = async () => {
     if (loadingBlogs || !hasMore) return;
@@ -124,6 +159,14 @@ const Profile: React.FC = () => {
   };
 
   // useEffect section
+
+  useEffect(() => {
+    if (userId && user?.usersFollowers.includes(userId)) {
+      setIsFollowing(true);
+    } else {
+      setIsFollowing(false); 
+    }
+  }, [userId, user?.usersFollowers]);
 
   // to get user info
   useEffect(() => {
@@ -220,7 +263,23 @@ const Profile: React.FC = () => {
                   <img alt="..." 
                     src={'/avatar.png'} 
                     className=" shadow-xl image_profile  h-auto align-middle border-none  -m-16  lg:-ml-16 max-w-150-px" />  
-                </div>         
+                </div>    
+
+                <div className="w-full flex justify-end mt-4">
+                  {accessToken && userId !== userIdNumber && (
+                    <button
+                      className={`px-6 py-2 mt-5 w-28 bg-blue-500 text-white text-sm rounded-full shadow-md hover:bg-blue-600 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-300`}
+                      onClick={isFollowing ? handleUnfollow : handleFollow}
+                      disabled={loadingFollow}
+                    >
+                      {loadingFollow ? (
+                        <CircularProgress size={20} color="inherit" />
+                      ) : (
+                        isFollowing ? "Unfollow" : "Follow"
+                      )}
+                    </button>
+                  )}
+                </div> 
               </div>
 
               <div className=" ">

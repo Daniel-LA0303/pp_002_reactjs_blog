@@ -165,7 +165,7 @@ const BlogsByCategory = () => {
 
         </div>
 
-        <aside className="hidden md:block pb-4 bg-gray-100 rounded-lg lg:col-span-1 max-h-[800px] overflow-auto">
+        <aside className="hidden md:block pb-4 px-4 bg-gray-100 rounded-lg lg:col-span-1 max-h-[800px] overflow-auto">
           <h2 
             // style={{ color: categoryInfo?.categoryFullInfoDTO.color || '#fff' }}
             className="mb-4 text-lg font-semibold text-gray-700"
@@ -176,7 +176,7 @@ const BlogsByCategory = () => {
               <div className='mb-4'>
                 <Link
                   to={`/create-blog`}
-                  className="mb-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  className="px-6 py-2 mt-5 w-28 bg-blue-500 text-white text-sm rounded-full shadow-md hover:bg-blue-600 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-300"
                 >
                   Create Blog
                 </Link>

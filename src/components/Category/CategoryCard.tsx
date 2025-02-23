@@ -33,8 +33,6 @@ const CategoryCard: React.FC<CategoryCardProps> = ({categoryId, nameCategory, co
 
   const handleFollowUnfollow = async () => {
 
-    console.log("category id:", categoryId);
-
     if (userIdAuth === null) {
       console.error("No se puede seguir o dejar de seguir sin un userId válido.");
       return;

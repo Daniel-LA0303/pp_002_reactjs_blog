@@ -19,3 +19,18 @@ export const fetchPutUpdateUserInfo = async (id: number, userUpdated: UserUpdate
   const response = await apiAuthClient.put<ApiResponse<string>>(`/user/${id}`, userUpdated);
   return response.data;
 }
+
+export const fetchPostFollowUser = async (followerId: number, followedId: number): Promise<ApiResponse<string>> => {
+  const response = await apiAuthClient.post<ApiResponse<string>>(`/user/${followedId}/follow`, null, {
+    params: { followerId }
+  });
+  return response.data;
+};
+
+export const fetchDeleteUnfollowUser = async (followerId: number, followedId: number): Promise<ApiResponse<string>> => {
+  const response = await apiAuthClient.delete<ApiResponse<string>>(`/user/${followedId}/unfollow`, {
+    params: { followerId }
+  });
+  return response.data;
+};
+

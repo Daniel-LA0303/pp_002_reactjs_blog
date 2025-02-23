@@ -22,3 +22,23 @@ export const fetchBlogsHomePage = async (page: number, size: number): Promise<Ap
     const response = await apiClient.get<ApiResponse<BlogsPageableResponseI>>(`/blog/pagination?page=${page}&size=${size}`);
     return response.data;
 };
+
+export const likeBlog = async (userId: number, blogId: number): Promise<ApiResponse<string>> => {
+    const response = await apiAuthClient.post<ApiResponse<string>>(`/blog/${blogId}/like?userId=${userId}`);
+    return response.data;
+};
+
+export const unlikeBlog = async (userId: number, blogId: number): Promise<ApiResponse<string>> => {
+    const response = await apiAuthClient.delete<ApiResponse<string>>(`/blog/${blogId}/unlike?userId=${userId}`);
+    return response.data;
+};
+
+export const savedBlog = async (userId: number, blogId: number): Promise<ApiResponse<string>> => {
+    const response = await apiAuthClient.post<ApiResponse<string>>(`/blog/${blogId}/read?userId=${userId}`);
+    return response.data;
+};
+
+export const unsavedBlog = async (userId: number, blogId: number): Promise<ApiResponse<string>> => {
+    const response = await apiAuthClient.delete<ApiResponse<string>>(`/blog/${blogId}/read?userId=${userId}`);
+    return response.data;
+};

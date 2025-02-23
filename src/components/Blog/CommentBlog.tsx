@@ -177,7 +177,7 @@ const CommentBlog: React.FC<CommentBlogProps> = ({blogId}) => {
       <div className=" flex justify-start ">
         <div className="w-full  ">
     
-          {comments.map((comment, index) => (
+          {comments.map((comment) => (
             <motion.div
               key={comment.commentId} // we use the commentId as the key to not open all the comments when a new comment is added
               initial={{ opacity: 0, y: 10 }}
@@ -281,6 +281,7 @@ const CommentBlog: React.FC<CommentBlogProps> = ({blogId}) => {
                       </a>
                     </div>
                   </div>
+                  <ReplyComment />
                 </div>
               </div>
             </motion.div>
@@ -296,7 +297,7 @@ const CommentBlog: React.FC<CommentBlogProps> = ({blogId}) => {
           )}
 
             {/* reply */}
-          <ReplyComment />
+          
 
         </div>
       </div>

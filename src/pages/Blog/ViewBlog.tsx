@@ -27,22 +27,32 @@ import 'react-quill/dist/quill.snow.css';
 import 'react-quill/dist/quill.bubble.css'; 
 
 /**
+ * icons
+ */
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
+
+/**
  * components
  */
 import CommentBlog from '../../components/Blog/CommentBlog'
-import ActionsBlog from '../../components/Blog/ActionsBlog'
 import AuthorBlogCard from '../../components/User/AuthorBlogCard'
 import RecommendBlog from '../../components/Blog/RecommendBlog'
 import Spinner from '../../components/Spinner/Spinner'
 import NavBar from '../../components/NavBar'
 import { AppContext } from '../../context/AppContext'
 import ModalError from '../../components/Tools/ModalError/ModalError'
+import { likeBlog, savedBlog, unlikeBlog, unsavedBlog } from '../../services/blogService'
 
 
 const ViewBlog: React.FC = () => {
 
     // context when there is an error
     const { showError, handleCloseModal, openErrorModal, errorModalMessage} = useContext(AppContext);
+
+    const userIdAuth = useSelector((state: RootState) => state.auth.userId);
+    const accessToken = useSelector((state: RootState) => state.auth.accessToken);
 
     // get id from params to get blog info
     const { id } = useParams<{ id: string }>();
@@ -56,6 +66,14 @@ const ViewBlog: React.FC = () => {
     // state
     const [blog, setBlog] = useState<BlogPageResponse>();
 
+    // like
+    const [isLiked, setIsLiked] = useState<boolean>(false);
+    const [likeCount, setLikeCount] = useState<number>(0);
+
+    // read
+    const [isSaved, setIsSaved] = useState<boolean>(false);
+    const [savedCount, setSavedCount] = useState<number>(0);
+
     // convert 
     const userIdNumber = id ? parseInt(id) : NaN;
 
@@ -64,21 +82,47 @@ const ViewBlog: React.FC = () => {
     // useEffect to get one blog info
     useEffect(() => {
         if (isNaN(userIdNumber)) {
-            console.error("The id is not a number");
-            return;
+          console.error("The id is not a number");
+          return;
         }
+    
         const fetchData = async () => {
-            try {
-                const response = await dispatch(fecthGetOneBlogPage(userIdNumber)).unwrap();
-                console.log(response);
-                
-                setBlog(response.data);
-            } catch (error) {
-                console.log(error);
-            }
-        } 
+          try {
+            const response = await dispatch(fecthGetOneBlogPage(userIdNumber)).unwrap();
+            console.log(response);
+
+            // if (userIdAuth && response.data.usersLiked) {
+                if (response.data.usersLiked.includes(userIdAuth ?? 0)) {
+                    console.log('is liked');
+                    
+                  setIsLiked(true);
+                } else {
+                  setIsLiked(false);
+                }
+
+                if(response.data.usersReaded.includes(userIdAuth ?? 0)){
+                    console.log('is readed');
+                    setIsSaved(true);
+                }else{
+                    setIsSaved(false);
+                }
+            //   }
+            setLikeCount(response.data.blogEngagement.likesNumber);
+            setSavedCount(response.data.blogEngagement.savedNumber);
+            console.log(response.data.blogEngagement.likesNumber);
+            console.log(response.data.blogEngagement.savedNumber);
+            
+            
+            setBlog(response.data);
+          } catch (error) {
+            console.error(error);
+          } finally {
+            // setLoading(false);
+          }
+        };
+    
         fetchData();
-    }, [dispatch]);
+      }, [dispatch, userIdNumber]);
 
     // useEffect to show error when there is an error backend
     useEffect(() => {
@@ -93,6 +137,84 @@ const ViewBlog: React.FC = () => {
             dispatch(resetError());
         }
     }, [openErrorModal, dispatch]);
+
+
+    const handleLikeToggle = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        if (!userIdAuth) return;
+      
+        const button = e.target as HTMLButtonElement;
+        button.disabled = true;
+      
+        try {
+          if (isLiked) {
+            await unlikeBlog(userIdAuth, blog?.blogId ?? 0);
+            setLikeCount(likeCount - 1);
+          } else {
+            await likeBlog(userIdAuth, blog?.blogId ?? 0);
+            setLikeCount(likeCount + 1);
+          }
+          setIsLiked(!isLiked);
+          if (blog) {
+            setBlog({
+              ...blog,
+              blogEngagement: {
+                ...blog.blogEngagement,
+                likesNumber: likeCount,
+                commentsNumber: blog?.blogEngagement?.commentsNumber ?? 0, // Default a 0 si es undefined
+                savedNumber: blog?.blogEngagement?.savedNumber ?? 0, // Default a 0 si es undefined
+                blogId: blog?.blogId ?? 0, // Default a 0 si es undefined
+              },
+            });
+          }
+          
+          
+        } catch (error) {
+          console.error("Error updating like:", error);
+        } finally {
+          setTimeout(() => {
+            button.disabled = false;
+          }, 3000);
+        }
+      };
+      
+      const handleSavedToggle = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        if (!userIdAuth) return;
+    
+        const button = e.target as HTMLButtonElement;
+        button.disabled = true;
+    
+        try {
+            if (isSaved) {
+                // Desmarcar el blog como leído
+                await unsavedBlog(userIdAuth, blog?.blogId ?? 0);
+                setSavedCount(savedCount - 1);
+            } else {
+                // Marcar el blog como leído
+                await savedBlog(userIdAuth, blog?.blogId ?? 0);
+                setSavedCount(savedCount + 1);
+            }
+            setIsSaved(!isSaved); // Cambiar el estado de "leído"
+    
+            // Verificar si blog no es undefined
+            if (blog) {
+                setBlog({
+                    ...blog,
+                    blogEngagement: {
+                        ...blog.blogEngagement,
+                        savedNumber: savedCount, // Actualizar el número de lecturas
+                    },
+                });
+            }
+        } catch (error) {
+            console.error("Error updating saved status:", error);
+        } finally {
+            // Volver a habilitar el botón después de un retraso
+            setTimeout(() => {
+                button.disabled = false;
+            }, 3000);
+        }
+    };
+    
 
     // loading data
     if (loading) return <Spinner />;
@@ -109,13 +231,37 @@ const ViewBlog: React.FC = () => {
             
             <div className="flex w-full lg:w-9/12 mx-0 sm:mx-1 ">
                 <div className="flex-col hidden sm:block sticky top-12 h-[90%] px-4 py-2">
-                    <ActionsBlog
-                        blogId={blog?.blogEngagement.blogId ?? 0}      
-                        likesNumber={blog?.blogEngagement.likesNumber ?? 0}
-                        commentsNumber={blog?.blogEngagement.commentsNumber ?? 0}
-                        savedNumber={blog?.blogEngagement.savedNumber ?? 0}
-                    />
-                    
+                    <div className="flex flex-row sm:flex-col">
+                        <div className="my-3 text-2xl mx-10 sm:mx-0 flex flex-row sm:flex-col justify-center items-center">
+                            <button 
+                                className="cursor-pointer" 
+                                onClick={handleLikeToggle}
+                                disabled={!accessToken}
+                            >
+                                {isLiked ? <FavoriteBorderIcon color="error" /> : <FavoriteBorderIcon />}
+                            </button>
+                            <p
+                                className={`${isLiked ? 'text-red-500' : 'text-black'}`}
+                            >{likeCount}</p>
+                        </div>
+                        <div className="my-3 text-2xl mx-10 sm:mx-0 flex flex-row sm:flex-col justify-center items-center">
+                            <p><ChatBubbleOutlineIcon /></p>
+                            <p>{blog?.blogEngagement.commentsNumber ? blog?.blogEngagement.commentsNumber : '0'}</p>
+                        </div>
+                        <div className="my-3 text-2xl mx-10 sm:mx-0 flex flex-row sm:flex-col justify-center items-center">
+                            <button 
+                                className="cursor-pointer" 
+                                onClick={handleSavedToggle}
+                                disabled={!accessToken}
+                            >
+                                {isSaved ? <BookmarkBorderIcon color="primary" /> : <BookmarkBorderIcon />}
+                            </button>
+                            <p className={`${isSaved ? 'text-blue-500' : 'text-black'}`}>
+                                {savedCount ? savedCount : '0'}
+                            </p>
+                        </div>
+
+                    </div>
                 </div>
                 <main className="w-full">
 
@@ -201,14 +347,38 @@ const ViewBlog: React.FC = () => {
                 <RecommendBlog />
             </aside>
 
-            <div className="fixed z-1 bottom-0 w-full  block sm:hidden bg-slate-500">
+            <div className="fixed z-1 bottom-0 w-full  block sm:hidden bg-white shadow-[0_-10px_15px_rgba(0,0,0,0.1)]">
                 <div className='flex justify-center'>
-                    <ActionsBlog
-                        blogId={blog?.blogEngagement.blogId ?? 0}      
-                        likesNumber={blog?.blogEngagement.likesNumber ?? 0}
-                        commentsNumber={blog?.blogEngagement.commentsNumber ?? 0}
-                        savedNumber={blog?.blogEngagement.savedNumber ?? 0}
-                    />
+                    <div className="flex flex-row sm:flex-col">
+                        <div className="my-3 text-2xl mx-10 sm:mx-0 flex flex-row sm:flex-col justify-center items-center">
+                            <button 
+                                className="cursor-pointer" 
+                                onClick={handleLikeToggle}
+                                disabled={!accessToken}
+                            >
+                                {isLiked ? <FavoriteBorderIcon color="error" /> : <FavoriteBorderIcon />}
+                            </button>
+                            <p
+                                className={`${isLiked ? 'text-red-500' : 'text-black'}`}
+                            >{likeCount}</p>
+                        </div>
+                        <div className="my-3 text-2xl mx-10 sm:mx-0 flex flex-row sm:flex-col justify-center items-center">
+                            <p><ChatBubbleOutlineIcon /></p>
+                            <p>{blog?.blogEngagement.commentsNumber ? blog?.blogEngagement.commentsNumber : '0'}</p>
+                        </div>
+                        <div className="my-3 text-2xl mx-10 sm:mx-0 flex flex-row sm:flex-col justify-center items-center">
+                            <button 
+                                className="cursor-pointer" 
+                                onClick={handleSavedToggle}
+                                disabled={!accessToken}
+                            >
+                                {isSaved ? <BookmarkBorderIcon color="primary" /> : <BookmarkBorderIcon />}
+                            </button>
+                            <p className={`${isSaved ? 'text-blue-500' : 'text-black'}`}>
+                                {savedCount ? savedCount : '0'}
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -90,6 +90,8 @@ const Profile: React.FC = () => {
       const response = await fetchBlogsByUser(userIdNumber, page, 5);
       const { content, last } = response.data;
       
+      console.log("content", content);
+      
       setCount(count + 1);
       console.log("count", count);
       

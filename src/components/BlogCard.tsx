@@ -1,16 +1,87 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { BlogCardI } from '../types/blog'
 import { formatDate } from '../utils/dateUtils'
 import { Link } from 'react-router-dom'
 
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
+import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import BookmarkBorderOutlinedIcon from '@mui/icons-material/BookmarkBorderOutlined';
+import { RootState } from '../redux/store';
+import { useSelector } from 'react-redux';
+import { likeBlog, savedBlog, unlikeBlog, unsavedBlog } from '../services/blogService';
 
 const BlogCard: React.FC<BlogCardI>  = (props) => {
+
+    const userIdAuth = useSelector((state: RootState) => state.auth.userId);
+    const accessToken = useSelector((state: RootState) => state.auth.accessToken);
+
+    // Like
+    const [isLiked, setIsLiked] = useState<boolean>(false);
+    const [likeCount, setLikeCount] = useState<number>(props.blogEngagement.likesNumber || 0);
+
+    // Saved
+    const [isSaved, setIsSaved] = useState<boolean>(false);
+    const [savedCount, setSavedCount] = useState<number>(props.blogEngagement.savedNumber || 0);
+
+    useEffect(() => {
+        if (userIdAuth) {
+            setIsLiked(props.usersLiked.includes(userIdAuth));
+            setIsSaved(props.usersReaded.includes(userIdAuth));
+        }
+    }, [props.usersLiked, props.usersReaded, userIdAuth]);
+
+    const handleLikeToggle = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        if (!userIdAuth) return;
+        
+        const button = e.currentTarget;
+        button.disabled = true;
+
+        try {
+            if (isLiked) {
+                await unlikeBlog(userIdAuth, props.blogId);
+                setLikeCount((prev) => prev - 1);
+            } else {
+                await likeBlog(userIdAuth, props.blogId);
+                setLikeCount((prev) => prev + 1);
+            }
+            setIsLiked((prev) => !prev);
+        } catch (error) {
+            console.error("Error updating like:", error);
+        } finally {
+            setTimeout(() => {
+                button.disabled = false;
+            }, 3000);
+        }
+    };
+
+    const handleSavedToggle = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        if (!userIdAuth) return;
+        
+        const button = e.currentTarget;
+        button.disabled = true;
+
+        try {
+            if (isSaved) {
+                await unsavedBlog(userIdAuth, props.blogId);
+                setSavedCount((prev) => prev - 1);
+            } else {
+                await savedBlog(userIdAuth, props.blogId);
+                setSavedCount((prev) => prev + 1);
+            }
+            setIsSaved((prev) => !prev);
+        } catch (error) {
+            console.error("Error updating saved status:", error);
+        } finally {
+            setTimeout(() => {
+                button.disabled = false;
+            }, 3000);
+        }
+    };
+
+
+
   return (
-    <div>
-        <div className="mx-auto w-full overflow-hidden rounded-lg bg-white shadow mb-7">
+    <div className="mx-auto w-full overflow-hidden rounded-lg bg-white shadow mb-7">
             <img
                 src="https://images.unsplash.com/photo-1552581234-26160f608093?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
                 className="aspect-video w-full h-28 object-cover"
@@ -26,7 +97,7 @@ const BlogCard: React.FC<BlogCardI>  = (props) => {
                 </h3>
                 <p className="mt-1 text-gray-500">{props.description}</p>
                 <div className="mt-4 flex gap-2">
-                    {props.categories.map((category: { name: string; color: string }, index: number) => (
+                    {props.categories.map((category, index) => (
                         <Link
                             to={`/categoy-by-blog/${category.name}`}
                             key={index}
@@ -38,24 +109,37 @@ const BlogCard: React.FC<BlogCardI>  = (props) => {
                     ))}
                 </div>
             </div>
-            <div className='mt-5 flex justify-between mx-5 mb-3'>
-                <div className='flex items-center'>
-                    <p className='mr-4'>
-                        <FavoriteBorderIcon fontSize='small'/>
-                        <span>{props.blogEngagement.likesNumber}</span>
-                    </p>
-                    <p>
-                        <ChatBubbleOutlineOutlinedIcon fontSize='small'/>
-                        <span>{props.blogEngagement.commentsNumber}</span>
+
+            {/* Sección de interacción */}
+            <div className="mt-5 flex justify-between mx-5 mb-3">
+                <div className="flex items-center">
+                    <button 
+                        onClick={handleLikeToggle} 
+                        className="cursor-pointer" 
+                        disabled={!accessToken}  // Deshabilitar si no existe accessToken
+                    >
+                        {isLiked ? <FavoriteBorderIcon color="error" fontSize="small"/> : <FavoriteBorderIcon fontSize="small" />}
+                    </button>
+                    <span className="ml-1 text-sm">{likeCount}</span>
+
+                    <p className="ml-4 ">
+                        <ChatBubbleOutlineIcon sx={{ fontSize: 20 }} />
+                        <span className="ml-1 text-sm">{props.blogEngagement.commentsNumber || 0}</span>
                     </p>
                 </div>
-                <p className='flex items-center'>
-                    <BookmarkBorderOutlinedIcon fontSize='small'/>
-                    <span>{props.blogEngagement.savedNumber}</span>
-                </p>
+
+                <div className='flex items-center'>
+                    <button 
+                        onClick={handleSavedToggle} 
+                        className="cursor-pointer" 
+                        disabled={!accessToken}  // Deshabilitar si no existe accessToken
+                    >
+                        {isSaved ? <BookmarkBorderOutlinedIcon color="primary" fontSize="small" /> : <BookmarkBorderOutlinedIcon fontSize="small" />}
+                    </button>
+                    <span className='text-sm'>{savedCount}</span>
+                </div>
             </div>
         </div>
-    </div>
   )
 }
 

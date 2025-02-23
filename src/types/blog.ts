@@ -33,11 +33,11 @@ export interface CreateBlogValidationErrorResponseI {
   content: string;
 }
 
-export interface BlogEngagement{
-  likesNumber: number;
-  commentsNumber: number;
-  savedNumber: number;
-}
+// export interface BlogEngagement{
+//   likesNumber: number;
+//   commentsNumber: number;
+//   savedNumber: number;
+// }
 
 export interface BlogPageResponse{
   blogId: number;
@@ -50,6 +50,8 @@ export interface BlogPageResponse{
   categories: CategorySmallInfo[];
   userInfo: UserInfoCard;
   blogEngagement: BlogEngagement;
+  usersLiked: number[];
+  usersReaded: number[];
 }
 
 
@@ -64,6 +66,8 @@ export interface BlogCardI{
   username: string;
   categories: CategorySmallInfo[];
   blogEngagement: BlogEngagement;
+  usersLiked: number[];
+  usersReaded: number[];
 }
 
 export interface BlogEngagement{

@@ -13,6 +13,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Button, IconButton, Menu, MenuItem } from "@mui/material";
 import { Link } from "react-router-dom";
+import ModalGlobal from "../MultipleUtils/ModalGlobal/ModalGlobal";
+import FormComment from "./FormUserComment/FormComment";
 
 
 interface CommentBlogProps {
@@ -30,6 +32,9 @@ const CommentBlog: React.FC<CommentBlogProps> = ({blogId}) => {
   const [anchorEl, setAnchorEl] = useState<{ [key: number]: HTMLElement | null }>({});
 
   const [removingCommentId, setRemovingCommentId] = useState<number | null>(null);
+
+  const [isGlobalModalOpen, setIsGlobalModalOpen] = useState(false);
+  const [currentComment, setCurrentComment] = useState<Comment | null>(null);
 
 
   const [comments, setComments] = useState<commentResponseI[]>([]);
@@ -121,8 +126,47 @@ const CommentBlog: React.FC<CommentBlogProps> = ({blogId}) => {
     }));
   };
 
+  const handleOpenGlobalModal = (comment: any) => {
+    setCurrentComment(comment);
+    setIsGlobalModalOpen(true);
+  };
+
+  const handleCloseGlobalModal = () => {
+    setCurrentComment(null);
+    setIsGlobalModalOpen(false);
+  };
+
+  const handleUpdateComment = (updatedComment: commentResponseI) => {
+    setComments((prevComments) =>
+      prevComments.map((comment) =>
+        comment.commentId === updatedComment.commentId ? updatedComment : comment
+      )
+    );
+  };
+
+
   return (
     <div className="flex flex-col w-full">
+
+    <div className="p-4 mt-20">
+      <ModalGlobal
+        isOpen={isGlobalModalOpen}
+        onClose={handleCloseGlobalModal}
+        title="Formulario de Registro"
+        maxWidth="md"
+      >
+        <FormComment  
+          blogId={blogId}
+          type="editComment"
+          placeholder="Edit your comment"
+          buttonText="Edit Comment"
+          contentData={currentComment}
+          onCloseModal={handleCloseGlobalModal}
+          onUpdateComment={handleUpdateComment}
+        />
+      </ModalGlobal>
+    </div>
+
 
         {
           accessToken && (
@@ -242,7 +286,11 @@ const CommentBlog: React.FC<CommentBlogProps> = ({blogId}) => {
                                     onClose={() => handleClose(comment.commentId)} 
                                     disableScrollLock
                                   >
-                                    <MenuItem onClick={() => handleClose(comment.commentId)}>
+                                    <MenuItem 
+                                     onClick={() => {
+                                      handleClose(comment.commentId);
+                                      handleOpenGlobalModal(comment);
+                                    }}>
                                       <Button variant="text" size="small" startIcon={<EditIcon fontSize="small" />}>
                                         Edit
                                       </Button>

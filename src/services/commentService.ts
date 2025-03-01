@@ -18,3 +18,7 @@ export const fecthGetCommentsByBlogId = async (blogId: number, page: number, siz
     return response.data
 }
 
+export const fetchUpdateCommentRequest = async (commentId: number, commentData: newCommentRequestI): Promise<ApiResponse<commentResponseI>> => {
+    const response = await apiAuthClient.put<ApiResponse<commentResponseI>>(`/comment/${commentId}`,commentData);
+    return response.data;
+};

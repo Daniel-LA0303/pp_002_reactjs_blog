@@ -221,7 +221,7 @@ const ViewBlog: React.FC = () => {
     // loading data
     if (loading) return <Spinner />;
 
-  return (
+    return (
     <>
         <ModalError
             open={openErrorModal}

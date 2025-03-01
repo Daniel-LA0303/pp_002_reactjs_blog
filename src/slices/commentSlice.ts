@@ -1,7 +1,7 @@
 import { createAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { ApiResponse } from "../types/category";
 import { newCommentRequestI } from "../types/comment";
-import { fetchCreateCommentRequest, fetchDeleteCommentRequest } from "../services/commentService";
+import { fetchCreateCommentRequest, fetchDeleteCommentRequest, fetchUpdateCommentRequest } from "../services/commentService";
 
 interface CommentState {
     loading: boolean;
@@ -39,6 +39,19 @@ export const fetchDeleteComment = createAsyncThunk(
             return response.data;
         } catch (error: any) {
             return rejectWithValue(error.response?.data || 'Error to delete comment');
+        }
+    }
+);
+
+export const fetchUpdateComment = createAsyncThunk(
+    'comment/updateComment',
+    async (params: { commentId: number, commentData: newCommentRequestI }, { rejectWithValue }) => {
+        try {
+            const { commentId, commentData } = params;
+            const response = await fetchUpdateCommentRequest(commentId, commentData); // Asumiendo que ya tienes esta función
+            return response.data;
+        } catch (error: any) {
+            return rejectWithValue(error.response?.data || 'Error to update comment');
         }
     }
 );
@@ -84,6 +97,22 @@ const commentSlice = createSlice({
             state.loading = false;
             state.errorComment = true;
             state.errorMessage = action.payload as ApiResponse<any> || 'Failed to delete comment';
+        });
+
+        builder.addCase(fetchUpdateComment.pending, (state) => {
+            state.loading = true;
+            state.errorComment = false;
+            state.errorMessage = null;
+        });
+        builder.addCase(fetchUpdateComment.fulfilled, (state) => {
+            state.loading = false;
+            state.errorComment = false;
+            state.errorMessage = null;
+        });
+        builder.addCase(fetchUpdateComment.rejected, (state, action) => {
+            state.loading = false;
+            state.errorComment = true;
+            state.errorMessage = action.payload as ApiResponse<any> || 'Failed to update comment';
         });
 
         builder.addCase(resetCommentError, (state) => {

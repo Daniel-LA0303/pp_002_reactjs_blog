@@ -1,5 +1,4 @@
 import React, { useState, useEffect, ReactNode } from 'react';
-import { Modal } from '@mui/material';
 import { Close as CloseIcon } from '@mui/icons-material';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -46,6 +45,7 @@ const ModalGlobal: React.FC<ModalGlobalProps> = ({
   const overlayVariants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1 },
+    exit: { opacity: 0, transition: { duration: 0.2 } },
   };
 
   const modalVariants = {
@@ -69,57 +69,52 @@ const ModalGlobal: React.FC<ModalGlobalProps> = ({
   const widthClass = fullWidth ? 'w-full' : 'w-auto';
 
   return (
-    <Modal
-      open={open}
-      onClose={handleClose}
-      aria-labelledby="modal-global-title"
-      className="flex items-center justify-center"
-    >
-      <AnimatePresence mode="wait">
-        {open && (
+    <AnimatePresence mode="wait">
+      {open && (
+        <motion.div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50"
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          variants={overlayVariants}
+          onClick={handleClose} // Cerrar la modal al hacer clic en el fondo
+        >
           <motion.div
-            className="w-full h-full flex items-center justify-center p-4"
             initial="hidden"
             animate="visible"
-            exit="hidden"
-            variants={overlayVariants}
+            exit="exit"
+            variants={modalVariants}
+            className={`${widthClass} ${maxWidthClass} mx-auto`}
+            onClick={(e) => e.stopPropagation()} // Evitar que el clic en la modal cierre el fondo
           >
-            <motion.div
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-              variants={modalVariants}
-              className={`${widthClass} ${maxWidthClass} mx-auto`}
-            >
-              <div className="bg-white rounded-lg shadow-xl overflow-hidden max-h-[90vh] outline-none">
-                {(title || showCloseButton) && (
-                  <div className="flex justify-between items-center px-6 py-4 bg-gray-50 border-b border-gray-200">
-                    {title && (
-                      <h2 id="modal-global-title" className="text-lg font-medium text-gray-800">
-                        {title}
-                      </h2>
-                    )}
-                    {showCloseButton && (
-                      <button
-                        type="button"
-                        aria-label="close"
-                        onClick={handleClose}
-                        className="text-gray-500 hover:text-gray-700 transition-colors duration-200"
-                      >
-                        <CloseIcon fontSize="small" />
-                      </button>
-                    )}
-                  </div>
-                )}
-                <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
-                  {children}
+            <div className="bg-white rounded-lg shadow-xl overflow-hidden max-h-[90vh] outline-none">
+              {(title || showCloseButton) && (
+                <div className="flex justify-between items-center px-6 py-4 bg-gray-50 border-b border-gray-200">
+                  {title && (
+                    <h2 id="modal-global-title" className="text-lg font-medium text-gray-800">
+                      {title}
+                    </h2>
+                  )}
+                  {showCloseButton && (
+                    <button
+                      type="button"
+                      aria-label="close"
+                      onClick={handleClose}
+                      className="text-gray-500 hover:text-gray-700 transition-colors duration-200"
+                    >
+                      <CloseIcon fontSize="small" />
+                    </button>
+                  )}
                 </div>
+              )}
+              <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+                {children}
               </div>
-            </motion.div>
+            </div>
           </motion.div>
-        )}
-      </AnimatePresence>
-    </Modal>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };
 

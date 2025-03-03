@@ -4,6 +4,7 @@ import userReducer from '../slices/userSlice';
 import blogReducer from '../slices/blogSlice'
 import authReducer from '../slices/authSlice';
 import commentReducer from '../slices/commentSlice';
+import replyReducer from '../slices/replySlice';
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     blog: blogReducer,
     auth: authReducer,
     comment: commentReducer,
+    reply: replyReducer,
   },
 });
 

@@ -346,9 +346,6 @@ const ViewBlog: React.FC = () => {
                     </div>
 
                     {/* comments section */}
-                    {/* <section> */}
-
-                    {/* </section> */}
 
                     {/* comments and replies */}
                     <div className="flex flex-col mx-auto items-center justify-start my-6 w-full max-w-screen-md ">

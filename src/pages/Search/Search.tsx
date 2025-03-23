@@ -1,21 +1,23 @@
 import { useState } from "react";
 import SearchBlogs from "../../components/Search/SearchBlogs";
-import CategoryCard from "../../components/Category/CategoryCard";
 import SearchCategories from "../../components/Search/SearchCategories";
 import SearchUsers from "../../components/Search/SearchUsers";
 import NavBar from "../../components/NavBar";
+import { useParams } from "react-router-dom";
 
 function TabMenu() {
+
+    const { query } = useParams();
     const [activeTab, setActiveTab] = useState("blog");
 
     const renderContent = () => {
         switch (activeTab) {
             case "blog":
-                return <SearchBlogs />;
+                return <SearchBlogs query={query}/>;
             case "category":
-                return <SearchCategories />;
+                return <SearchCategories query={query}/>;
             case "user":
-                return <SearchUsers />;
+                return <SearchUsers query={query}/>;
             default:
                 return <div>Selecciona una pestaña</div>;
         }

@@ -1,36 +1,126 @@
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { CircularProgress } from "@mui/material"; // Ajusta la importación según tu proyecto
+import { fetchDeleteUnfollowUser, fetchPostFollowUser } from "../../services/userService";
+import { RootState } from "../../redux/store";
 
-
-const SearchUserCard = () => {
-  return (
-    <div className="flex bg-white shadow-lg rounded-lg mx-4 md:mx-full my-2 max-w-md md:w-full">    
-        <div className="flex items-start px-4 py-6">
-            <img className="w-12 h-12 rounded-full object-cover mr-4 shadow" src="https://images.unsplash.com/photo-1542156822-6924d1a71ace?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" alt="avatar" />
-            <div className="">
-                <div className="flex items-center justify-between">
-                    <h2 className="text-lg font-semibold text-gray-900 -mt-1">Brad Adams </h2>
-                </div>
-                <p className="text-gray-700">Joined 12 SEP 2012. </p>
-                <p className="mt-3 text-gray-700 text-sm">
-                    Lorem ipsum, dolor sit amet conse. Saepe optio minus rem dolor sit amet!
-                </p>
-                <div className="mt-4 flex items-center">
-                    <div className="flex text-gray-700 text-sm mr-3">
-                    <svg fill="none" viewBox="0 0 24 24"  className="w-4 h-4 mr-1" stroke="currentColor">
-                        <path  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-                        </svg>
-                    <span>12</span>
-                    </div>
-                    <div className="flex text-gray-700 text-sm mr-8">
-                    <svg fill="none" viewBox="0 0 24 24" className="w-4 h-4 mr-1" stroke="currentColor">
-                        <path  d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"/>
-                    </svg>
-                    <span>8</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-  )
+interface SearchUserCardProps {
+  userId: number;
+  username: string;
+  city?: string;
+  followers: number;
+  following: number;
+  usersFollowers?: number[];
+  joinedDate: string; // Nueva propiedad para la fecha de unión
+  profileImage?: string; // Nueva propiedad para la imagen de perfil
 }
 
-export default SearchUserCard
+const SearchUserCard: React.FC<SearchUserCardProps> = (props) => {
+  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
+  const userIdAuth = useSelector((state: RootState) => state.auth.userId);
+
+  const [isFollowing, setIsFollowing] = useState(
+    userIdAuth !== null && props?.usersFollowers?.includes(userIdAuth)
+  );
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (userIdAuth && props?.usersFollowers?.includes(userIdAuth)) {
+      setIsFollowing(true);
+    } else {
+      setIsFollowing(false);
+    }
+  }, [userIdAuth, props.usersFollowers]);
+
+  const handleFollow = async () => {
+    if (!accessToken || userIdAuth === props.userId || userIdAuth === null) {
+      return;
+    }
+
+    try {
+      setLoading(true);
+      await fetchPostFollowUser(userIdAuth, props.userId);
+      setIsFollowing(true);
+    } catch (error) {
+      console.error("Error al seguir al usuario:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUnfollow = async () => {
+    if (!accessToken || userIdAuth === props.userId || userIdAuth === null) {
+      return;
+    }
+
+    try {
+      setLoading(true);
+      await fetchDeleteUnfollowUser(userIdAuth, props.userId);
+      setIsFollowing(false);
+    } catch (error) {
+      console.error("Error al dejar de seguir al usuario:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="flex bg-white shadow-lg rounded-lg mx-auto my-2 md:w-full">
+      <div className="flex items-start px-4 py-6 w-full">
+        {/* Imagen de perfil */}
+        <Link to={`/profile/${props.userId}`}>
+          <img
+            className="w-12 h-12 rounded-full object-cover mr-4 shadow"
+            src={props?.profileImage || "https://github.com/creativetimofficial/soft-ui-dashboard-tailwind/blob/main/build/assets/img/team-2.jpg?raw=true"} // Imagen por defecto
+            alt="avatar"
+          />
+        </Link>
+
+        {/* Información del usuario */}
+        <div className="flex-grow">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-gray-900 -mt-1">
+              <Link to={`/profile/${props.userId}`}>{props.username}</Link>
+            </h2>
+          </div>
+
+          {/* Estadísticas (Followers y Following) */}
+          <div className="flex mt-2">
+            <div className="mr-4">
+              <span className="text-sm font-bold text-gray-700">
+                {props.followers}
+              </span>
+              <span className="text-sm text-gray-500 ml-1">Followers</span>
+            </div>
+            <div>
+              <span className="text-sm font-bold text-gray-700">
+                {props.following}
+              </span>
+              <span className="text-sm text-gray-500 ml-1">Following</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Botón de Follow/Unfollow */}
+        {accessToken && userIdAuth !== props.userId && (
+          <button
+            onClick={isFollowing ? handleUnfollow : handleFollow}
+            className="px-4 py-2 bg-blue-500 text-white text-sm rounded-full shadow-md hover:bg-blue-600 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-300"
+            disabled={loading}
+          >
+            {loading ? (
+              <CircularProgress size={20} color="inherit" />
+            ) : isFollowing ? (
+              "Unfollow"
+            ) : (
+              "Follow"
+            )}
+          </button>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default SearchUserCard;

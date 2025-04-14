@@ -14,7 +14,6 @@ import UserSettings from '../pages/UserPages/UserSettings';
 import ViewCategories from '../pages/Category/ViewCategories';
 import Home from '../pages/Home/Home';
 import PrincipalDashBoard from '../pages/UserPages/Dashboard/PrincipalDashBoard';
-import BlogsByCategory from '../pages/Category/BlogsByCategory';
 import BlogsByUserDashboard from '../pages/UserPages/Dashboard/BlogsByUserDashboard';
 import BlogsByLikeDashboard from '../pages/UserPages/Dashboard/BlogsByLikeDashboard';
 import BlogsByCommentDashboard from '../pages/UserPages/Dashboard/BlogsByCommentDashboard';

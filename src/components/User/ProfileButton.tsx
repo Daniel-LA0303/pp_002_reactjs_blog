@@ -19,20 +19,19 @@ const ProfileButton = () => {
   
   const navigate = useNavigate();
 
+  const [username, setUsername] = useState(localStorage.getItem("userName"));
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const menuRef = useRef(null);
-
+  const menuRef = useRef<HTMLDivElement>(null);
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   // functions section
 
   // function to handle click outside the menu
-  const handleClickOutside = (event) => {
-    if (menuRef.current && !menuRef.current.contains(event.target)) {
+  const handleClickOutside = (event: MouseEvent) => {
+    if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
       setIsMenuOpen(false);
     }
   };
-
   // function to handle logout
   const handleLogout = () => {
     dispatch(logout()); 
@@ -67,6 +66,11 @@ const ProfileButton = () => {
        data-popover-placement="bottom"
        className="absolute right-1 top-14 z-10 flex min-w-[180px] flex-col gap-2 overflow-auto rounded-md border border-blue-gray-50 bg-white p-3 font-sans text-sm font-normal text-blue-gray-500 shadow-lg shadow-blue-gray-500/10 focus:outline-none"
      >
+        <div>
+          <p
+            className="block font-sans font-normal leading-normal text-inherit antialiased text-center text-base"
+          >{username}</p>
+        </div>
        <Link
           to={`/profile/${userIdAuth}`}
           role="menuitem"

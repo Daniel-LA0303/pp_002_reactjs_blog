@@ -215,9 +215,33 @@ const CreateBlog: React.FC = () => {
       return
     }
     
+    const formDataToSend = new FormData();
+
+    // Crear el objeto blogData
+    const blogData = {
+        userId: formData.userId,
+        title: formData.title,
+        description: formData.description,
+        content: content,
+        categories: categoriesSelected.map((c) => c.value)
+    };
     // prepare data
-    formData.content = content;
-    formData.categories = categoriesSelected.map(c => c.value);
+    // formData.content = content;
+    // formData.categories = categoriesSelected.map(c => c.value);
+
+    formDataToSend.append("blogData", new Blob([JSON.stringify(blogData)], {
+      type: "application/json"
+    }));
+
+    if (!selectedImage) {
+      alert("Blog image is required");
+      return;
+    }
+
+
+    if (selectedImage) {
+        formDataToSend.append("blogImage", selectedImage);
+    }
     
     // request to backend
     try {
@@ -228,7 +252,9 @@ const CreateBlog: React.FC = () => {
       // await dispatch(fetchCreateBlog(formData)).unwrap();
       // navigate('/profile/1');
 
-      const res = await dispatch(fetchCreateBlog(formData)).unwrap();
+      console.log("formDataToSend", formDataToSend);
+      
+      const res = await dispatch(fetchCreateBlog(formDataToSend)).unwrap();
       console.log("res-create-blog-ui", res);
       
       navigate(`/profile/${userIdAuth}`);
@@ -379,13 +405,13 @@ const CreateBlog: React.FC = () => {
                   </div>
 
 
-                  <div className="md:col-span-5">
+                  <div className="md:col-span-5 cursor-pointer">
                     <label className="uppercase md:text-sm text-xs text-gray-500 text-light font-semibold mb-1">
                       Upload Photo
                     </label>
                     {!selectedImage && (
                     <div className="flex items-center justify-center w-full">
-                      <label className="flex flex-col border-4 border-dashed w-full h-32 hover:bg-gray-100 hover:border-slate-300 group">
+                      <label className="flex flex-col border-4 border-dashed w-full h-32 hover:bg-gray-100 hover:border-slate-300 group cursor-pointer">
                         <div className="flex flex-col items-center justify-center pt-7">
                           <svg
                             className="w-10 h-10 text-slate-400 group-hover:text-slate-600"

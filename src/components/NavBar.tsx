@@ -14,6 +14,7 @@ const NavBar: React.FC = () => {
 
   const route = useNavigate();
   const [atTop, setAtTop] = useState(true);
+  const [searchQuery, setSearchQuery] = useState(""); // Estado para la búsqueda
   const [menuOpen, setMenuOpen] = useState(false); // Estado para el menú
 
   // Detect scroll to handle "atTop" state
@@ -28,7 +29,9 @@ const NavBar: React.FC = () => {
   }, []);
 
   const handleSearch = () => {
-    route("/search");
+    if (searchQuery.trim()) {  // Verifica que no esté vacío
+      route(`/search/${encodeURIComponent(searchQuery.trim())}`);
+    }
   };
 
   const toggleMenu = () => {
@@ -63,8 +66,16 @@ const NavBar: React.FC = () => {
                 LOGO
               </Link>
               <div className="searchBox">
-                <input className="searchInput" type="text" name="" placeholder="Search" />
-                <button onClick={() => handleSearch()} className="searchButton">
+                <input 
+                  className="searchInput" 
+                  type="text" 
+                  name="searchQuery"
+                  value={searchQuery} 
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                  placeholder="Search" 
+                />
+                <button onClick={handleSearch} className="searchButton">
                   <SearchIcon fontSize="small" />
                 </button>
               </div>

@@ -59,7 +59,9 @@ const UserSettings: React.FC = () => {
     skills: '',
     bio: '',
   });
-
+  // image selected by user
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  
   // conver id
   const userIdNumber = id ? parseInt(id) : NaN;
 
@@ -107,30 +109,60 @@ const UserSettings: React.FC = () => {
   
 
   // function section
+
+  // set file in UI
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setSelectedImage(file);
+    }
+  };
+
+  // remove Image
+  const removeImage = () => {
+    setSelectedImage(null);
+  };
+
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const {name, value} = e.target;
     setFormData(prevData => ({...prevData, [name]: value}))
   }  
 
   // submit to backend
-  const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      console.log(
-        "Submit form with data update profile:",
-        formData
-      );
-      
-      try {
-        const response = await dispatch(fetchPutUpdatedUserInfoToolkit({ id: userIdNumber, userInfoUpdated: formData })).unwrap();
-        
-        navigate(`/profile/${userIdNumber}`);
-        console.log("Response update user info:", response);
-        
-      } catch (error) {
-        console.log(error);
-        
-      }
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    
+    const formDataToSend = new FormData();
+    
+    // Agregar los datos del formulario
+    formDataToSend.append("userData", new Blob([JSON.stringify(formData)], {
+      type: "application/json"
+    }));
+    
+    // Agregar la imagen solo si existe
+    if (selectedImage) {
+      formDataToSend.append("profileImage", selectedImage);
     }
+    
+    try {
+
+      console.log("FormData to send:", formDataToSend);
+      
+
+      const response = await dispatch(
+        fetchPutUpdatedUserInfoToolkit({ 
+          id: userIdNumber, 
+          userInfoUpdated: formDataToSend // Enviamos FormData en lugar del objeto
+        })
+      ).unwrap();
+      
+      navigate(`/profile/${userIdNumber}`);
+      console.log("Response update user info:", response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   // prevent errors
   if (loadingUser) return <Spinner />;
@@ -292,32 +324,52 @@ const UserSettings: React.FC = () => {
                       ></textarea>
                     </div>
 
-                    <div className="md:col-span-5">
-                      <label className="uppercase md:text-sm text-xs text-gray-500 text-light font-semibold mb-1">
-                        Upload Photo
+                    <div className="md:col-span-5 cursor-pointer">
+                    <label className="uppercase md:text-sm text-xs text-gray-500 text-light font-semibold mb-1">
+                      Upload Photo
+                    </label>
+                    {!selectedImage && (
+                    <div className="flex items-center justify-center w-full">
+                      <label className="flex flex-col border-4 border-dashed w-full h-32 hover:bg-gray-100 hover:border-slate-300 group cursor-pointer">
+                        <div className="flex flex-col items-center justify-center pt-7">
+                          <svg
+                            className="w-10 h-10 text-slate-400 group-hover:text-slate-600"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                            ></path>
+                          </svg>
+                          <p className="lowercase text-sm text-gray-400 group-hover:text-slate-600 pt-1 tracking-wider">
+                            Select a photo
+                          </p>
+                        </div>
+                        <input type="file" className="hidden" onChange={handleImageChange} />
                       </label>
-                      <div className="flex items-center justify-center w-full">
-                        <label className="flex flex-col border-4 border-dashed w-full h-32 hover:bg-gray-100 hover:border-slate-300 group">
-                          <div className="flex flex-col items-center justify-center pt-7">
-                            <svg
-                              className="w-10 h-10 text-slate-400 group-hover:text-slate-400"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                              ></path>
-                            </svg>
-                            <p className="lowercase text-sm text-gray-400 group-hover:text-slate-400 pt-1 tracking-wider">
-                              Select a photo
-                            </p>
-                          </div>
-                          <input type="file" className="hidden" />
-                        </label>
-                      </div>
+
                     </div>
+                    )}
+ 
+                    {selectedImage && (
+                      <div className="mt-4 relative">
+                        <p className="text-sm text-gray-500">Selected file: {selectedImage.name}</p>
+                        <img
+                          src={URL.createObjectURL(selectedImage)}
+                          alt="Preview"
+                          className="mt-2 w-full h-40  md:h-80 object-cover rounded"
+                        />
+                        <button
+                          onClick={removeImage}
+                          className="absolute bottom-2 right-2 bg-slate-500 text-white rounded-full w-8 h-8 flex items-center justify-center shadow-md hover:bg-slate-600 focus:outline-none"
+                        >
+                          <span className=" text-base font-bold">X</span>
+                        </button>
+                      </div>
+                    )}
+                  </div>
 
                     <div className="md:col-span-5 text-right">
                       <div className="inline-flex items-end">

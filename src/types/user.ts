@@ -40,6 +40,7 @@ export interface UserUpdateInfoRequest{
     city: string;
     skills: string;
     bio: string;
+    blogImage?: File;
 }
 
 export interface UserUpdateInfoI{

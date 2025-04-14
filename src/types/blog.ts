@@ -6,12 +6,15 @@ import { UserInfoCard } from "./user";
 /**
  * create a blog
  */
-export interface CreateBlogRequestI {
+export interface CreateBlogRequestI 
+// extends FormData
+{
   userId: number;
   title: string;
   description: string;
   content: string;
   categories: number[];
+  blogImage?: File;
 }
 
 export interface CreateBlogResponseI {

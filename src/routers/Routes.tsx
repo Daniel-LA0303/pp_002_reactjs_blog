@@ -25,6 +25,8 @@ import PrivateRoute from '../pages/Auth/PrivateRoute';
 import PublicAuthRoute from '../pages/Auth/PublicAuthRoute';
 import WrappedBlogsByCategory from '../pages/Category/WrappedBlogsByCategory ';
 import UserConfirmed from '../pages/Auth/UserConfirmed';
+import ResetPasswordRequest from '../pages/Auth/ResetPasswordRequest';
+import ResetPasswordConfirm from '../pages/Auth/ResetPasswordConfirm';
 
 
 const AppRoutes: React.FC = () => {
@@ -35,6 +37,9 @@ const AppRoutes: React.FC = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/user-confirm/:id" element={<UserConfirmed />} />
+        <Route path="/reset-password" element={<ResetPasswordRequest />} />
+        <Route path="/new-password/:id" element={<ResetPasswordConfirm />} />
+        
       </Route>
 
       {/* public routes */}
@@ -72,3 +77,4 @@ const AppRoutes: React.FC = () => {
 };
 
 export default AppRoutes;
+

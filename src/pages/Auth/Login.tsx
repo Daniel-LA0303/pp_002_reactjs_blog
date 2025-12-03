@@ -164,6 +164,15 @@ const Login = () => {
                             </Link>
                         </div>
 
+                        <div className="mt-6 text-center">
+                            <Link
+                                to={"/reset-password"}
+                                className="inline-block w-full border text-blue-500 border-blue-600 hover:bg-blue-600 hover:text-white font-semibold rounded-md py-2 px-6 transition-all duration-300 shadow-md hover:shadow-lg"
+                            >
+                                I forget my password
+                            </Link>
+                        </div>
+
                     </div>
                 </div>
 

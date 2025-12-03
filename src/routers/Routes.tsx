@@ -24,6 +24,7 @@ import UserFollowingDashboar from '../pages/UserPages/Dashboard/UserFollowingDas
 import PrivateRoute from '../pages/Auth/PrivateRoute';
 import PublicAuthRoute from '../pages/Auth/PublicAuthRoute';
 import WrappedBlogsByCategory from '../pages/Category/WrappedBlogsByCategory ';
+import UserConfirmed from '../pages/Auth/UserConfirmed';
 
 
 const AppRoutes: React.FC = () => {
@@ -33,6 +34,7 @@ const AppRoutes: React.FC = () => {
       <Route element={<PublicAuthRoute />}>
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/user-confirm/:id" element={<UserConfirmed />} />
       </Route>
 
       {/* public routes */}

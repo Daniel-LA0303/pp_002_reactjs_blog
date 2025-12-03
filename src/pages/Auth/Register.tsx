@@ -1,5 +1,5 @@
 import { TextField } from '@mui/material';
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { AuthSuccessResponseI, SignUpRequestI } from '../../types/auth';
 import { useDispatch } from 'react-redux';
@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux';
 import Spinner from '../../components/Spinner/Spinner';
 import ModalError from '../../components/Tools/ModalError/ModalError';
 import { ApiResponse } from '../../types/category';
+import { fetchRegisterRequest } from '../../services/authService';
 
 const Register = () => {
 
@@ -34,6 +35,8 @@ const Register = () => {
         email: "",
         password: ""
     });
+
+    const [message, setMessage] = useState("");
 
     /**
      * useEffect section
@@ -77,10 +80,23 @@ const Register = () => {
         e.preventDefault()
         console.log(formData)
 
+        if(formData.email === '' || formData.password === '' || formData.username === ''){
+            console.log("All info is requiered");
+            
+            return
+        }
+
         try {
-            const res = await dispatch(fetchRegister(formData)).unwrap();
-            route("/home-dev");
-            console.log("res-auth", res);
+            //const res = await dispatch(fetchRegister(formData)).unwrap();
+
+            const res2 = await fetchRegisterRequest(formData);
+            setMessage(res2.message);
+
+            setTimeout(() => {
+                route("/login")
+            }, 3000)
+            //route("/home-dev");
+            console.log("res-auth", res2);
         } catch (error: any) {
             console.log(error);
         }
@@ -103,6 +119,10 @@ const Register = () => {
                 </div>
                 <div className="lg:p-36 md:p-52 sm:20 p-8 w-full lg:w-1/2">
                     <div className="mx-auto w-full sm:w-5/6">
+                        {
+                            message && 
+                            <p className='text-red-400 font-bold text-sm mb-2'>{message}</p> 
+                        }
                         <h1 className="text-2xl font-semibold mb-4">Register</h1>
                         <form onSubmit={handleSubmit}>
 

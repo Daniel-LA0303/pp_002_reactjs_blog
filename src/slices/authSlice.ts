@@ -113,14 +113,14 @@ const authSlice = createSlice({
             state.loading = false;
             state.errorAuth = false;
             state.errorMessage = null;
-            state.accessToken = action.payload.data.tokenInfo.accessToken;
-            localStorage.setItem('authToken', action.payload.data.tokenInfo.accessToken as string);
-            state.userId = action.payload.data.userId;
-            localStorage.setItem('userId', action.payload.data.userId.toString());
-            state.userName = action.payload.data.username;
-            localStorage.setItem('userName', action.payload.data.username as string);
-            state.email = action.payload.data.email;
-            localStorage.setItem('email', action.payload.data.email as string);
+            //state.accessToken = action.payload.data.tokenInfo.accessToken;
+            //localStorage.setItem('authToken', action.payload.data.tokenInfo.accessToken as string);
+            //state.userId = action.payload.data.userId;
+            //localStorage.setItem('userId', action.payload.data.userId.toString());
+            //state.userName = action.payload.data.username;
+            //localStorage.setItem('userName', action.payload.data.username as string);
+            //state.email = action.payload.data.email;
+            //localStorage.setItem('email', action.payload.data.email as string);
         })
         .addCase(fetchRegister.rejected, (state, action) => {
             state.loading = false;

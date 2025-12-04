@@ -2,31 +2,31 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import About from '../pages/About';
-import Register from '../pages/Auth/Register';
-import Login from '../pages/Auth/Login';
+import Register from '../features/auth/pages/Register';
+import Login from '../features/auth/pages/Login';
 
-import Search from '../pages/Search/Search';
+import Search from '../features/search/pages/Search';
 
-import CreateBlog from '../pages/Blog/CreateBlog';
-import ViewBlog from '../pages/Blog/ViewBlog';
-import Profile from '../pages/UserPages/Profile';
-import UserSettings from '../pages/UserPages/UserSettings';
-import ViewCategories from '../pages/Category/ViewCategories';
+import CreateBlog from '../features/blog/pages/CreateBlog';
+import ViewBlog from '../features/blog/pages/ViewBlog';
+import Profile from '../features/user/pages/Profile';
+import UserSettings from '../features/user/pages/UserSettings';
+import ViewCategories from '../features/category/pages/ViewCategories';
 import Home from '../pages/Home/Home';
-import PrincipalDashBoard from '../pages/UserPages/Dashboard/PrincipalDashBoard';
-import BlogsByUserDashboard from '../pages/UserPages/Dashboard/BlogsByUserDashboard';
-import BlogsByLikeDashboard from '../pages/UserPages/Dashboard/BlogsByLikeDashboard';
-import BlogsByCommentDashboard from '../pages/UserPages/Dashboard/BlogsByCommentDashboard';
-import BlogsBySavedDashboard from '../pages/UserPages/Dashboard/BlogsBySavedDashboard';
-import CategoriesByUserDashboard from '../pages/UserPages/Dashboard/CategoriesByUserDashboard';
-import UserFollowersDashboard from '../pages/UserPages/Dashboard/UserFollowersDashboard';
-import UserFollowingDashboar from '../pages/UserPages/Dashboard/UserFollowingDashboar';
-import PrivateRoute from '../pages/Auth/PrivateRoute';
-import PublicAuthRoute from '../pages/Auth/PublicAuthRoute';
-import WrappedBlogsByCategory from '../pages/Category/WrappedBlogsByCategory ';
-import UserConfirmed from '../pages/Auth/UserConfirmed';
-import ResetPasswordRequest from '../pages/Auth/ResetPasswordRequest';
-import ResetPasswordConfirm from '../pages/Auth/ResetPasswordConfirm';
+import PrincipalDashBoard from '../features/user/pages/dahsboard/PrincipalDashBoard';
+import BlogsByUserDashboard from '../features/user/pages/dahsboard/BlogsByUserDashboard';
+import BlogsByLikeDashboard from '../features/user/pages/dahsboard/BlogsByLikeDashboard';
+import BlogsByCommentDashboard from '../features/user/pages/dahsboard/BlogsByCommentDashboard';
+import BlogsBySavedDashboard from '../features/user/pages/dahsboard/BlogsBySavedDashboard';
+import CategoriesByUserDashboard from '../features/user/pages/dahsboard/CategoriesByUserDashboard';
+import UserFollowersDashboard from '../features/user/pages/dahsboard/UserFollowersDashboard';
+import UserFollowingDashboar from '../features/user/pages/dahsboard/UserFollowingDashboar';
+import PrivateRoute from './config/PrivateRoute';
+import PublicAuthRoute from './config/PublicAuthRoute';
+import WrappedBlogsByCategory from '../features/category/pages/WrappedBlogsByCategory ';
+import UserConfirmed from '../features/auth/pages/UserConfirmed';
+import ResetPasswordRequest from '../features/auth/pages/ResetPasswordRequest';
+import ResetPasswordConfirm from '../features/auth/pages/ResetPasswordConfirm';
 
 
 const AppRoutes: React.FC = () => {

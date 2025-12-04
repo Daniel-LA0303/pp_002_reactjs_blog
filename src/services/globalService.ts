@@ -1,6 +1,6 @@
-import { ApiResponse } from "../types/category";
+import { ApiResponse } from "../types/global";
 import { UserCategoryTop } from "../types/global";
-import apiClient from "./apiClient";
+import apiClient from "./config-client/apiClient";
 
 
 export const fetchHomePageInfo = async (): Promise<ApiResponse<UserCategoryTop>> => {

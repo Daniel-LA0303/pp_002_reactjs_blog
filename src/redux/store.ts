@@ -1,10 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
-import categoryReducer from '../slices/categorySlice';
-import userReducer from '../slices/userSlice';
-import blogReducer from '../slices/blogSlice'
-import authReducer from '../slices/authSlice';
-import commentReducer from '../slices/commentSlice';
-import replyReducer from '../slices/replySlice';
+import categoryReducer from '../features/category/store/categorySlice';
+import userReducer from '../features/user/store/userSlice';
+import blogReducer from '../features/blog/store/blogSlice'
+import authReducer from '../features/auth/store/authSlice';
+import commentReducer from '../features/blog/.modules/comments/store/commentSlice';
+import replyReducer from '../features/blog/.modules/replies/store/replySlice';
 
 export const store = configureStore({
   reducer: {

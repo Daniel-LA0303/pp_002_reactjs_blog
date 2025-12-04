@@ -11,22 +11,22 @@ import { Link } from 'react-router-dom';
 /**
  * types
  */
-import { BlogCardI } from '../../types/blog';
+import { BlogCardI } from '../../features/blog/types/blog';
 import { UserCategoryTop } from '../../types/global';
 
 
 /**
  * components
  */
-import NavBar from '../../components/NavBar';
+import NavBar from '../../components/NavBar/NavBar';
 import SideBarMenu from '../../components/sidebar/SideBarMenu';
-import RecommendBlog from '../../components/Blog/RecommendBlog'
-import BlogCard from '../../components/BlogCard'
+import RecommendBlog from '../../features/blog/components/RecommendBlog'
+import BlogCard from '../../features/blog/components/BlogCard'
 
 /**
  * services
  */
-import { fetchBlogsHomePage } from '../../services/blogService';
+import { fetchBlogsHomePage } from '../../features/blog/services/blogService';
 import { fetchHomePageInfo } from '../../services/globalService';
 import CardBlogSkeleton from '../../components/Skeletons/Blog/CardBlogSkeleton';
 import { Avatar, Tooltip } from '@mui/material';

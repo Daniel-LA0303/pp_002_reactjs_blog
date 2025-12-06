@@ -13,7 +13,7 @@ export interface CreateBlogRequestI
   description: string;
   content: string;
   categories: number[];
-  blogImage?: File;
+  blogImage?: string;
 }
 
 export interface CreateBlogResponseI {

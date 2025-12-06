@@ -266,7 +266,7 @@ const Profile: React.FC = () => {
                   <div
                     className="bg-center bg-no-repeat bg-cover rounded-full w-32 h-32 shadow-md shrink-0"
                     style={{
-                      backgroundImage: `url("https://lh3.googleusercontent.com/aida-public/AB6AXuBadYLjPwWa1soJ4QKBbxSZq19zwKVKPOYUbXSqdoMFifE4j-7xZOHX1zayk2c6GmdWxgqAUM36YglryQot0nLrg1zmUWmtW_EpWpOr8mgaeCbviLIvx8qHih-Cg4PbPuPxiYYsRpkCo3ileK8lim2e7gZBYcytUCedc1b8nesQ0lO8xjahr7LHzNc1pIO04YjAUuq3ye4PKNiyrIoJidrSJXI7CwuqmJ7jq0ZdzZYu2Lq0ifHUUm7ujpgCi3jigAkoDLrbJ4J6HIOd")`
+                      backgroundImage: `url("${user?.profilePicture ? user.profilePicture : '/avatar.png'}")`
                     }}
                   />
 

@@ -1,9 +1,9 @@
 import apiClient from "../../../services/config-client/apiClient";
 import { ApiResponse } from "../../../types/global";
-import { BlogPageResponse, BlogsPageableResponseI, CreateBlogResponseI } from "../types/blog";
+import { BlogPageResponse, BlogsPageableResponseI, CreateBlogRequestI, CreateBlogResponseI } from "../types/blog";
 import apiAuthClient from "../../../services/config-client/apiAuthClient";
 
-export const fetchCreateBlogRequest = async (post: FormData): Promise<ApiResponse<CreateBlogResponseI>> => {
+export const fetchCreateBlogRequest = async (post: CreateBlogRequestI): Promise<ApiResponse<CreateBlogResponseI>> => {
     const response = await apiAuthClient.post<ApiResponse<CreateBlogResponseI>>('/blog', post);
     return response.data;
 }

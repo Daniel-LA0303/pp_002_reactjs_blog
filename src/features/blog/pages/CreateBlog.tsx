@@ -35,10 +35,10 @@ import { AppContext } from "../../../context/AppContext";
 import ModalError from "../../../components/Modals/ModalError";
 
 import { load } from 'cheerio';
+import apiAuthClient from "../../../services/config-client/apiAuthClient";
 
 // modules of react quill
 const modules = {
-
   toolbar: {
     container: [
       [{ header: [1, 2, 3, false] }],
@@ -99,7 +99,8 @@ const CreateBlog: React.FC = () => {
     title: '',
     description: '',
     content: '',
-    categories: []
+    categories: [],
+    blogImage: ''
   });
   // max cats
   // const [maxCats, setMaxCats] = useState(3);
@@ -110,10 +111,8 @@ const CreateBlog: React.FC = () => {
     maxCats: 3
   });
 
+  const [submitting, setSubmitting] = useState(false);
   const [readTime, setReadTime] = useState(0);
-
-
-  // modal
 
 
   /**
@@ -124,6 +123,8 @@ const CreateBlog: React.FC = () => {
     const fetchData = async () => {
       try {
         const response = await dispatch(fetchCategories()).unwrap();
+        console.log(response);
+
         // mapping categories tooptions
         const optionsC = response.map(c => ({
           label: c.name,
@@ -198,81 +199,63 @@ const CreateBlog: React.FC = () => {
   };
 
   // handle submit prepare info to backend
-  const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // check if user choose category between 1 and 3
+    setSubmitting(true);
+
+    // 1. check if user choose category between 1 and 3
     if (categoriesSelected.length > categoriesMax.maxCats) {
       setCategoriesMax({
         isMax: true,
-        message: 'Please choose between 1 and 3 categories',
-        maxCats: 3
+        message: "Please choose between 1 and 3 categories",
+        maxCats: 3,
       });
-      return
-    }
-
-    // check if user choose category
-    if (categoriesSelected.length === 0) {
-      setCategoryIsEmpty(true);
-      return
-    }
-
-    const formDataToSend = new FormData();
-
-    // Crear el objeto blogData
-    const blogData = {
-      userId: formData.userId,
-      title: formData.title,
-      description: formData.description,
-      content: content,
-      categories: categoriesSelected.map((c) => c.value)
-    };
-    // prepare data
-    // formData.content = content;
-    // formData.categories = categoriesSelected.map(c => c.value);
-
-    formDataToSend.append("blogData", new Blob([JSON.stringify(blogData)], {
-      type: "application/json"
-    }));
-
-    if (!selectedImage) {
-      alert("Blog image is required");
       return;
     }
 
-
-    if (selectedImage) {
-      formDataToSend.append("blogImage", selectedImage);
+    // 2. check if user choose category
+    if (categoriesSelected.length === 0) {
+      setCategoryIsEmpty(true);
+      return;
     }
 
-    // request to backend
     try {
-      // fetch with redux
+      const categoryIds = categoriesSelected.map((c) => c.value);      
+      const fd = new FormData();
+      fd.append("title", formData.title);
+      fd.append("description", formData.description);
+      fd.append("content", content);
+      fd.append("userId", String(userIdAuth));
 
-      console.log(readTime);
+      categoryIds.forEach(id => {
+        fd.append("categories", id.toString());
+      });
 
-      // await dispatch(fetchCreateBlog(formData)).unwrap();
-      // navigate('/profile/1');
+      if (selectedImage) {
+        fd.append("blogImage", selectedImage);
+      }
 
-      console.log("formDataToSend", formDataToSend);
-
-      const res = await dispatch(fetchCreateBlog(formDataToSend)).unwrap();
-      console.log("res-create-blog-ui", res);
+      const res = await apiAuthClient.post("/blog", fd, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       navigate(`/profile/${userIdAuth}`);
-
-    } catch (error: any) {
+    } catch (error) {
       console.log(error);
-
+    } finally {
+      setSubmitting(false);
     }
 
     // reset state of categories
     setCategoriesMax({
       isMax: false,
-      message: 'Please choose between 1 and 3 categories',
-      maxCats: 3
+      message: "Please choose between 1 and 3 categories",
+      maxCats: 3,
     });
-  }
+  };
 
   // set file in UI
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -299,11 +282,17 @@ const CreateBlog: React.FC = () => {
 
       <ModalError
         open={openErrorModal}
-        message={errorModalMessage} // Pasar el mensaje al modal
+        message={errorModalMessage}
         onClose={handleCloseModal}
       />
 
       <NavBar />
+
+      {submitting && (
+        <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
+          <Spinner />
+        </div>
+      )}
 
       <div className="min-h-screen py-10 bg-gray-100 flex items-center justify-center mt-10">
         <div className="container w-full max-w-screen-lg px-2 lg:mx-auto ">
@@ -355,8 +344,6 @@ const CreateBlog: React.FC = () => {
                             : null
                         }
                       </p>
-
-
 
                       <input
                         type="text"

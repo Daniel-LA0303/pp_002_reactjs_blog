@@ -1,6 +1,7 @@
 import { createAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { fetchCreateBlogRequest, fetchGetOneBlog } from "../services/blogService";
 import { ApiResponse } from "../../../types/global";
+import { CreateBlogRequestI } from "../types/blog";
 
 interface BlogState {
     loading: boolean;
@@ -18,7 +19,7 @@ export const resetError = createAction('blog/resetError');
 
 export const fetchCreateBlog = createAsyncThunk(
     'blog/createBlog',
-    async (blog: FormData, {rejectWithValue}) => {
+    async (blog: CreateBlogRequestI, {rejectWithValue}) => {
         try {            
             const response = await fetchCreateBlogRequest(blog);
             console.log("response-create-blog-redux", response);

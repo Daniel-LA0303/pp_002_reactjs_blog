@@ -144,7 +144,7 @@ const UserSettings: React.FC = () => {
     e.preventDefault();
 
     setSubmitting(true);
-    let finalProfilePicture = formData.profilePicture; // por defecto, la misma
+    let finalProfilePicture = formData.profilePicture;
 
     try {
       // 1. upload new image if user uploaded

@@ -47,14 +47,17 @@ import { fetchBlogsByUser } from '../../blog/services/blogService';
 import CardBlogSkeleton from '../../../components/Skeletons/Blog/CardBlogSkeleton';
 import { fetchDeleteUnfollowUser, fetchPostFollowUser } from '../services/userService';
 import { CircularProgress } from '@mui/material';
+import CakeIcon from '@mui/icons-material/Cake';
+import WorkOutlineRoundedIcon from '@mui/icons-material/WorkOutlineRounded';
+import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
 
 const Profile: React.FC = () => {
 
   // context when there is an error
-  const { showError, handleCloseModal, openErrorModal, errorModalMessage} = useContext(AppContext);
+  const { showError, handleCloseModal, openErrorModal, errorModalMessage } = useContext(AppContext);
 
   // get id from params to get a user info
-  const { id } = useParams<{ id: string }>(); 
+  const { id } = useParams<{ id: string }>();
 
   // redux
   const dispatch = useDispatch<AppDispatch>();
@@ -65,14 +68,14 @@ const Profile: React.FC = () => {
   const loadingUser = useSelector((state: RootState) => state.user.loading);
   const errorUser = useSelector((state: RootState) => state.user.errorUser);
   const errorUserMessage = useSelector((state: RootState) => state.user.errorMessage);
-  
+
 
   // page state
   const [user, setUser] = React.useState<UserProfile | null>(null);
   const [blogs, setBlogs] = useState<BlogCardI[]>([]);
   const [page, setPage] = useState(0);
   const [loadingBlogs, setLoadingBlogs] = useState(false);
-  const [hasMore, setHasMore] = useState(true); 
+  const [hasMore, setHasMore] = useState(true);
   const [count, setCount] = useState(0);
 
   const [isFollowing, setIsFollowing] = useState(
@@ -81,7 +84,7 @@ const Profile: React.FC = () => {
   const [loadingFollow, setLoadingFollow] = useState(false);
 
   const scrollTimeout = useRef<number | null>(null);
-    
+
   // verify id from params
   const userIdNumber = id ? parseInt(id) : NaN;
 
@@ -89,7 +92,7 @@ const Profile: React.FC = () => {
 
   const handleFollow = async () => {
     if (!accessToken || userId === userIdNumber || userId === null) return;
-    
+
     try {
       setLoadingFollow(true);
       await fetchPostFollowUser(userId, userIdNumber);
@@ -100,14 +103,14 @@ const Profile: React.FC = () => {
       setLoadingFollow(false);
     }
   };
-  
+
   const handleUnfollow = async () => {
     if (!accessToken || userId === userIdNumber || userId === null) return;
-  
+
     try {
       setLoadingFollow(true);
       await fetchDeleteUnfollowUser(userId, userIdNumber);
-      setIsFollowing(false); 
+      setIsFollowing(false);
     } catch (error) {
       console.error("Error al dejar de seguir al usuario:", error);
     } finally {
@@ -119,20 +122,20 @@ const Profile: React.FC = () => {
   const fetchBlogs = async () => {
     if (loadingBlogs || !hasMore) return;
     setLoadingBlogs(true);
-    
+
     try {
-      
+
       const response = await fetchBlogsByUser(userIdNumber, page, 5);
       const { content, last } = response.data;
-      
+
       console.log("content", content);
-      
+
       setCount(count + 1);
       console.log("count", count);
-      
-      setBlogs((prevBlogs) => [...prevBlogs, ...content]);  
-      setPage((prevPage) => prevPage + 1); 
-      setHasMore(!last);  
+
+      setBlogs((prevBlogs) => [...prevBlogs, ...content]);
+      setPage((prevPage) => prevPage + 1);
+      setHasMore(!last);
     } catch (error) {
       console.error("Error fetching blogs:", error);
     } finally {
@@ -154,7 +157,7 @@ const Profile: React.FC = () => {
 
       scrollTimeout.current = setTimeout(() => {
         fetchBlogs();
-      }, 100); 
+      }, 100);
     }
   };
 
@@ -164,7 +167,7 @@ const Profile: React.FC = () => {
     if (userId && user?.usersFollowers.includes(userId)) {
       setIsFollowing(true);
     } else {
-      setIsFollowing(false); 
+      setIsFollowing(false);
     }
   }, [userId, user?.usersFollowers]);
 
@@ -177,24 +180,24 @@ const Profile: React.FC = () => {
 
     const fetchData = async () => {
       try {
-        
+
         const response = await dispatch(fetchGetProfileBackToolkit(userIdNumber)).unwrap();
-        setUser(response); 
+        setUser(response);
         console.log("response", response);
       } catch (err) {
         console.error("Error al obtener el perfil", err);
       }
     };
 
-    fetchData(); 
+    fetchData();
   }, [userIdNumber, dispatch]);
 
-  
+
   // fecth get blogs
   useEffect(() => {
     let isMounted = true; // Para evitar actualizaciones si el componente se desmonta
     setLoadingBlogs(true);
-  
+
     const delayFetchBlogs = setTimeout(async () => {
       try {
         const response = await fetchBlogsByUser(userIdNumber, 0, 5);
@@ -211,7 +214,7 @@ const Profile: React.FC = () => {
         }
       }
     }, 10); // Reducimos el tiempo del timeout sin eliminarlo
-  
+
     return () => {
       isMounted = false;
       clearTimeout(delayFetchBlogs);
@@ -221,7 +224,7 @@ const Profile: React.FC = () => {
   // activate scroll
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll); 
+    return () => window.removeEventListener("scroll", handleScroll);
   }, [loadingBlogs, hasMore]);
 
   useEffect(() => {
@@ -229,14 +232,14 @@ const Profile: React.FC = () => {
       showError(errorUserMessage);
     }
   }, [errorUser]);
-  
-      // reset error state redux
+
+  // reset error state redux
   useEffect(() => {
     if (!openErrorModal) {
       dispatch(resetUserError());
     }
   }, [openErrorModal, dispatch]);
-  
+
 
   // prevent errors
   if (loadingUser) return <Spinner />;
@@ -246,77 +249,95 @@ const Profile: React.FC = () => {
     <div className=''>
       <ModalError
         open={openErrorModal}
-        message={errorModalMessage} 
+        message={errorModalMessage}
         onClose={handleCloseModal}
       />
 
-      {/* navbaer */}
+      {/* navbar */}
       <NavBar />
-      <section className="pt-8 sm:pt-8 mt-8">
-
+      <section className="pt-8 sm:pt-8 mt-0">
         <div className="w-full max-w-screen-lg px-2 lg:mx-auto flex flex-wrap gap-4">
-          <div className={`flex flex-col min-w-0 break-word w-full mb-6 shadow-lg rounded-lg mt-16 bg-white`}>
-            <div className="px-2 sm:px-6 ">
+          <div className="flex flex-col w-full mb-6 shadow-lg rounded-lg mt-16 bg-white">
+            <div className="flex flex-col gap-6 p-6 bg-white dark:bg-background-dark/50 rounded-xl shadow-sm  border-gray-200 dark:border-gray-800">
 
-              <div className="flex flex-wrap justify-center">
-                <div className="w-full ml-10 sm:ml-0 px-4 flex justify-start sm:justify-center">
-                  <img alt="..." 
-                    src={'/avatar.png'} 
-                    className=" shadow-xl image_profile  h-auto align-middle border-none  -m-16  lg:-ml-16 max-w-150-px" />  
-                </div>    
+              <div className="flex flex-col">
+                <div className="flex gap-6 flex-col sm:flex-row">
 
-                <div className="w-full flex justify-end mt-4">
-                  {accessToken && userId !== userIdNumber && (
-                    <button
-                      className={`px-6 py-2 mt-5 w-28 bg-blue-500 text-white text-sm rounded-full shadow-md hover:bg-blue-600 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-300`}
-                      onClick={isFollowing ? handleUnfollow : handleFollow}
-                      disabled={loadingFollow}
-                    >
-                      {loadingFollow ? (
-                        <CircularProgress size={20} color="inherit" />
-                      ) : (
-                        isFollowing ? "Unfollow" : "Follow"
+                  <div
+                    className="bg-center bg-no-repeat bg-cover rounded-full w-32 h-32 shadow-md shrink-0"
+                    style={{
+                      backgroundImage: `url("https://lh3.googleusercontent.com/aida-public/AB6AXuBadYLjPwWa1soJ4QKBbxSZq19zwKVKPOYUbXSqdoMFifE4j-7xZOHX1zayk2c6GmdWxgqAUM36YglryQot0nLrg1zmUWmtW_EpWpOr8mgaeCbviLIvx8qHih-Cg4PbPuPxiYYsRpkCo3ileK8lim2e7gZBYcytUCedc1b8nesQ0lO8xjahr7LHzNc1pIO04YjAUuq3ye4PKNiyrIoJidrSJXI7CwuqmJ7jq0ZdzZYu2Lq0ifHUUm7ujpgCi3jigAkoDLrbJ4J6HIOd")`
+                    }}
+                  />
+
+                  <div className="flex flex-col justify-center w-full">
+
+                    <div className='flex items-start sm:items-center justify-between w-full flex-col sm:flex-row gap-2'>
+
+                      <p className="text-3xl font-semibold">
+                        {user?.username}
+                      </p>
+
+                      {accessToken && userId !== userIdNumber && (
+                        <div className="flex justify-end">
+                          <button
+                            className="px-6 py-2 w-28 bg-blue-500 text-white text-sm rounded-full shadow-md hover:bg-blue-600 transition-colors duration-300"
+                            onClick={isFollowing ? handleUnfollow : handleFollow}
+                            disabled={loadingFollow}
+                          >
+                            {loadingFollow ? <CircularProgress size={20} color="inherit" /> : (isFollowing ? "Unfollow" : "Follow")}
+                          </button>
+                        </div>
                       )}
-                    </button>
-                  )}
-                </div> 
+
+                      {accessToken && userId === userIdNumber && (
+                        <div className="flex justify-end">
+                          <Link
+                            to={`/user-settings/${userIdNumber}`}
+                            className="text-center py-2 w-32 bg-blue-500 text-white text-sm rounded-full shadow-md hover:bg-blue-600 transition-colors duration-300"
+                          >
+                            Edit Profile
+                          </Link>
+                        </div>
+                      )}
+
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-4 mt-2">
+                      {user?.city && (
+                        <div className="flex items-center gap-1.5 text-gray-500 dark:text-gray-400">
+                          <h2 className='text-sm font-bold flex items-center'>
+                            <LocationOnIcon fontSize='small' /> City
+                          </h2>
+                          <p className="text-sm">{user.city}</p>
+                        </div>
+                      )}
+
+                      {user?.webSite && (
+                        <div className="flex items-center gap-1.5 text-gray-500 dark:text-gray-400">
+                          <h2 className='text-sm font-bold flex items-center'>
+                            <LanguageIcon fontSize='small' /> WebSite
+                          </h2>
+                          <p className="text-sm">{user.webSite}</p>
+                        </div>
+                      )}
+                    </div>
+
+                    {user?.bio && (
+                      <p className="text-gray-600 dark:text-gray-400 text-base mt-3 break-words">
+                        {user.bio}
+                      </p>
+                    )}
+
+                  </div>
+                </div>
               </div>
 
-              <div className=" ">
-
-                <h3 className={`text-left sm:text-center text-xl mt-10 md:mt-10 font-bold leading-normal mb-2`}>
-                  {user?.username}
-                </h3>
-
-                <div className="flex flex-wrap justify-center">
-                  <div className="w-full lg:w-9/12">
-                    <p className=" text-left sm:text-center text-sm mb-4 leading-relaxed text-blueGray-700">
-                      {user?.bio ? user?.bio : 'No data'}
-                    </p>
-                  </div>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-start sm:items-center border-t border-gray-200 dark:border-gray-800 pt-5">
+                <div className="flex items-center gap-1.5 text-gray-500 dark:text-gray-400">
+                  <CakeIcon fontSize="small" />
+                  <p className="text-sm">Joined in {user?.createdAt ? formatDate(user.createdAt) : 'Date not available'}</p>
                 </div>
-
-                <div className="flex flex-wrap justify-center">
-                  <div className="w-full lg:w-9/12">
-                    <p className=" text-left sm:text-center text-sm mb-4 leading-relaxed text-blueGray-700">
-                      Join in {user?.createdAt ? formatDate(user.createdAt) : 'Date not available'}
-                    </p>
-                  </div>
-                </div>
-                
-                <div className=" my-2 border-t border-0.5 text-center"></div>
-
-                <div className=' block sm:flex'>
-                  <div className="my-3 text-left sm:text-center  w-full sm:w-2/4">
-                    <h2 className=' text-sm sm:text-xs font-bold'>Work: </h2>   
-                    <p className=' text-lg'>{user?.work ? user?.work : 'No data'}</p>       
-                  </div>
-                  <div className="my-3 text-left sm:text-center w-full sm:w-2/4">
-                    <h2 className=' text-sm sm:text-xs font-bold'>Education: </h2>   
-                    <p className='text-lg'>{user?.education ? user?.education : 'No data'}</p>
-                  </div>
-                </div>
-
               </div>
 
             </div>
@@ -324,41 +345,51 @@ const Profile: React.FC = () => {
         </div>
 
         {/* Content here */}
-        <div className='block sm:flex w-full max-w-screen-lg px-2 lg:mx-auto '> 
+        <div className='block sm:flex w-full max-w-screen-lg px-2 lg:mx-auto '>
           <div className='w-full sm:w-3/12 mr-0 sm:mr-2'>
 
-            <div className= "flex flex-col min-w-0 break-word w-full mb-1 shadow-lg  rounded-lg  bg-white">
-              <div className=" px-2 mb-2 mt-4 text-left block sm:text-center  sm:justify-center">
-                <h2 className=' text-sm sm:text-xs font-bold flex justify-center items-center'>
-                  <TerminalOutlinedIcon fontSize='small'/>
-                    Skills/Lnaguages:
-                </h2>
-                <div className=" my-2 border-t border-0.5 text-center"></div>
-                <p>{user?.skills ? user?.skills : 'No data'}</p>
-              </div>
-            </div>
-
-            <div className= "flex flex-col min-w-0 break-word w-full my-1 shadow-lg  rounded-lg mt-4 bg-white">
-              <div className=" px-2 mb-2 mt-4 text-left block sm:text-center  sm:justify-center">
-                <h2 className=' text-sm sm:text-xs font-bold flex justify-center items-center'>
-                  <LocationOnIcon fontSize='small'/>
-                    City
-                </h2>
-                <div className=" my-2 border-t border-0.5 text-center"></div>
-                <p>{user?.city ? user?.city : 'No data'}</p>
-              </div>
-            </div>
-
-            <div className= "flex flex-col min-w-0 break-word w-full my-1 shadow-lg  rounded-lg mt-4 bg-white">
-              <div className=" px-2 mb-2 mt-4 text-left block sm:text-center  sm:justify-center">
-                <h2 className=' text-sm sm:text-xs font-bold flex justify-center items-center'>
-                  <LanguageIcon fontSize='small'/>
-                    WebSite
-                </h2>
-                <div className=" my-2 border-t border-0.5 text-center"></div>
-                  <p className=' text-sm'>{user?.webSite ? user?.webSite : 'No data'}</p>
+            {
+              user?.skills &&
+              <div className="flex flex-col min-w-0 break-word w-full mb-1 shadow-lg  rounded-lg  bg-white">
+                <div className=" px-2 mb-2 mt-4 text-left block sm:text-center  sm:justify-center">
+                  <h2 className=' text-sm sm:text-xs font-bold flex justify-center items-center'>
+                    <TerminalOutlinedIcon fontSize='small' />
+                    <span className='ml-1'>Skills</span>
+                  </h2>
+                  <div className=" my-2 border-t border-0.5 text-center"></div>
+                  <p>{user?.skills ? user?.skills : 'No data'}</p>
                 </div>
-            </div>
+              </div>
+
+            }
+
+            {
+              user?.work &&
+              <div className="flex flex-col min-w-0 break-word w-full my-1 shadow-lg  rounded-lg mt-4 bg-white">
+                <div className=" px-2 mb-2 mt-4 text-left block sm:text-center  sm:justify-center">
+                  <h2 className=' text-sm sm:text-xs font-bold flex justify-center items-center'>
+                    <WorkOutlineRoundedIcon fontSize='small' />
+                    <span className='ml-1'>Work</span>
+                  </h2>
+                  <div className="my-2 border-t border-0.5 text-center"></div>
+                  <p>{user?.work ? user?.work : 'No data'}</p>
+                </div>
+              </div>
+            }
+
+            {
+              user?.education &&
+              <div className="flex flex-col min-w-0 break-word w-full my-1 shadow-lg  rounded-lg mt-4 bg-white">
+                <div className=" px-2 mb-2 mt-4 text-left block sm:text-center  sm:justify-center">
+                  <h2 className='text-sm sm:text-xs font-bold flex justify-center items-center'>
+                    <SchoolOutlinedIcon fontSize='small' />
+                    <span className='ml-1'>Education</span>
+                  </h2>
+                  <div className=" my-2 border-t border-0.5 text-center"></div>
+                  <p className=' text-sm'>{user?.education ? user?.education : 'No data'}</p>
+                </div>
+              </div>
+            }
 
             {/* user engagement */}
             <div>
@@ -366,17 +397,17 @@ const Profile: React.FC = () => {
                 <div className=" py-4 lg:pt-4 px-2">
 
                   <div className="flex items-center  text-center">
-                    <ArticleOutlinedIcon fontSize='small'/>
+                    <ArticleOutlinedIcon fontSize='small' />
                     <span className="text-sm font-bold block uppercase tracking-wide text-blueGray-600 mx-1">
                       {user?.blogsNumber}
                     </span>
-                    <span className="text-sm text-blueGray-400">           
+                    <span className="text-sm text-blueGray-400">
                       Posts published
                     </span>
                   </div>
 
                   <div className="flex items-center pt-2 text-center">
-                    <FavoriteBorderIcon fontSize='small'/>
+                    <FavoriteBorderIcon fontSize='small' />
                     <span className="text-sm font-bold block uppercase tracking-wide text-blueGray-600 mx-1">
                       {user?.likesNumber}
                     </span>
@@ -386,7 +417,7 @@ const Profile: React.FC = () => {
                   </div>
 
                   <div className="flex items-center pt-2 text-center">
-                    <PersonAddAltIcon fontSize='small'/>
+                    <PersonAddAltIcon fontSize='small' />
                     <span className="text-sm font-bold block uppercase tracking-wide text-blueGray-600 mx-1">
                       {user?.followers}
                     </span>
@@ -396,7 +427,7 @@ const Profile: React.FC = () => {
                   </div>
 
                   <div className="flex items-center pt-2 text-center">
-                    <TagIcon fontSize='small'/>
+                    <TagIcon fontSize='small' />
                     <span className="text-sm font-bold block uppercase tracking-wide text-blueGray-600 mx-1">
                       {user?.categoryFollows}
                     </span>
@@ -414,7 +445,7 @@ const Profile: React.FC = () => {
           <div className="w-full sm:w-9/12">
             <div className="w-full items-center">
               {loadingBlogs && blogs.length === 0 ? (
-                <CardBlogSkeleton /> 
+                <CardBlogSkeleton />
               ) : blogs.length > 0 ? (
                 blogs.map((b, index) => (
                   <BlogCard key={index} {...b} />
@@ -442,7 +473,7 @@ const Profile: React.FC = () => {
 
 
         </div>
-      
+
       </section>
     </div>
   )

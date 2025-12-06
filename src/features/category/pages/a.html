@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Perfil de Usuario Completo</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24;
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#135bec",
+              "background-light": "#f6f6f8",
+              "background-dark": "#101622",
+            },
+            fontFamily: {
+              "display": ["Newsreader", "serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-[#0d121b] dark:text-gray-200">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-gray-200 dark:border-gray-800 px-10 py-3 fixed top-0 left-0 right-0 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm z-50">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary text-2xl"> article </span>
+<h2 class="text-[#0d121b] dark:text-gray-100 text-lg font-bold leading-tight tracking-[-0.015em]">Blogify</h2>
+</div>
+<div class="flex flex-1 justify-end gap-8">
+<div class="flex items-center gap-9">
+<a class="text-[#0d121b] dark:text-gray-200 text-sm font-medium leading-normal hover:text-primary dark:hover:text-primary" href="#">Home</a>
+<a class="text-[#0d121b] dark:text-gray-200 text-sm font-medium leading-normal hover:text-primary dark:hover:text-primary" href="#">Explore</a>
+<a class="text-[#0d121b] dark:text-gray-200 text-sm font-medium leading-normal hover:text-primary dark:hover:text-primary" href="#">Create Post</a>
+</div>
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 w-10 bg-gray-200/50 dark:bg-gray-800/50 text-[#0d121b] dark:text-gray-200 gap-2 text-sm font-bold leading-normal tracking-[0.015em] hover:bg-gray-200 dark:hover:bg-gray-800">
+<span class="material-symbols-outlined"> notifications </span>
+</button>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="User avatar image, abstract colorful pattern" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCthfkpjngNUole_ReGNuiM7Qz7-cVW9GZTrvAGdppCPu7FP2qOiH86goEGloyrBpr4lK6SFioJydem3KeRCf02DDJbvmukmDcd7SzVrVD5ImosZaC1ewLXuB-nJ5rEuvDiIGv4BePKd5rLhSQvWv6NxajK0jDDrxVm9AtKVyd9Dqbo9qe5_no0brTgLNntG7Mr_j0Sf2BZ3nz8OawP0eyw45CUi0GEbyJtKPAqyxr4JDhZ47tvGUzjYvN260GAsWCCdXBbq5Ia2M04");'></div>
+</div>
+</header>
+<main class="px-4 md:px-10 lg:px-40 flex flex-1 justify-center py-5 pt-24">
+<div class="layout-content-container flex flex-col max-w-[960px] flex-1 w-full gap-8">
+<div class="flex flex-col gap-6 p-6 @container bg-white dark:bg-background-dark/50 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
+<div class="flex w-full flex-col gap-6 @[640px]:flex-row @[640px]:justify-between">
+<div class="flex gap-6">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full min-h-32 w-32 shadow-md" data-alt="Profile picture of Maria Garcia" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBadYLjPwWa1soJ4QKBbxSZq19zwKVKPOYUbXSqdoMFifE4j-7xZOHX1zayk2c6GmdWxgqAUM36YglryQot0nLrg1zmUWmtW_EpWpOr8mgaeCbviLIvx8qHih-Cg4PbPuPxiYYsRpkCo3ileK8lim2e7gZBYcytUCedc1b8nesQ0lO8xjahr7LHzNc1pIO04YjAUuq3ye4PKNiyrIoJidrSJXI7CwuqmJ7jq0ZdzZYu2Lq0ifHUUm7ujpgCi3jigAkoDLrbJ4J6HIOd");'></div>
+<div class="flex flex-col justify-center">
+<p class="text-[#0d121b] dark:text-gray-100 text-3xl font-bold leading-tight tracking-[-0.015em]">Maria Garcia</p>
+<div class="flex items-center gap-4 mt-2">
+<div class="flex items-center gap-1.5 text-gray-500 dark:text-gray-400">
+<span class="material-symbols-outlined text-base"> location_on </span>
+<p class="text-sm font-normal leading-normal">Barcelona, Spain</p>
+</div>
+<div class="flex items-center gap-1.5 text-gray-500 dark:text-gray-400">
+<span class="material-symbols-outlined text-base"> link </span>
+<a class="text-sm font-normal leading-normal hover:text-primary dark:hover:text-primary underline" href="#">mariagarcia.dev</a>
+</div>
+</div>
+<p class="text-gray-600 dark:text-gray-400 text-base font-normal leading-normal mt-3 max-w-md">Software Engineer &amp; Tech Blogger passionate about building scalable web applications and sharing knowledge with the community.</p>
+</div>
+</div>
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] w-full max-w-[480px] @[640px]:w-auto @[640px]:self-start hover:bg-primary/90 transition-colors">
+<span class="truncate">Edit Profile</span>
+</button>
+</div>
+<div class="flex flex-col @[520px]:flex-row gap-4 justify-between items-start @[520px]:items-center border-t border-gray-200 dark:border-gray-800 pt-5">
+<div class="flex gap-6">
+<div class="text-center">
+<p class="text-[#0d121b] dark:text-gray-100 text-xl font-bold leading-tight tracking-[-0.015em]">1.2M</p>
+<p class="text-gray-500 dark:text-gray-400 text-sm font-normal leading-normal">Engagement</p>
+</div>
+<div class="text-center">
+<p class="text-[#0d121b] dark:text-gray-100 text-xl font-bold leading-tight tracking-[-0.015em]">42</p>
+<p class="text-gray-500 dark:text-gray-400 text-sm font-normal leading-normal">Blogs Published</p>
+</div>
+<div class="text-center">
+<p class="text-[#0d121b] dark:text-gray-100 text-xl font-bold leading-tight tracking-[-0.015em]">15.3k</p>
+<p class="text-gray-500 dark:text-gray-400 text-sm font-normal leading-normal">Followers</p>
+</div>
+</div>
+<div class="flex items-center gap-1.5 text-gray-500 dark:text-gray-400">
+<span class="material-symbols-outlined text-base"> calendar_month </span>
+<p class="text-sm font-normal leading-normal">Joined in January 2021</p>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-6 p-6 @container bg-white dark:bg-background-dark/50 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
+<div class="flex flex-col gap-4">
+<h3 class="text-[#0d121b] dark:text-gray-100 text-lg font-bold leading-tight tracking-[-0.015em]">Skills</h3>
+<div class="flex flex-wrap gap-2">
+<span class="inline-flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 px-3 py-1 text-sm font-medium text-gray-700 dark:text-gray-300">JavaScript</span>
+<span class="inline-flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 px-3 py-1 text-sm font-medium text-gray-700 dark:text-gray-300">React</span>
+<span class="inline-flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 px-3 py-1 text-sm font-medium text-gray-700 dark:text-gray-300">Node.js</span>
+<span class="inline-flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 px-3 py-1 text-sm font-medium text-gray-700 dark:text-gray-300">Serverless</span>
+<span class="inline-flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 px-3 py-1 text-sm font-medium text-gray-700 dark:text-gray-300">CI/CD</span>
+<span class="inline-flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 px-3 py-1 text-sm font-medium text-gray-700 dark:text-gray-300">Web Performance</span>
+</div>
+</div>
+<div class="flex flex-col gap-4 border-t border-gray-200 dark:border-gray-800 pt-6">
+<h3 class="text-[#0d121b] dark:text-gray-100 text-lg font-bold leading-tight tracking-[-0.015em]">Tags Followed</h3>
+<div class="flex flex-wrap gap-2">
+<span class="inline-flex items-center justify-center rounded-full bg-primary/10 dark:bg-primary/20 px-3 py-1 text-sm font-medium text-primary dark:text-sky-300">#webdev</span>
+<span class="inline-flex items-center justify-center rounded-full bg-primary/10 dark:bg-primary/20 px-3 py-1 text-sm font-medium text-primary dark:text-sky-300">#typescript</span>
+<span class="inline-flex items-center justify-center rounded-full bg-primary/10 dark:bg-primary/20 px-3 py-1 text-sm font-medium text-primary dark:text-sky-300">#cloud</span>
+<span class="inline-flex items-center justify-center rounded-full bg-primary/10 dark:bg-primary/20 px-3 py-1 text-sm font-medium text-primary dark:text-sky-300">#devops</span>
+<span class="inline-flex items-center justify-center rounded-full bg-primary/10 dark:bg-primary/20 px-3 py-1 text-sm font-medium text-primary dark:text-sky-300">#frontend</span>
+</div>
+</div>
+</div>
+<div class="w-full">
+<h2 class="text-[#0d121b] dark:text-gray-100 text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">Published Articles</h2>
+<div class="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6 p-4">
+<div class="flex flex-col gap-3 pb-3 group">
+<div class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-lg overflow-hidden">
+<div class="w-full h-full bg-center bg-cover group-hover:scale-105 transition-transform duration-300" data-alt="Abstract image representing Javascript code" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCQJM1_6ynFJ-Fj0JPBQgq23QmsBq9cXLAo4bcI1yZeQTuyFN2gr2IScMFz_fssiULShfMQi54ZQUgR4i10rYfRECuVBedzlVIIE6w-Bw1D7fSeiEnIcNhfvOSY-sKnO75PaBgNhozK__W5cFzNFKFE5SNKJYIX9XT8TgOFbBv8YboNLaox9DeaJbbaPeJMsfhD31j3JGkGYOGmt2bqQnXM2Sl6-Zj41-C0FJXG6Yz9Zh21d65O5B7MS_mtVwuFWMPyLvPqCD7m5T9X");'></div>
+</div>
+<div>
+<p class="text-[#0d121b] dark:text-gray-100 text-base font-medium leading-normal group-hover:text-primary dark:group-hover:text-primary transition-colors">Mastering Asynchronous JavaScript</p>
+<p class="text-gray-600 dark:text-gray-400 text-sm font-normal leading-normal mt-1">Explore callbacks, promises, and async/await to write non-blocking code that performs...</p>
+<p class="text-gray-500 dark:text-gray-500 text-sm font-normal leading-normal mt-2">Jan 15, 2024 • 8 min read</p>
+</div>
+</div>
+<div class="flex flex-col gap-3 pb-3 group">
+<div class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-lg overflow-hidden">
+<div class="w-full h-full bg-center bg-cover group-hover:scale-105 transition-transform duration-300" data-alt="Diagram of a serverless architecture" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuChAre5adchk1zQIRzHar6Yloviwu0fT7N0HaNIDQocYUokQIZoDv0iDmFH0y0KT8xTYRHSlsANBTv7K8mc-x23RlJeTV3CVu6XBv7KHJeCVMpyJpN7fUBP6-PXaXxlQHu2VYWP_brP78biFKc1XcTdzgigwB7eiZ6OAnwuMimD3untwaiqXq11KshtUvC1VVqCOuK3Nzdm_p7n7HqNrBALbv7B_EASHG9YuvGJ4gflsyHCU4t_UGzL7Uz2gVboTAlpjAXoo4X7zaRo");'></div>
+</div>
+<div>
+<p class="text-[#0d121b] dark:text-gray-100 text-base font-medium leading-normal group-hover:text-primary dark:group-hover:text-primary transition-colors">A Deep Dive into Serverless Architectures</p>
+<p class="text-gray-600 dark:text-gray-400 text-sm font-normal leading-normal mt-1">Learn how to build, deploy, and manage applications without thinking about servers...</p>
+<p class="text-gray-500 dark:text-gray-500 text-sm font-normal leading-normal mt-2">Dec 22, 2023 • 12 min read</p>
+</div>
+</div>
+<div class="flex flex-col gap-3 pb-3 group">
+<div class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-lg overflow-hidden">
+<div class="w-full h-full bg-center bg-cover group-hover:scale-105 transition-transform duration-300" data-alt="VS Code editor with extensions visible" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDxfh17IeEBQ8e__xquhZBSooojB91kq1P3rrNCweqfZUivfl3e5UgQlIsSrqIcn4THsOKjQkXVVSQwGvT0JRAyFdsQAiPDw3pmY9vxt7YeJsdvXF3GMtWrS4fJI1gvDYDPs7f_RLwto0bFnpXhLjqJL6H8rkCZR51hfJpY1HHWmxRlt2JRzU7TwsKXDeWWgj9XS_G5uABnwPsgmky1qo_IAuK8_d9CwXn-I8VREQ8AQCes6lvgQiStfgobrFlhiAvIdOMhx2TKXxEl");'></div>
+</div>
+<div>
+<p class="text-[#0d121b] dark:text-gray-100 text-base font-medium leading-normal group-hover:text-primary dark:group-hover:text-primary transition-colors">My Favorite VS Code Extensions for 2024</p>
+<p class="text-gray-600 dark:text-gray-400 text-sm font-normal leading-normal mt-1">Boost your productivity with this curated list of extensions for Visual Studio Code...</p>
+<p class="text-gray-500 dark:text-gray-500 text-sm font-normal leading-normal mt-2">Dec 5, 2023 • 6 min read</p>
+</div>
+</div>
+<div class="flex flex-col gap-3 pb-3 group">
+<div class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-lg overflow-hidden">
+<div class="w-full h-full bg-center bg-cover group-hover:scale-105 transition-transform duration-300" data-alt="A book about clean code on a desk" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBRZYjCA9BdcNFlN-ovLbB-gcK2OlJjzzwFJxOw6pDsIl6TcrNF0S3G-yIO8EONoAcZb_Bkt5Oc5m0hQfDYn4efpJ2rgCWuIYSXnzTttZGXNiBWBabIlwzPmF4FlqpER9J45CPg6wMN5O103pXfeKN_ZRV0tIOexIuKe9A0Au__Vzr7D5uMAmB3zVEzIqnZwqLlihru1SvPuMHZSJ1XSOwo7q1-vvuYsuh7GHwuxdlmmuZS_lrAN_j5-nvb_59nOrF_IRrpMNZpo1vD");'></div>
+</div>
+<div>
+<p class="text-[#0d121b] dark:text-gray-100 text-base font-medium leading-normal group-hover:text-primary dark:group-hover:text-primary transition-colors">The Art of Writing Clean Code</p>
+<p class="text-gray-600 dark:text-gray-400 text-sm font-normal leading-normal mt-1">Discover principles and patterns for crafting readable, maintainable, and robust code...</p>
+<p class="text-gray-500 dark:text-gray-500 text-sm font-normal leading-normal mt-2">Nov 18, 2023 • 10 min read</p>
+</div>
+</div>
+<div class="flex flex-col gap-3 pb-3 group">
+<div class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-lg overflow-hidden">
+<div class="w-full h-full bg-center bg-cover group-hover:scale-105 transition-transform duration-300" data-alt="Flowchart illustrating a CI/CD pipeline" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDb5P7wkC1TJgvm4MZPfV-Q6GN-aaMvn3JfwVlKS0zf4Nu_n-sU9WZ0fThAIRs5g7nYKz4un9QIe5i1-QBxMzI9KiPz8-rp9Lgfwd1CW6id_BGSMCwBJ2jQpFPY9j2VHHt08ppx5pp0LKET-K4YHJQsF8hkNSl9z2BMLRIkb1i301_iZX95mCDtruTo14VEeoBcFyiZuwRn8-oHliyGLDhWUgwsc6eojpZZG6-Lj1eZuJbsWH6bGQbzKg6jbRrJciFS20BSdgmW2Yi9");'></div>
+</div>
+<div>
+<p class="text-[#0d121b] dark:text-gray-100 text-base font-medium leading-normal group-hover:text-primary dark:group-hover:text-primary transition-colors">CI/CD Pipelines Explained Simply</p>
+<p class="text-gray-600 dark:text-gray-400 text-sm font-normal leading-normal mt-1">Automate your build, test, and deployment process with a solid CI/CD strategy...</p>
+<p class="text-gray-500 dark:text-gray-500 text-sm font-normal leading-normal mt-2">Nov 1, 2023 • 9 min read</p>
+</div>
+</div>
+<div class="flex flex-col gap-3 pb-3 group">
+<div class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-lg overflow-hidden">
+<div class="w-full h-full bg-center bg-cover group-hover:scale-105 transition-transform duration-300" data-alt="Website performance dashboard on a laptop screen" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCdQlxe0tSI80SjFmBVjYMvpWx5IDEmDc37dQw9ClHPbDEfntyCtlxxMUPhPMnklxsSq8XJWI-qfzhJfG6EWnXypWWwaKTzeCb20yW7Qk6zjr0e65JsulS6QLYkUzTuLSguMzaSRG8vo0-ybhM2phs9TzIZYN2nx6fwI1_9X4Ebho4LSXeMrCtUjYm4BnCFZmEcXCgFkgsJsplDWj1PpxxfLllrxM47bMtj0GnfoPMmjAcV3AdhLfHBKcU7AvQnyOfkC8AkOtRUjOEH");'></div>
+</div>
+<div>
+<p class="text-[#0d121b] dark:text-gray-100 text-base font-medium leading-normal group-hover:text-primary dark:group-hover:text-primary transition-colors">Optimizing Web Performance: A Checklist</p>
+<p class="text-gray-600 dark:text-gray-400 text-sm font-normal leading-normal mt-1">From image compression to lazy loading, here are the key steps to a faster website...</p>
+<p class="text-gray-500 dark:text-gray-500 text-sm font-normal leading-normal mt-2">Oct 25, 2023 • 7 min read</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+
+</body></html>

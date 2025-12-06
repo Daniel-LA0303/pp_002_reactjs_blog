@@ -117,7 +117,7 @@ const BlogsByCategory = () => {
 
       console.log("Blogs:", response);
 
-      const { content, last } = response.data;
+      const { content, last } = response.data.data;
       setBlogs((prevBlogs) => {
         if (page === 0) {
           return [...content];

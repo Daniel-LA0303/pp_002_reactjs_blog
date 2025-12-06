@@ -15,7 +15,7 @@ export const fetchGetUpdateUserInfo = async (id: number): Promise<ApiResponse<Us
   return response.data;
 }
 
-export const fetchPutUpdateUserInfo = async (id: number, userUpdated: FormData): Promise<ApiResponse<string>> => {
+export const fetchPutUpdateUserInfo = async (id: number, userUpdated: UserUpdateInfoI): Promise<ApiResponse<string>> => {
   const response = await apiAuthClient.put<ApiResponse<string>>(`/user/${id}`, userUpdated);
   return response.data;
 }

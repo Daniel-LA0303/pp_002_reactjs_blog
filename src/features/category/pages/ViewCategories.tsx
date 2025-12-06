@@ -100,7 +100,7 @@ const ViewCategories: React.FC = () => {
   return (
 <div>
   <NavBar />
-  <div className="container w-full max-w-screen-lg px-2 lg:px-0 lg:mx-auto flex flex-wrap gap-4 mt-5">
+  <div className="w-full max-w-screen-lg px-2 lg:px-0 lg:mx-auto flex flex-wrap gap-4">
   
     {loadingCategories && categories.length === 0 && (
       <div className="w-full grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-14">
@@ -109,10 +109,10 @@ const ViewCategories: React.FC = () => {
     )}
 
     {categories.length > 0 && (
-      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-14">
+      <div className="w-full grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-14">
         {categories.map((category) => (
           <CategoryCard
-            key={category?.categoryFullInfoDTO?.categoryId} // Usando categoryId como key
+            key={category?.categoryFullInfoDTO?.categoryId + Date.now()} // Usando categoryId como key
             categoryId={category.categoryFullInfoDTO.categoryId ?? null}
             nameCategory={category.categoryFullInfoDTO.name ?? ''}
             color={category.categoryFullInfoDTO.color ?? ''}

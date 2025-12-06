@@ -53,6 +53,7 @@ export interface UserUpdateInfoI{
     city: string;
     skills: string;
     bio: string;
+    profilePicture: string;
 }
 
 export interface UserSimpleInfoI{

@@ -29,10 +29,17 @@ import Spinner from "../../../components/Spinner/Spinner";
 import { AppContext } from "../../../context/AppContext";
 import ModalError from "../../../components/Modals/ModalError";
 
+/**
+ * Icons
+ */
+import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
+import apiAuthClient from "../../../services/config-client/apiAuthClient";
+
+
 const UserSettings: React.FC = () => {
 
   // context when there is an error
-  const { showError, handleCloseModal, openErrorModal, errorModalMessage} = useContext(AppContext);
+  const { showError, handleCloseModal, openErrorModal, errorModalMessage } = useContext(AppContext);
 
   // id to get user info to update
   const { id } = useParams<{ id: string }>();
@@ -41,6 +48,7 @@ const UserSettings: React.FC = () => {
   // redux
   const dispatch = useDispatch<AppDispatch>();
 
+  // selector
   const loadingUser = useSelector((state: RootState) => state.user.loading);
   const errorUser = useSelector((state: RootState) => state.user.errorUser);
   const errorMessageUser = useSelector((state: RootState) => state.user.errorMessage);
@@ -58,10 +66,13 @@ const UserSettings: React.FC = () => {
     city: '',
     skills: '',
     bio: '',
+    profilePicture: ''
   });
   // image selected by user
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  
+  const [submitting, setSubmitting] = useState(false);
+
+
   // conver id
   const userIdNumber = id ? parseInt(id) : NaN;
 
@@ -82,10 +93,10 @@ const UserSettings: React.FC = () => {
           "User info to update:",
           response
         );
-        
+
       } catch (error) {
         console.log(error);
-        
+
       }
     }
 
@@ -96,7 +107,7 @@ const UserSettings: React.FC = () => {
   // useEffect to show error when there is an error backend
   useEffect(() => {
     if (errorUser) {
-        showError(errorMessageUser);
+      showError(errorMessageUser);
     }
   }, [errorUser]);
 
@@ -106,7 +117,7 @@ const UserSettings: React.FC = () => {
       dispatch(resetUserError());
     }
   }, [openErrorModal, dispatch]);
-  
+
 
   // function section
 
@@ -123,46 +134,67 @@ const UserSettings: React.FC = () => {
     setSelectedImage(null);
   };
 
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const {name, value} = e.target;
-    setFormData(prevData => ({...prevData, [name]: value}))
-  }  
+    const { name, value } = e.target;
+    setFormData(prevData => ({ ...prevData, [name]: value }))
+  }
 
   // submit to backend
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
-    const formDataToSend = new FormData();
-    
-    // Agregar los datos del formulario
-    formDataToSend.append("userData", new Blob([JSON.stringify(formData)], {
-      type: "application/json"
-    }));
-    
-    // Agregar la imagen solo si existe
-    if (selectedImage) {
-      formDataToSend.append("profileImage", selectedImage);
-    }
-    
+
+    setSubmitting(true);
+    let finalProfilePicture = formData.profilePicture; // por defecto, la misma
+
     try {
+      // 1. upload new image if user uploaded
+      if (selectedImage) {
+        const imageFormData = new FormData();
+        imageFormData.append("image", selectedImage);
 
-      console.log("FormData to send:", formDataToSend);
-      
+        const uploadImageResponse = await apiAuthClient.put(
+          `/storage/v1/update-upload-image-cloudinary?ownerType=USER&ownerId=${userIdNumber}&categoryStorage=AVATAR`,
+          imageFormData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
 
-      const response = await dispatch(
-        fetchPutUpdatedUserInfoToolkit({ 
-          id: userIdNumber, 
-          userInfoUpdated: formDataToSend // Enviamos FormData en lugar del objeto
+        finalProfilePicture = uploadImageResponse.data.data.imageURL;
+      }
+
+      // 2. set image
+      setFormData(prev => ({
+        ...prev,
+        profilePicture: finalProfilePicture
+      }));
+      setSelectedImage(null);
+
+      // build info to send
+      const updatedUserInfo = {
+        ...formData,
+        profilePicture: finalProfilePicture,
+      };
+
+      // 3. dispatch to update info
+      await dispatch(
+        fetchPutUpdatedUserInfoToolkit({
+          id: userIdNumber,
+          userInfoUpdated: updatedUserInfo
         })
       ).unwrap();
-      
-      navigate(`/profile/${userIdNumber}`);
-      console.log("Response update user info:", response);
+
+      navigate(`/profile/${userIdNumber}`)
+
     } catch (error) {
-      console.log(error);
+      console.error(error);
+    }finally{
+      setSubmitting(false);
     }
   };
+
 
   // prevent errors
   if (loadingUser) return <Spinner />;
@@ -175,215 +207,241 @@ const UserSettings: React.FC = () => {
         message={errorModalMessage}
         onClose={handleCloseModal}
       />
-      
+
       <NavBar />
-      <div className="md:min-h-screen flex items-center justify-center mt-20 md:mt-0">
 
-        <div className="container w-full max-w-screen-lg px-2 lg:mx-auto md:flex md:flex-wrap gap-4">
-          <div>
+      {submitting && (
+        <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
+          <Spinner />
+        </div>
+      )}
 
-            <div className="bg-white rounded shadow-lg p-4 px-4 md:p-8 ">
-              <div className="grid gap-4 gap-y-2 text-sm grid-cols-1 lg:grid-cols-3">
-                <div className="text-gray-600">
-                  <p className="font-medium text-lg">Personal Details</p>
-                  <p>Please fill out all the fields.</p>
-                </div>
+      <div className="mt-20 max-w-screen-lg mx-auto px-2 lg:px-0">
 
-                {/* form */}
-                <form 
-                  className="lg:col-span-2"
-                  onSubmit={handleSubmit}
-                >
-                  <div className="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-5">
+        <form onSubmit={handleSubmit}>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-                    <div className="md:col-span-3">
-                      <label htmlFor="full_name">Name</label>
-                      <input
-                        type="text"
-                        name="name"
-                        id="name"
-                        className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                        value={formData.name}
-                        placeholder="ex: Jhoe"
-                        onChange={handleChange}
-                      />
-                    </div>
+            <div className="lg:col-span-1">
+              <div className="flex p-4 bg-white rounded-lg">
+                <div className="flex w-full flex-col gap-4">
 
-                    <div className="md:col-span-2">
-                      <label htmlFor="full_name">Lastname</label>
-                      <input
-                        type="text"
-                        name="lastName"
-                        id="lastName"
-                        className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                        value={formData.lastName}
-                        placeholder="ex: Dae"
-                        onChange={handleChange}
-                      />
-                    </div>
-
-                    <div className="md:col-span-2">
-                      <label htmlFor="full_name">Work</label>
-                      <input
-                        type="text"
-                        name="work"
-                        id="work"
-                        className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                        value={formData.work}
-                        placeholder="ex: Google"
-                        onChange={handleChange}
-                      />
-                    </div>
-
-                    <div className="md:col-span-2">
-                      <label htmlFor="full_name">Education</label>
-                      <input
-                        type="text"
-                        name="education"
-                        id="education"
-                        className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                        value={formData.education}
-                        placeholder="ex: Harvad"
-                        onChange={handleChange}
-                      />
-                    </div>
-
-                    <div className="md:col-span-1">
-                      <label htmlFor="full_name">Pronouns</label>
-                      <input
-                        type="text"
-                        name="pronouns"
-                        id="pronouns"
-                        className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                        value={formData.pronouns}
-                        placeholder="ex: Jonny"
-                        onChange={handleChange}
-                      />
-                    </div>
-
-                    <div className="md:col-span-5">
-                      <label htmlFor="email">Website</label>
-                      <input
-                        type="text"
-                        name="website"
-                        id="website"
-                        className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                        value={formData.website}
-                        placeholder="https://www.google.com.mx/"
-                        onChange={handleChange}
-                      />
-                    </div>
-
-                    <div className="md:col-span-3">
-                      <label htmlFor="address">Address / Street</label>
-                      <input
-                        type="text"
-                        name="address"
-                        id="address"
-                        className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                        value={formData.address}
-                        placeholder="ex: Cll Delante 203 Ensenada, Mexico"
-                        onChange={handleChange}
-                      />
-                    </div>
-
-                    <div className="md:col-span-2">
-                      <label htmlFor="city">City</label>
-                      <input
-                        type="text"
-                        name="city"
-                        id="city"
-                        className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-                        value={formData.city}
-                        placeholder="ex: New York"
-                        onChange={handleChange}
-                      />
-                    </div>
-
-                    <div className="md:col-span-2">
-                      <label htmlFor="zipcode">Skills</label>
-                      <textarea
-                        name="skills"
-                        id="skills"
-                        className="h-20 max-h-40  border mt-1 rounded px-4 w-full bg-gray-50"
-                        placeholder="ex: My skills are Java, Python, JS"
-                        value={formData.skills}
-                        onChange={handleChange}
-                      ></textarea>
-                    </div>
-
-                    <div className="md:col-span-3">
-                      <label htmlFor="city">Bio</label>
-                      <textarea
-                        name="bio"
-                        id="bio"
-                        className="h-20 max-h-40  border mt-1 rounded px-4 w-full bg-gray-50"
-                        placeholder="ex: This is a simple info bio"
-                        value={formData.bio}
-                        onChange={handleChange}
-                      ></textarea>
-                    </div>
-
-                    <div className="md:col-span-5 cursor-pointer">
-                    <label className="uppercase md:text-sm text-xs text-gray-500 text-light font-semibold mb-1">
-                      Upload Photo
-                    </label>
-                    {!selectedImage && (
-                    <div className="flex items-center justify-center w-full">
-                      <label className="flex flex-col border-4 border-dashed w-full h-32 hover:bg-gray-100 hover:border-slate-300 group cursor-pointer">
-                        <div className="flex flex-col items-center justify-center pt-7">
-                          <svg
-                            className="w-10 h-10 text-slate-400 group-hover:text-slate-600"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                            ></path>
-                          </svg>
-                          <p className="lowercase text-sm text-gray-400 group-hover:text-slate-600 pt-1 tracking-wider">
-                            Select a photo
-                          </p>
-                        </div>
-                        <input type="file" className="hidden" onChange={handleImageChange} />
-                      </label>
-
-                    </div>
-                    )}
- 
-                    {selectedImage && (
-                      <div className="mt-4 relative">
-                        <p className="text-sm text-gray-500">Selected file: {selectedImage.name}</p>
-                        <img
-                          src={URL.createObjectURL(selectedImage)}
-                          alt="Preview"
-                          className="mt-2 w-full h-40  md:h-80 object-cover rounded"
-                        />
-                        <button
-                          onClick={removeImage}
-                          className="absolute bottom-2 right-2 bg-slate-500 text-white rounded-full w-8 h-8 flex items-center justify-center shadow-md hover:bg-slate-600 focus:outline-none"
+                  <div className="flex gap-4 flex-col items-start">
+                    {/* actual image */}
+                    <div className="flex flex-col items-start">
+                      {!selectedImage && !formData?.profilePicture && (
+                        <label
+                          className="rounded-full w-32 aspect-square border-2 border-dashed border-gray-400 dark:border-gray-600 flex flex-col items-center justify-center cursor-pointer text-gray-500 dark:text-gray-300 hover:bg-gray-100/50 dark:hover:bg-gray-700/30 transition"
                         >
-                          <span className=" text-base font-bold">X</span>
-                        </button>
-                      </div>
-                    )}
-                  </div>
+                          <span className="text-xs text-center px-2">Subir Imagen</span>
 
-                    <div className="md:col-span-5 text-right">
-                      <div className="inline-flex items-end">
-                        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                          Save Information User
-                        </button>
-                      </div>
+                          <input
+                            type="file"
+                            className="hidden"
+                            onChange={handleImageChange}
+                          />
+                        </label>
+                      )}
+
+                      {/* show image */}
+                      {(selectedImage || formData?.profilePicture) && (
+                        <div
+                          className="bg-center bg-no-repeat aspect-square bg-cover rounded-full min-h-32 w-32 shadow-md cursor-pointer"
+                          style={{
+                            backgroundImage: selectedImage
+                              ? `url(${URL.createObjectURL(selectedImage)})`
+                              : `url("${formData?.profilePicture}")`,
+                          }}
+                          onClick={() => document.getElementById("pfp-input")?.click()}
+                        >
+                          {/* file input oculto */}
+                          <input
+                            id="pfp-input"
+                            type="file"
+                            className="hidden"
+                            onChange={handleImageChange}
+                          />
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex flex-col">
+                      <p className="text-gray-900 text-[15px] font-semibold">My photo</p>
                     </div>
                   </div>
-                </form>
+
+                  {/* upload static image */}
+                  {!selectedImage && (
+                    <label className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-5 rounded-lg text-center">
+                      <span>Upload New Image</span>
+                      <input type="file" className="hidden" onChange={handleImageChange} />
+                    </label>
+                  )}
+
+                  {/* remove image*/}
+                  {selectedImage && (
+                    <div className="relative">
+                      <img
+                        src={URL.createObjectURL(selectedImage)}
+                        className="w-full h-40 object-cover rounded"
+                      />
+
+                      <button
+                        onClick={removeImage}
+                        type="button"
+                        className="absolute bottom-2 right-2 bg-slate-500 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-slate-600"
+                      >
+                        X
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="lg:col-span-2 space-y-4">
+
+              <details className="flex flex-col p-4 bg-white rounded-lg group" open>
+                <summary className="flex cursor-pointer items-center justify-between py-2">
+                  <p className=" text-lg font-medium">Information</p>
+                  <div className=" group-open:rotate-180 transition-transform">
+                    <span className="material-symbols-outlined"><ExpandMoreOutlinedIcon fontSize='medium' /></span>
+                  </div>
+                </summary>
+
+                <div className="flex flex-col gap-4 pt-4">
+                  <div className="flex flex-wrap gap-4">
+                    <label className="flex flex-col flex-1 min-w-40">
+                      <p className="pb-2 text-base font-medium">Name</p>
+                      <input
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        className="form-input h-10 p-[10px] rounded-lg bg-gray-100 border border-gray-200"
+                        placeholder="Name"
+                      />
+                    </label>
+
+                    <label className="flex flex-col flex-1 min-w-40">
+                      <p className="pb-2  text-base font-medium">Last Name</p>
+                      <input
+                        name="lastName"
+                        value={formData.lastName}
+                        onChange={handleChange}
+                        className="form-input h-10 p-[10px] rounded-lg bg-gray-100 border border-gray-200"
+                        placeholder="Lastname"
+                      />
+                    </label>
+                  </div>
+
+                  <label className="flex flex-col">
+                    <p className="pb-2  text-base font-medium">Pronums</p>
+                    <input
+                      name="pronouns"
+                      value={formData.pronouns}
+                      onChange={handleChange}
+                      className="form-input h-10 p-[10px] rounded-lg bg-gray-100 border border-gray-200"
+                      placeholder="He / She"
+                    />
+                  </label>
+                </div>
+              </details>
+
+              <details className="flex flex-col p-4 bg-white rounded-lg group border-t">
+                <summary className="flex cursor-pointer items-center justify-between py-2">
+                  <p className=" text-lg font-medium">Contact and Location</p>
+                  <div className=" group-open:rotate-180 transition-transform">
+                    <span className="material-symbols-outlined"><ExpandMoreOutlinedIcon fontSize='medium' /></span>
+                  </div>
+                </summary>
+
+                <div className="flex flex-col gap-4 pt-4">
+
+                  {/* Website */}
+                  <label className="flex flex-col">
+                    <p className="pb-2 text-base font-medium">Web Site</p>
+                    <input
+                      name="website"
+                      value={formData.website}
+                      onChange={handleChange}
+                      className="form-input h-10 p-[10px] rounded-lg bg-gray-100 border border-gray-200"
+                      placeholder="https://site.com"
+                    />
+                  </label>
+
+                  <div className="flex flex-wrap gap-4">
+                    <label className="flex flex-col flex-1 min-w-40">
+                      <p className="pb-2  text-base font-medium">City</p>
+                      <input
+                        name="city"
+                        value={formData.city}
+                        onChange={handleChange}
+                        className="form-input h-10 p-[10px] rounded-lg bg-gray-100 border border-gray-200"
+                        placeholder="City"
+                      />
+                    </label>
+
+                    <label className="flex flex-col flex-1 min-w-40">
+                      <p className="pb-2  text-base font-medium">Address</p>
+                      <input
+                        name="address"
+                        value={formData.address}
+                        onChange={handleChange}
+                        className="form-input h-10 p-[10px] rounded-lg bg-gray-100 border border-gray-200"
+                        placeholder="My Address"
+                      />
+                    </label>
+                  </div>
+                </div>
+              </details>
+
+              <details className="flex flex-col p-4 bg-white rounded-lg group border-t">
+                <summary className="flex cursor-pointer items-center justify-between py-2">
+                  <p className=" text-lg font-medium">Skills</p>
+                  <div className=" group-open:rotate-180 transition-transform">
+                    <span className="material-symbols-outlined"><ExpandMoreOutlinedIcon fontSize='medium' /></span>
+                  </div>
+                </summary>
+
+                <div className="flex flex-col gap-4 pt-4">
+
+                  <label className="flex flex-col">
+                    <p className="pb-2  text-base font-medium">Skills</p>
+                    <textarea
+                      name="skills"
+                      value={formData.skills}
+                      onChange={handleChange}
+                      className="form-input h-24 p-4 rounded-lg border bg-background-light dark:bg-background-dark"
+                      placeholder="Example: Java, Python, Docker..."
+                    ></textarea>
+                  </label>
+
+                  <label className="flex flex-col">
+                    <p className="pb-2  text-base font-medium">Bio</p>
+                    <textarea
+                      name="bio"
+                      value={formData.bio}
+                      onChange={handleChange}
+                      className="form-input h-60 p-4 rounded-lg border bg-background-light dark:bg-background-dark"
+                      placeholder="My bio"
+                    ></textarea>
+                  </label>
+
+                </div>
+              </details>
+
+              {/* SUBMIT */}
+              <div className="flex justify-end pt-4">
+                <button
+                  type="submit"
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-5 rounded-lg"
+                >
+                  Save Changes
+                </button>
               </div>
             </div>
           </div>
-        </div>
+        </form>
+
       </div>
     </div>
   );

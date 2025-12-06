@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk, createAction } from '@reduxjs/toolkit';
 import { fetchGetProfile, fetchGetUpdateUserInfo, fetchPutUpdateUserInfo } from '../services/userService';
 import { ApiResponse } from '../../../types/global';
+import { UserUpdateInfoI } from '../types/user';
 
 
 interface UserState {
@@ -43,7 +44,7 @@ export const fetchGetUpdateUserInfoToolkit = createAsyncThunk(
 
 export const fetchPutUpdatedUserInfoToolkit = createAsyncThunk(
   'user/putUpdatedUserInfo',
-  async ({ id, userInfoUpdated }: { id: number; userInfoUpdated: FormData }, { rejectWithValue }) => {
+  async ({ id, userInfoUpdated }: { id: number; userInfoUpdated: UserUpdateInfoI }, { rejectWithValue }) => {
     console.log(id, userInfoUpdated);
     
     try {

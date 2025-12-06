@@ -12,8 +12,9 @@ import { likeBlog, savedBlog, unlikeBlog, unsavedBlog } from '../services/blogSe
 
 import { motion } from "framer-motion";
 
-const BlogCard: React.FC<BlogCardI>  = (props) => {
+const BlogCard: React.FC<BlogCardI> = (props) => {
 
+    // redux auth
     const userIdAuth = useSelector((state: RootState) => state.auth.userId);
     const accessToken = useSelector((state: RootState) => state.auth.accessToken);
 
@@ -26,15 +27,17 @@ const BlogCard: React.FC<BlogCardI>  = (props) => {
     const [savedCount, setSavedCount] = useState<number>(props.blogEngagement.savedNumber || 0);
 
     useEffect(() => {
+
         if (userIdAuth) {
             setIsLiked(props.usersLiked.includes(userIdAuth));
             setIsSaved(props.usersReaded.includes(userIdAuth));
         }
     }, [props.usersLiked, props.usersReaded, userIdAuth]);
 
+    // like blog
     const handleLikeToggle = async (e: React.MouseEvent<HTMLButtonElement>) => {
         if (!userIdAuth) return;
-        
+
         const button = e.currentTarget;
         button.disabled = true;
 
@@ -56,9 +59,10 @@ const BlogCard: React.FC<BlogCardI>  = (props) => {
         }
     };
 
+    // save blog
     const handleSavedToggle = async (e: React.MouseEvent<HTMLButtonElement>) => {
         if (!userIdAuth) return;
-        
+
         const button = e.currentTarget;
         button.disabled = true;
 
@@ -80,18 +84,20 @@ const BlogCard: React.FC<BlogCardI>  = (props) => {
         }
     };
 
-
-
-  return (
-    <div className="mx-auto w-full overflow-hidden rounded-lg bg-white shadow mb-7">
-            <img
-                src="https://images.unsplash.com/photo-1552581234-26160f608093?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
-                className="aspect-video w-full h-28 object-cover"
-                alt=""
-            />
+    return (
+        <div className="mx-auto w-full overflow-hidden rounded-lg bg-white shadow mb-7">
+            {
+                props?.blogImage && (
+                    <img
+                        src={`${props?.blogImage ? props?.blogImage : null}`}
+                        className="aspect-video w-full h-28 object-cover"
+                        alt=""
+                    />
+                )
+            }
             <div className="p-4">
                 <p className="mb-1 text-sm text-primary-500">
-                    <Link to={`/profile/${props.userId}`}>{props.username}</Link> • 
+                    <Link to={`/profile/${props.userId}`}>{props.username}</Link> •
                     <time> {props.createdAt ? formatDate(props.createdAt) : 'Date not available'}</time>
                 </p>
                 <h3 className="text-xl font-medium text-gray-900">
@@ -112,18 +118,18 @@ const BlogCard: React.FC<BlogCardI>  = (props) => {
                 </div>
             </div>
 
-            {/* Sección de interacción */}
+            {/* interaction section */}
             <div className="mt-5 flex justify-between mx-5 mb-3">
                 <div className="flex items-center">
-                    <motion.button 
-                        onClick={handleLikeToggle} 
-                        className="cursor-pointer" 
-                        disabled={!accessToken}  
-                        initial={{ scale: 1 }} // Escala inicial
-                        animate={{ scale: isLiked ? 1.0 : 1.1 }} // Escala aumentada cuando se da like
-                        transition={{ type: "spring", stiffness: 300 }} // Transición con efecto 'spring'
+                    <motion.button
+                        onClick={handleLikeToggle}
+                        className={`${accessToken ? 'cursor-pointer' : null}`}
+                        disabled={!accessToken}
+                        initial={{ scale: 1 }} 
+                        animate={{ scale: isLiked ? 1.0 : 1.1 }} 
+                        transition={{ type: "spring", stiffness: 300 }} 
                     >
-                        {isLiked ? <FavoriteBorderIcon color="error" fontSize="small"/> : <FavoriteBorderIcon fontSize="small" />}
+                        {isLiked ? <FavoriteBorderIcon color="error" fontSize="small" /> : <FavoriteBorderIcon fontSize="small" />}
                     </motion.button>
                     <span className="ml-1 text-sm">{likeCount}</span>
 
@@ -134,13 +140,13 @@ const BlogCard: React.FC<BlogCardI>  = (props) => {
                 </div>
 
                 <div className='flex items-center'>
-                    <motion.button 
-                        onClick={handleSavedToggle} 
-                        className="cursor-pointer" 
-                        disabled={!accessToken} 
-                        initial={{ scale: 1 }} // Escala inicial
-                        animate={{ scale: isSaved ? 1.0 : 1.1 }} // Aumentar la escala cuando se guarda
-                        transition={{ type: "spring", stiffness: 300 }} // Transición suave
+                    <motion.button
+                        onClick={handleSavedToggle}
+                        className={`${accessToken ? 'cursor-pointer' : null}`}
+                        disabled={!accessToken}
+                        initial={{ scale: 1 }} 
+                        animate={{ scale: isSaved ? 1.0 : 1.1 }} 
+                        transition={{ type: "spring", stiffness: 300 }} 
                     >
                         {isSaved ? <BookmarkBorderOutlinedIcon color="primary" fontSize="small" /> : <BookmarkBorderOutlinedIcon fontSize="small" />}
                     </motion.button>
@@ -149,7 +155,7 @@ const BlogCard: React.FC<BlogCardI>  = (props) => {
                 </div>
             </div>
         </div>
-  )
+    )
 }
 
 export default BlogCard

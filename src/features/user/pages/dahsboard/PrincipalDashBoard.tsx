@@ -36,11 +36,6 @@ const PrincipalDashBoard = () => {
     });
     
   useEffect(() => {
-    // if (isNaN(userIdNumber)) {
-    //   console.error("El ID de usuario no es válido");
-    //   return;
-    // }
-
     const fetchData = async () => {
       try {
         const response = await axios.get(`http://127.0.0.1:8080/api/user/get-user-engagement/${userIdAuth}`);
@@ -148,30 +143,19 @@ const PrincipalDashBoard = () => {
                     </Link>
 
                     <Link 
-                        to={`/categories-following`}
+                        to={`/users-following`}
                         className="relative flex flex-grow !flex-row items-center rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] text-gray-600 hover:bg-gray-600 hover:text-white transition-all">
                         <div className="ml-[18px] flex h-[90px] w-auto flex-row items-center">
                             <div className="rounded-full bg-gray-600 p-3 text-gray-100">
-                                <LocalOfferOutlinedIcon />
+                                <HowToRegOutlinedIcon />
                             </div>
                         </div>
-                        <div className="h-50 ml-4 flex w-auto flex-col justify-center mb-10">
+                        <div className="h-50 ml-4 flex w-auto flex-col justify-center">
                             <p className="font-dm text-sm font-medium">Categories Followed</p>
                             <h4 className="text-xl font-bold text-navy-700 ">{userEngagement.followingCategoryCount}</h4>
                         </div>
                     </Link>
-
-                    {/* <div className="relative flex flex-grow !flex-row flex-col items-center rounded-[10px] rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] mb-10">
-                        <div className="ml-[18px] flex h-[90px] w-auto flex-row items-center">
-                            <div className="rounded-full bg-gray-600 p-3 text-gray-100">
-                                <SettingsOutlinedIcon />
-                            </div>
-                        </div>
-                        <div className="h-50 ml-4 flex w-auto flex-col justify-center">
-                            <p className="font-dm text-sm font-medium text-gray-600">Settings</p>
-                            <h4 className="text-xl font-bold text-navy-700 "></h4>
-                        </div>
-                    </div> */}
+                    
 
                 </div>            
             </div>

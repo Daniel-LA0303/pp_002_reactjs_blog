@@ -163,6 +163,10 @@ const UserSettings: React.FC = () => {
         );
 
         finalProfilePicture = uploadImageResponse.data.data.imageURL;
+
+        // change image
+        localStorage.removeItem("profileImage");
+        localStorage.setItem("profileImage", finalProfilePicture);
       }
 
       // 2. set image
@@ -190,7 +194,7 @@ const UserSettings: React.FC = () => {
 
     } catch (error) {
       console.error(error);
-    }finally{
+    } finally {
       setSubmitting(false);
     }
   };
@@ -388,6 +392,30 @@ const UserSettings: React.FC = () => {
                         onChange={handleChange}
                         className="form-input h-10 p-[10px] rounded-lg bg-gray-100 border border-gray-200"
                         placeholder="My Address"
+                      />
+                    </label>
+                  </div>
+
+                  <div className="flex flex-wrap gap-4">
+                    <label className="flex flex-col flex-1 min-w-40">
+                      <p className="pb-2  text-base font-medium">Education</p>
+                      <input
+                        name="education"
+                        value={formData.education}
+                        onChange={handleChange}
+                        className="form-input h-10 p-[10px] rounded-lg bg-gray-100 border border-gray-200"
+                        placeholder="Education"
+                      />
+                    </label>
+
+                    <label className="flex flex-col flex-1 min-w-40">
+                      <p className="pb-2  text-base font-medium">Work</p>
+                      <input
+                        name="work"
+                        value={formData.work}
+                        onChange={handleChange}
+                        className="form-input h-10 p-[10px] rounded-lg bg-gray-100 border border-gray-200"
+                        placeholder="Work"
                       />
                     </label>
                   </div>

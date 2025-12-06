@@ -71,6 +71,7 @@ export interface BlogCardI{
   blogEngagement: BlogEngagement;
   usersLiked: number[];
   usersReaded: number[];
+  blogImage: string;
 }
 
 export interface BlogEngagement{

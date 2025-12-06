@@ -16,6 +16,7 @@ export interface AuthSuccessResponseI {
     email: string;
     tokenInfo: AuthTokenInfoI;
     password: string; // <-- this should be removed but resolve a warning in login
+    profileImage: string;
 }
 
 export interface AuthUserSessionI {

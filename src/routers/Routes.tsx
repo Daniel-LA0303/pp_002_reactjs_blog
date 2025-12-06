@@ -39,7 +39,7 @@ const AppRoutes: React.FC = () => {
         <Route path="/user-confirm/:id" element={<UserConfirmed />} />
         <Route path="/reset-password" element={<ResetPasswordRequest />} />
         <Route path="/new-password/:id" element={<ResetPasswordConfirm />} />
-        
+
       </Route>
 
       {/* public routes */}
@@ -51,8 +51,8 @@ const AppRoutes: React.FC = () => {
       {/* <Route path="/categoy-by-blog/:nameCategory" element={<BlogsByCategory />}/> */}
 
       {/* <Routes> */}
-  <Route path="/categoy-by-blog/:nameCategory" element={<WrappedBlogsByCategory />} />
-{/* </Routes> */}
+      <Route path="/categoy-by-blog/:nameCategory" element={<WrappedBlogsByCategory />} />
+      {/* </Routes> */}
 
       <Route path='/home-dev' element={<Home />} />
 
@@ -62,7 +62,7 @@ const AppRoutes: React.FC = () => {
         <Route path="/user-settings/:id" element={<UserSettings />} />
 
         {/* Dashboard */}
-        <Route path="/dashboard" element={<PrincipalDashBoard />} />  
+        <Route path="/dashboard" element={<PrincipalDashBoard />} />
         <Route path="/blogs-published/:id" element={<BlogsByUserDashboard />} />
         <Route path="/blogs-by-likes" element={<BlogsByLikeDashboard />} />
         <Route path="/blogs-by-comments" element={<BlogsByCommentDashboard />} />

@@ -11,6 +11,7 @@ interface AuthState {
     userId: number | null;
     userName: string | null;
     email: string | null;
+    profileImage: string | null;
 }
 
 const initialState: AuthState = {
@@ -21,6 +22,7 @@ const initialState: AuthState = {
     userId: localStorage.getItem('userId') ? parseInt(localStorage.getItem('userId') as string) : null,
     userName: localStorage.getItem('userName'),
     email: localStorage.getItem('email'),
+    profileImage: localStorage.getItem('profileImage'),
 };
 
 export const fetchLogin = createAsyncThunk(
@@ -96,6 +98,8 @@ const authSlice = createSlice({
             localStorage.setItem('userName', action.payload.data.username as string);
             state.email = action.payload.data.email;
             localStorage.setItem('email', action.payload.data.email as string);
+            state.profileImage = action.payload.data.profileImage;
+            localStorage.setItem('profileImage', action.payload.data.profileImage as string);
         })
         .addCase(fetchLogin.rejected, (state, action) => {
             state.loading = false;

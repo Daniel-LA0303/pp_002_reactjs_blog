@@ -5,59 +5,60 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 import { fetchDeleteUnfollowUser, fetchPostFollowUser } from "../services/userService";
 import CircularProgress from '@mui/material/CircularProgress';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 
 
 const AuthorBlogCard: React.FC<UserInfoCard> = (props) => {
 
-    const accessToken = useSelector((state: RootState) => state.auth.accessToken);
-    const userIdAuth = useSelector((state: RootState) => state.auth.userId);
-  
-    const [isFollowing, setIsFollowing] = useState(
-      userIdAuth !== null && props?.usersFollowers?.includes(userIdAuth)
-    );
-    const [loading, setLoading] = useState(false);
-  
-    useEffect(() => {
-      if (userIdAuth && props?.usersFollowers?.includes(userIdAuth)) {
-        setIsFollowing(true);
-      } else {
-        setIsFollowing(false);
-      }
-    }, [userIdAuth, props.usersFollowers]);
-  
-    const handleFollow = async () => {
-      if (!accessToken || userIdAuth === props.userId || userIdAuth === null) {
-        return; 
-      }
-  
-      try {
-        setLoading(true);
-        await fetchPostFollowUser(userIdAuth, props.userId);
-        setIsFollowing(true); 
-      } catch (error) {
-        console.error("Error al seguir al usuario:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-  
-    const handleUnfollow = async () => {
-      if (!accessToken || userIdAuth === props.userId || userIdAuth === null) {
-        return; 
-      }
-  
-      try {
-        setLoading(true);
-        await fetchDeleteUnfollowUser(userIdAuth, props.userId);
-        setIsFollowing(false); 
-      } catch (error) {
-        console.error("Error al dejar de seguir al usuario:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
+  const userIdAuth = useSelector((state: RootState) => state.auth.userId);
 
-    return (
+  const [isFollowing, setIsFollowing] = useState(
+    userIdAuth !== null && props?.usersFollowers?.includes(userIdAuth)
+  );
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (userIdAuth && props?.usersFollowers?.includes(userIdAuth)) {
+      setIsFollowing(true);
+    } else {
+      setIsFollowing(false);
+    }
+  }, [userIdAuth, props.usersFollowers]);
+
+  const handleFollow = async () => {
+    if (!accessToken || userIdAuth === props.userId || userIdAuth === null) {
+      return;
+    }
+
+    try {
+      setLoading(true);
+      await fetchPostFollowUser(userIdAuth, props.userId);
+      setIsFollowing(true);
+    } catch (error) {
+      console.error("Error al seguir al usuario:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUnfollow = async () => {
+    if (!accessToken || userIdAuth === props.userId || userIdAuth === null) {
+      return;
+    }
+
+    try {
+      setLoading(true);
+      await fetchDeleteUnfollowUser(userIdAuth, props.userId);
+      setIsFollowing(false);
+    } catch (error) {
+      console.error("Error al dejar de seguir al usuario:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
     <div className="relative w-full mx-auto md:max-w-2xl min-w-0 break-words bg-white mb-6 shadow-md rounded-xl mt-16">
       <div className="px-6">
         <div className="flex flex-wrap justify-center">
@@ -65,7 +66,7 @@ const AuthorBlogCard: React.FC<UserInfoCard> = (props) => {
             <div className="relative">
               <Link to={`/profile/${props.userId}`}>
                 <img
-                  src="https://github.com/creativetimofficial/soft-ui-dashboard-tailwind/blob/main/build/assets/img/team-2.jpg?raw=true"
+                  src={`${props.profilePicture ? props.profilePicture : '/avatar.png'} `}
                   className="shadow-xl rounded-full align-middle border-none absolute -m-16 -ml-10 lg:-ml-10 max-w-[100px]"
                 />
               </Link>
@@ -74,36 +75,40 @@ const AuthorBlogCard: React.FC<UserInfoCard> = (props) => {
           <div className="w-full text-center mt-5 md:mt-10">
             <div className="flex justify-center lg:pt-4 pt-8 pb-0">
               <div className="p-2 text-center">
-                <span className="text-lg font-bold block uppercase tracking-wide text-slate-700">
+                <span className="text-sm font-bold block uppercase tracking-wide text-slate-700">
                   {props.blogsByUser}
                 </span>
-                <span className="text-sm text-slate-400">Blogs</span>
+                <span className="text-xs text-slate-400">Blogs</span>
               </div>
               <div className="p-2 text-center">
-                <span className="text-lg font-bold block uppercase tracking-wide text-slate-700">
+                <span className="text-sm font-bold block uppercase tracking-wide text-slate-700">
                   {props.followers}
                 </span>
-                <span className="text-sm text-slate-400">Followers</span>
+                <span className="text-xs text-slate-400">Followers</span>
               </div>
 
               <div className="p-2 text-center">
-                <span className="text-lg font-bold block uppercase tracking-wide text-slate-700">
+                <span className="text-sm font-bold block uppercase tracking-wide text-slate-700">
                   {props.following}
                 </span>
-                <span className="text-sm text-slate-400">Following</span>
+                <span className="text-xs text-slate-400">Following</span>
               </div>
             </div>
           </div>
         </div>
-        <div className="text-center mt-2">
+        <div className="text-center my-2">
           <h3 className="text-base pb-5 text-slate-700 font-bold leading-normal">
-            <Link 
-                className=""
-                to={`/profile/${props.userId}`}>{props.username}</Link>
+            <Link
+              className=""
+              to={`/profile/${props.userId}`}>{props.username}
+            </Link>
           </h3>
-          <div className="text-sm mt-0 mb-2 text-slate-400 font-bold uppercase">
-            <p>{props.city}</p>
-          </div>
+          {
+            props?.city &&
+            <div className="text-sm pb-5 text-slate-400 font-bold uppercase">
+              <p><LocationOnIcon fontSize='small' />  {props?.city}</p>
+            </div>
+          }
 
           {accessToken && userIdAuth !== props.userId && (
             <button
@@ -114,8 +119,8 @@ const AuthorBlogCard: React.FC<UserInfoCard> = (props) => {
               {loading
                 ? <CircularProgress size={20} color="inherit" />
                 : isFollowing
-                ? "Unfollow"
-                : "Follow"}
+                  ? "Unfollow"
+                  : "Follow"}
             </button>
           )}
         </div>

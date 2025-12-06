@@ -54,6 +54,7 @@ export interface BlogPageResponse{
   blogEngagement: BlogEngagement;
   usersLiked: number[];
   usersReaded: number[];
+  blogImage: string;
 }
 
 

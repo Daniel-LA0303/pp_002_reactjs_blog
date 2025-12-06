@@ -216,7 +216,7 @@ const UserSettings: React.FC = () => {
         </div>
       )}
 
-      <div className="mt-20 max-w-screen-lg mx-auto px-2 lg:px-0">
+      <div className="my-20 max-w-screen-lg mx-auto px-2 lg:px-0">
 
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

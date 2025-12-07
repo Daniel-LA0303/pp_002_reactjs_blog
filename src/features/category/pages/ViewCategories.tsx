@@ -34,6 +34,9 @@ const ViewCategories: React.FC = () => {
       const response = await fetchCategoriesPaginated(page, 10);      
       const { content, last } = response.data;
 
+      console.log(response);
+      
+
       setCategories((prevCategories) => [...prevCategories, ...content]);
       setPage((prevPage) => prevPage + 1);
       setHasMoreCategories(!last);

@@ -64,12 +64,12 @@ const AppRoutes: React.FC = () => {
         {/* Dashboard */}
         <Route path="/dashboard" element={<PrincipalDashBoard />} />
         <Route path="/blogs-published/:id" element={<BlogsByUserDashboard />} />
-        <Route path="/blogs-by-likes" element={<BlogsByLikeDashboard />} />
-        <Route path="/blogs-by-comments" element={<BlogsByCommentDashboard />} />
-        <Route path="/blogs-by-save" element={<BlogsBySavedDashboard />} />
-        <Route path="/categories-following" element={<CategoriesByUserDashboard />} />
-        <Route path="/users-followers" element={<UserFollowersDashboard />} />
-        <Route path="/users-following" element={<UserFollowingDashboar />} />
+        <Route path="/blogs-by-likes/:id" element={<BlogsByLikeDashboard />} />
+        <Route path="/blogs-by-comments/:id" element={<BlogsByCommentDashboard />} />
+        <Route path="/blogs-by-save/:id" element={<BlogsBySavedDashboard />} />
+        <Route path="/categories-following/:id" element={<CategoriesByUserDashboard />} />
+        <Route path="/users-followers/:id" element={<UserFollowersDashboard />} />
+        <Route path="/users-following/:id" element={<UserFollowingDashboar />} />
       </Route>
 
     </Routes>

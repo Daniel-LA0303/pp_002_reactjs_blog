@@ -12,8 +12,9 @@ interface SearchUserCardProps {
   followers: number;
   following: number;
   usersFollowers?: number[];
-  joinedDate: string; // Nueva propiedad para la fecha de unión
-  profileImage?: string; // Nueva propiedad para la imagen de perfil
+  joinedDate: string;
+  profilePicture?: string; 
+  blogsByUser: number;
 }
 
 const SearchUserCard: React.FC<SearchUserCardProps> = (props) => {
@@ -68,16 +69,16 @@ const SearchUserCard: React.FC<SearchUserCardProps> = (props) => {
   return (
     <div className="flex bg-white shadow-lg rounded-lg mx-auto my-2 md:w-full">
       <div className="flex items-start px-4 py-6 w-full">
-        {/* Imagen de perfil */}
+        {/* profile image */}
         <Link to={`/profile/${props.userId}`}>
           <img
             className="w-12 h-12 rounded-full object-cover mr-4 shadow"
-            src={props?.profileImage || "https://github.com/creativetimofficial/soft-ui-dashboard-tailwind/blob/main/build/assets/img/team-2.jpg?raw=true"} // Imagen por defecto
+            src={`${props?.profilePicture ? props?.profilePicture : '/avatar.png'}`}
             alt="avatar"
           />
         </Link>
 
-        {/* Información del usuario */}
+        {/* info user */}
         <div className="flex-grow">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold text-gray-900 -mt-1">
@@ -85,7 +86,7 @@ const SearchUserCard: React.FC<SearchUserCardProps> = (props) => {
             </h2>
           </div>
 
-          {/* Estadísticas (Followers y Following) */}
+          {/* engagement */}
           <div className="flex mt-2">
             <div className="mr-4">
               <span className="text-sm font-bold text-gray-700">
@@ -100,9 +101,17 @@ const SearchUserCard: React.FC<SearchUserCardProps> = (props) => {
               <span className="text-sm text-gray-500 ml-1">Following</span>
             </div>
           </div>
+          <div className="flex mt-2">
+          <div className="mr-4">
+            <span className="text-sm font-bold text-gray-700">
+              {props.blogsByUser}
+            </span>
+            <span className="text-sm text-gray-500 ml-1">Blogs Published</span>
+          </div>
+        </div>
         </div>
 
-        {/* Botón de Follow/Unfollow */}
+        {/* follow or unfollowe */}
         {accessToken && userIdAuth !== props.userId && (
           <button
             onClick={isFollowing ? handleUnfollow : handleFollow}
@@ -118,8 +127,11 @@ const SearchUserCard: React.FC<SearchUserCardProps> = (props) => {
             )}
           </button>
         )}
+
+        
       </div>
-    </div>
+      
+    </div >
   );
 };
 

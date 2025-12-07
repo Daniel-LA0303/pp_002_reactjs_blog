@@ -4,23 +4,23 @@ export interface UserProfile {
     email: string;
     bio: string | null;
     work: string | null;
-    education: string | null;   
+    education: string | null;
     city: string | null;
     profilePicture: string | null;
     skills: string | null;
     blogsNumber: number;
     likesNumber: number;
     followers: number;
-    createdAt: string | null; 
+    createdAt: string | null;
     webSite: string;
     categoryFollows: number;
     usersFollowers: number[];
 }
 
-export interface UserInfoCard{
+export interface UserInfoCard {
     userId: number;
     username: string;
-    profilePicture: string; 
+    profilePicture: string;
     city: string;
     blogsByUser: number;
     followers: number;
@@ -28,7 +28,7 @@ export interface UserInfoCard{
     usersFollowers: number[];
 }
 
-export interface UserUpdateInfoRequest{
+export interface UserUpdateInfoRequest {
     name: string;
     lastName: string;
     work: string;
@@ -42,7 +42,7 @@ export interface UserUpdateInfoRequest{
     blogImage?: File;
 }
 
-export interface UserUpdateInfoI{
+export interface UserUpdateInfoI {
     name: string;
     lastName: string;
     work: string;
@@ -56,7 +56,7 @@ export interface UserUpdateInfoI{
     profilePicture: string;
 }
 
-export interface UserSimpleInfoI{
+export interface UserSimpleInfoI {
     userId: number;
     username: string;
     email: string;
@@ -64,7 +64,7 @@ export interface UserSimpleInfoI{
     createdAt: string;
 }
 
-export interface UserTop{
+export interface UserTop {
     userId: number;
     name: string;
     profilePicture: string;
@@ -79,4 +79,16 @@ export interface UserFullEngagementDTO {
     followingUserCount: number;
     followersUserCount: number;
     followingCategoryCount: number;
+}
+
+export interface UserCardI {
+    userId: number;
+    username: string;
+    city?: string;
+    followers: number;
+    following: number;
+    usersFollowers?: number[];
+    joinedDate: string;
+    profilePicture?: string;
+    blogsByUser: number;
 }

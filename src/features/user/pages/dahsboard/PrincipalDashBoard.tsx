@@ -151,7 +151,7 @@ const PrincipalDashBoard = () => {
                             </Link>
 
                             <Link
-                                to={`/users-following/${userIdAuth}`}
+                                to={`/categories-following/${userIdAuth}`}
                                 className="relative flex flex-grow !flex-row items-center rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] text-gray-600 hover:bg-gray-600 hover:text-white transition-all">
                                 <div className="ml-[18px] flex h-[90px] w-auto flex-row items-center">
                                     <div className="rounded-full bg-gray-600 p-3 text-gray-100">

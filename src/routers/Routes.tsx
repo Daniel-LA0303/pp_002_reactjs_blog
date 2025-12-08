@@ -1,6 +1,6 @@
 // src/routes/Routes.tsx
 import React from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import About from '../pages/About';
 import Register from '../features/auth/pages/Register';
 import Login from '../features/auth/pages/Login';
@@ -55,6 +55,7 @@ const AppRoutes: React.FC = () => {
       {/* </Routes> */}
 
       <Route path='/home-dev' element={<Home />} />
+      <Route path="/" element={<Navigate to="/home-dev" />} />
 
       {/* private routes */}
       <Route element={<PrivateRoute />}>

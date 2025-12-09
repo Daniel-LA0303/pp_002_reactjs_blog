@@ -101,6 +101,8 @@ export interface NotificationReceivedI {
     notificationType: string;
     notificationUserInfo: NotificationUserInfoI;
     read: boolean;
+    targetId: number; // <- resource to LINK
+    targetType: string; // <- resource type
     userFromId: number
     userToId: number;
 }
@@ -109,4 +111,9 @@ export interface NotificationUserInfoI {
     profileImage: string;
     userId: number;
     username: string;
+}
+
+export interface NotifcationsSSEResponseI {
+    notifications: NotificationReceivedI[];
+    numberNotifications: number;
 }

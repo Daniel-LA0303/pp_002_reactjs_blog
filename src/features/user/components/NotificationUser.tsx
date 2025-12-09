@@ -1,35 +1,76 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import NotificationsNoneRoundedIcon from '@mui/icons-material/NotificationsNoneRounded';
-import { NotificationReceivedI } from '../types/user';
+import { NotifcationsSSEResponseI, NotificationReceivedI } from '../types/user';
 import NotificationCard from './NotificationCard';
+import apiAuthClient from '../../../services/config-client/apiAuthClient';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../redux/store';
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { getLink } from '../hooks/functions';
 
-interface NotificationUserProps {
-    notifications: NotificationReceivedI[];
-}
+const NotificationUser: React.FC<{ notificationsResponse: NotifcationsSSEResponseI | undefined }> = ({ notificationsResponse }) => {
 
-const NotificationUser: React.FC<NotificationUserProps> = ({ notifications }) => {
+    // console.log(notifications);
+    const userIdAuth = useSelector((state: RootState) => state.auth.userId);
+    const [localNotifications, setLocalNotifications] = useState<NotificationReceivedI[]>(notificationsResponse?.notifications ?? []);
+    const [numberNotifications, setNumberNotifications] = useState<number>(notificationsResponse?.numberNotifications ?? 0);
 
-    console.log(notifications);
+    const navigate = useNavigate();
 
+    // const [notificationNotRead, setNotificationsNotRead] = useState
+    const handleNotificationClick = async (notification: NotificationReceivedI) => {
+        try {
+            await apiAuthClient.post(`/notification/mark-read-notification`, {
+                notificationId: notification.notificationId,
+            });
+            setNumberNotifications(prev => (prev ?? 0) - 1);
+            navigate(getLink(notification.notificationType, notification.targetId));
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+
+    const handleMarkAllNotificationsAsRead = async () => {
+        console.log("click noti");
+
+        try {
+            await apiAuthClient.post(`/notification/mark-all-notification-read`, {
+                userId: userIdAuth
+            });
+            setNumberNotifications(0);
+            setLocalNotifications(prev =>
+                prev.map(n => ({ ...n, read: true }))
+            );
+        } catch (error) {
+        }
+    }
+    useEffect(() => {
+        if(notificationsResponse?.numberNotifications){ setNumberNotifications(notificationsResponse?.numberNotifications);}
+        
+        if (notificationsResponse?.notifications) {
+            setLocalNotifications(notificationsResponse.notifications);
+        }
+    }, [notificationsResponse]);
 
     return (
         <div className="group relative">
-            {/* Botón */}
+
             <button
-                className="relative z-10 flex size-10 cursor-pointer items-center justify-center 
-               overflow-hidden rounded-full border border-gray-300  
+                className="relative z-10 flex size-12 cursor-pointer items-center justify-center 
+               overflow-hidden rounded-full  
                bg-white text-gray-600 hover:bg-gray-100">
 
                 <NotificationsNoneRoundedIcon fontSize='large' />
 
-                {/* Badge → ahora sí se posiciona sobre el botón */}
-                <div
-                    className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center 
-                 rounded-full bg-red-600 text-[10px] font-bold text-white shadow">
-                    {notifications.length}
-                </div>
+                {numberNotifications === 0 ? null :
+                    <div
+                        className="absolute z-20 top-1 right-2 flex h-4 w-4 items-center justify-center rounded-full bg-red-600 text-[10px] font-bold text-white shadow">
+                        {notificationsResponse?.numberNotifications}
+                    </div>
+                }
             </button>
-
 
 
             <div
@@ -39,16 +80,20 @@ const NotificationUser: React.FC<NotificationUserProps> = ({ notifications }) =>
 
                     <div className="flex items-center justify-between border-b border-gray-200 px-4 py-3">
                         <h3 className="font-semibold">Notifications</h3>
-                        <a className="text-xs font-medium text-primary hover:underline" href="#">Mark all as read</a>
+                        <button
+                            className="text-xs font-medium text-primary hover:underline"
+                            onClick={() => handleMarkAllNotificationsAsRead()}
+                        >Mark all as read</button>
                     </div>
 
                     <div className="flex flex-col divide-y divide-gray-200">
 
                         {
-                            notifications.map((n, index) => (
+                            localNotifications?.map((n, index) => (
                                 <NotificationCard
                                     key={n.notificationId ?? index}
-                                    {...n}
+                                    notification={n}
+                                    onClickNotification={handleNotificationClick}
                                 />
                             ))
                         }
@@ -56,9 +101,11 @@ const NotificationUser: React.FC<NotificationUserProps> = ({ notifications }) =>
 
                     {/* Footer */}
                     <div className="border-t border-gray-200 px-4 py-2 text-center">
-                        <a className="w-full text-sm font-semibold text-primary hover:underline" href="#">
+                        <Link
+                            to={`/notifications/${userIdAuth}`}
+                            className="w-full text-sm font-semibold text-primary hover:underline">
                             View All Notifications
-                        </a>
+                        </Link>
                     </div>
                 </div>
 

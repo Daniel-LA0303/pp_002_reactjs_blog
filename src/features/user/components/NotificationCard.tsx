@@ -2,9 +2,19 @@ import React from 'react'
 import { NotificationReceivedI } from '../types/user'
 import { timeAgo } from '../../../utils/dateUtils'
 
-const NotificationCard : React.FC<NotificationReceivedI>= (notification) => {
+interface NotificationCardProps {
+    notification: NotificationReceivedI;
+    onClickNotification: (notification: NotificationReceivedI) => void;
+}
+
+const NotificationCard: React.FC<NotificationCardProps> = ({ notification, onClickNotification }) => {
+
+    // const { getIcon, getClass, getLink } = useNotificationHelpers(notification);
+
     return (
-        <div className="flex cursor-pointer items-center gap-4 p-4 min-h-[72px] justify-between transition-colors hover:bg-blue-500 hover:text-white">
+        <div
+            onClick={() => onClickNotification(notification)} 
+            className={`${notification?.read ? "bg-white text-black hover:bg-slate-100" : "bg-blue-500 text-white hover:bg-blue-400"} flex cursor-pointer items-center gap-4 p-4  justify-between transition-colors `}>
             <div className="flex items-center gap-4">
                 <div
                     className="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-12 w-12 shrink-0"
@@ -14,20 +24,20 @@ const NotificationCard : React.FC<NotificationReceivedI>= (notification) => {
                 ></div>
 
                 <div className="flex flex-col justify-center">
-                    <p className="text-sm font-medium leading-normal line-clamp-1">{notification.notificationType}</p>
+                    <p className="text-sm font-medium leading-normal line-clamp-1">{notification?.notificationType}</p>
                     <p className="text-sm font-normal leading-normal line-clamp-2">
-                        {notification.content}
+                        {notification?.content}
                     </p>
                 </div>
             </div>
 
             <div className="shrink-0 text-right">
                 <p className=" text-xs font-normal leading-normal">
-                    {timeAgo(notification.createdAt)}
+                    {timeAgo(notification?.createdAt)}
                 </p>
             </div>
         </div>
     )
 }
 
-export default NotificationCard
+export default NotificationCard;

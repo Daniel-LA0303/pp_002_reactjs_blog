@@ -8,7 +8,7 @@ import SideBarMenu from "../sidebar/SideBarMenu";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import NotificationUser from "../../features/user/components/NotificationUser";
-import { NotificationReceivedI } from "../../features/user/types/user";
+import { NotifcationsSSEResponseI } from "../../features/user/types/user";
 
 
 const NavBar: React.FC = () => {
@@ -20,7 +20,7 @@ const NavBar: React.FC = () => {
   const [atTop, setAtTop] = useState(true);
   const [searchQuery, setSearchQuery] = useState(""); 
   const [menuOpen, setMenuOpen] = useState(false); 
-  const [notifications, setNotifications] = useState<NotificationReceivedI[]>([]);
+  const [notificationsResponse, setNotificationsResponse] = useState<NotifcationsSSEResponseI>();
 
   // Detect scroll to handle "atTop" state
   useEffect(() => {
@@ -40,7 +40,7 @@ const NavBar: React.FC = () => {
 
     sse.addEventListener("user-list-event", (event) => {
       const data = JSON.parse(event.data);
-      setNotifications(data);
+      setNotificationsResponse(data);
     });
 
     sse.onerror = () => {
@@ -115,7 +115,7 @@ const NavBar: React.FC = () => {
                     Create Blog
                   </Link>
                   <NotificationUser 
-                    notifications={notifications}
+                    notificationsResponse={notificationsResponse}
                   />
                   <ProfileButton />
 

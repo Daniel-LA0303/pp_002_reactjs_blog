@@ -27,6 +27,7 @@ import WrappedBlogsByCategory from '../features/category/pages/WrappedBlogsByCat
 import UserConfirmed from '../features/auth/pages/UserConfirmed';
 import ResetPasswordRequest from '../features/auth/pages/ResetPasswordRequest';
 import ResetPasswordConfirm from '../features/auth/pages/ResetPasswordConfirm';
+import AllNotifications from '../features/user/pages/AllNotifications';
 
 
 const AppRoutes: React.FC = () => {
@@ -71,6 +72,7 @@ const AppRoutes: React.FC = () => {
         <Route path="/categories-following/:id" element={<CategoriesByUserDashboard />} />
         <Route path="/users-followers/:id" element={<UserFollowersDashboard />} />
         <Route path="/users-following/:id" element={<UserFollowingDashboar />} />
+        <Route path="/notifications/:id" element={<AllNotifications />} />
       </Route>
 
     </Routes>

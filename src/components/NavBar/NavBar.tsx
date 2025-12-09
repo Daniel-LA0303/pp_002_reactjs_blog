@@ -7,24 +7,47 @@ import { Link, useNavigate } from "react-router-dom";
 import SideBarMenu from "../sidebar/SideBarMenu";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
+import NotificationUser from "../../features/user/components/NotificationUser";
+import { NotificationReceivedI } from "../../features/user/types/user";
+
 
 const NavBar: React.FC = () => {
 
   const accessToken = useSelector((state: RootState) => state.auth.accessToken);
+  const userIdAuth = useSelector((state: RootState) => state.auth.userId);
 
   const route = useNavigate();
   const [atTop, setAtTop] = useState(true);
-  const [searchQuery, setSearchQuery] = useState(""); // Estado para la búsqueda
-  const [menuOpen, setMenuOpen] = useState(false); // Estado para el menú
+  const [searchQuery, setSearchQuery] = useState(""); 
+  const [menuOpen, setMenuOpen] = useState(false); 
+  const [notifications, setNotifications] = useState<NotificationReceivedI[]>([]);
 
   // Detect scroll to handle "atTop" state
-  React.useEffect(() => {
+  useEffect(() => {
     const handleScroll = () => {
       setAtTop(window.pageYOffset <= 10);
     };
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  
+  useEffect(() => {
+    // let url = BASE_URL + "/push-notifications/" + user.id;
+    const sse = new EventSource(`http://localhost:8080/api/push-notifications/${userIdAuth}`);
+
+    sse.addEventListener("user-list-event", (event) => {
+      const data = JSON.parse(event.data);
+      setNotifications(data);
+    });
+
+    sse.onerror = () => {
+      sse.close();
+    };
+    return () => {
+      sse.close();
     };
   }, []);
 
@@ -91,7 +114,11 @@ const NavBar: React.FC = () => {
                   >
                     Create Blog
                   </Link>
+                  <NotificationUser 
+                    notifications={notifications}
+                  />
                   <ProfileButton />
+
                 </>
               ): (
                 <>

@@ -92,3 +92,21 @@ export interface UserCardI {
     profilePicture?: string;
     blogsByUser: number;
 }
+
+export interface NotificationReceivedI {
+    content: string;
+    createdAt: string;
+    delivered: boolean;
+    notificationId: number;
+    notificationType: string;
+    notificationUserInfo: NotificationUserInfoI;
+    read: boolean;
+    userFromId: number
+    userToId: number;
+}
+
+export interface NotificationUserInfoI {
+    profileImage: string;
+    userId: number;
+    username: string;
+}

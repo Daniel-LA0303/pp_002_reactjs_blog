@@ -34,22 +34,21 @@ const NavBar: React.FC = () => {
   }, []);
 
   
-  useEffect(() => {
-    // let url = BASE_URL + "/push-notifications/" + user.id;
-    const sse = new EventSource(`http://localhost:8080/api/push-notifications/${userIdAuth}`);
+useEffect(() => {
+  if (!userIdAuth) return; // no user, no SSE
 
-    sse.addEventListener("user-list-event", (event) => {
-      const data = JSON.parse(event.data);
-      setNotificationsResponse(data);
-    });
+  const sse = new EventSource(`http://192.168.100.3:8080/api/push-notifications/${userIdAuth}`);
 
-    sse.onerror = () => {
-      sse.close();
-    };
-    return () => {
-      sse.close();
-    };
-  }, []);
+  sse.addEventListener("user-list-event", (event) => {
+    const data = JSON.parse(event.data);
+    setNotificationsResponse(data);
+  });
+
+  sse.onerror = () => sse.close();
+
+  return () => sse.close();
+}, [userIdAuth]);
+
 
   const handleSearch = () => {
     if (searchQuery.trim()) {  // Verifica que no esté vacío

@@ -11,6 +11,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/store';
 import CircularButton from '../../user/components/CircularButton';
 import { UserSimpleInfoI } from '../../user/types/user';
+import apiClient from '../../../services/config-client/apiClient';
 
 const BlogsByCategory = () => {
 
@@ -81,8 +82,8 @@ const BlogsByCategory = () => {
    */
   const fetchCategoryInfo = async () => {
     try {
-      const response = await axios.get(
-        `http://127.0.0.1:8080/api/category/${nameCategory}`
+      const response = await apiClient.get(
+        `/category/${nameCategory}`
       );
       console.log("Category Info:", response);
       setCategoryInfo(response.data.data);
@@ -104,8 +105,8 @@ const BlogsByCategory = () => {
     }
 
     try {
-      const response = await axios.get(
-        `http://127.0.0.1:8080/api/blog/${nameCategory}/blogs?page=${page}&size=5`,
+      const response = await apiClient.get(
+        `/blog/${nameCategory}/blogs?page=${page}&size=5`,
         { signal: abortController.current?.signal }  
       );
 

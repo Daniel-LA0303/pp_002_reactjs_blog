@@ -10,7 +10,7 @@ const useSearch = (module: string, query: string, page: number, size: number) =>
             setLoading(true);
             try {
                 const response = await fetch(
-                    `http://localhost:8080/api/search?query=${query}&modules=${module}&page=${page}&size=${size}`
+                    `http://192.168.100.3:8080/api/search?query=${query}&modules=${module}&page=${page}&size=${size}`
                 );
 
                 console.log(response);

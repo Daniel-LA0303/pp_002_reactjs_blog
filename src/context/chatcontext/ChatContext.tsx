@@ -16,6 +16,8 @@ const ChatProvider = ({ children }: ChatProviderProps) => {
     // chats by user
     const [chatsByUser, setChatsByUser] = useState<ChatUserInfo[]>([]);
 
+    const [chatsSearch, setChatsSearch] = useState<ChatUserInfo[]>([]);
+
     /**
      * TODO: this can be deleted
      */
@@ -64,8 +66,9 @@ const ChatProvider = ({ children }: ChatProviderProps) => {
                 chatsByUser,
                 setChatsByUser,
                 chatSelected,
-                setChatSelected
-
+                setChatSelected,
+                chatsSearch,
+                setChatsSearch,
             }}
         >
             {children}

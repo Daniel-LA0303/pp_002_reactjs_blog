@@ -13,7 +13,6 @@ const ChatMessage = ({ message }: ChatMessageProps) => {
     const isSelfMessage = message.senderId === userIdAuth;
     return (
 
-
         <div className={`flex gap-3 max-w-[80%] ${isSelfMessage ? 'self-end flex-row-reverse' : ''}`}>
             {!isSelfMessage && (
                 <div className="bg-center bg-no-repeat bg-cover rounded-full h-8 w-8 self-end mb-1" data-alt="Portrait of a young woman with glasses smiling" style={{

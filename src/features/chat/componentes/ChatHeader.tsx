@@ -28,6 +28,9 @@ const ChatHeader = () => {
             const res = await apiAuthClient.get(`/v1/chats/${id}`);
             const data = res.data;
 
+            console.log(data);
+            
+
             setChatData({
                 chatId: data.id,
                 lastMessage: data.lastMessage,

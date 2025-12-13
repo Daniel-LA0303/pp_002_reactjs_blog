@@ -10,3 +10,9 @@ export interface ChatUserInfo {
     recipientOnline: boolean;
     unreadCount: number
 }
+
+export interface UserSearchChatDTO {
+    userId: number;
+    username: string;
+    profileImage: string;
+}

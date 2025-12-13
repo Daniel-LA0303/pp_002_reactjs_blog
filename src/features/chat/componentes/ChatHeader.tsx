@@ -27,10 +27,7 @@ const ChatHeader = () => {
         try {
             const res = await apiAuthClient.get(`/v1/chats/${id}`);
             const data = res.data;
-
-            console.log(data);
             
-
             setChatData({
                 chatId: data.id,
                 lastMessage: data.lastMessage,
@@ -38,7 +35,7 @@ const ChatHeader = () => {
                 name: data.name,
                 receiverId: data.receiverId,
                 senderId: data.senderId,
-                recipientOnline: data.isRecipientOnline, // Cambia aquí
+                recipientOnline: data.isRecipientOnline, 
                 unreadCount: data.unreadCount
             });
         } catch (error) {

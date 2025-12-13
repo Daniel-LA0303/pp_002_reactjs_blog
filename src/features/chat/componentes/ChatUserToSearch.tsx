@@ -22,18 +22,18 @@ const ChatUserToSearch = ({ user, onClick }: UserToChatCardProps) => {
 
             console.log("Respuesta del backend:", newChat);
 
-            // Esperar un momento si es necesario
+            // get to chatid delay
             await new Promise(resolve => setTimeout(resolve, 50));
 
             const chatId = res.data.id;
 
-            // Actualizar lista
+            // update list
             const chatExists = chatsByUser.some((chat: any) => chat.chatId === chatId);
             if (!chatExists && chatId) {
                 setChatsByUser((prev: any) => [{ ...newChat, chatId: chatId }, ...prev]);
             }
 
-            // Navegar
+            // nav
             navigate(`/chat/${chatId}`);
             onClick();
 

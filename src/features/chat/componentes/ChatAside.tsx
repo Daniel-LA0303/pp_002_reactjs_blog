@@ -46,7 +46,7 @@ const ChatAside = () => {
 
         const timer = setTimeout(() => {
             getUsersToChat();
-        }, 500); // Debounce de 500ms
+        }, 500); // Debounce 500ms
 
         return () => clearTimeout(timer);
 

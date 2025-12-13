@@ -28,6 +28,7 @@ import UserConfirmed from '../features/auth/pages/UserConfirmed';
 import ResetPasswordRequest from '../features/auth/pages/ResetPasswordRequest';
 import ResetPasswordConfirm from '../features/auth/pages/ResetPasswordConfirm';
 import AllNotifications from '../features/user/pages/AllNotifications';
+import ChatMessages from '../features/chat/pages/ChatMessages';
 
 
 const AppRoutes: React.FC = () => {
@@ -73,6 +74,10 @@ const AppRoutes: React.FC = () => {
         <Route path="/users-followers/:id" element={<UserFollowersDashboard />} />
         <Route path="/users-following/:id" element={<UserFollowingDashboar />} />
         <Route path="/notifications/:id" element={<AllNotifications />} />
+
+        {/* chat */}
+        <Route path="/chat" element={<ChatMessages />} />
+
       </Route>
 
     </Routes>

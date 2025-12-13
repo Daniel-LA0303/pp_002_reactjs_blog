@@ -11,6 +11,7 @@ import ChatUserCard from './ChatUserCard';
 const ChatAside = () => {
 
     const {getChatsByUser, chatsByUser} = useChat();
+    
     useEffect(() => {
 
         getChatsByUser();

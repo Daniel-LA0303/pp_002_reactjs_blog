@@ -30,6 +30,7 @@ import ResetPasswordConfirm from '../features/auth/pages/ResetPasswordConfirm';
 import AllNotifications from '../features/user/pages/AllNotifications';
 import ChatMessages from '../features/chat/pages/ChatMessages';
 import ChatLayout from '../features/chat/pages/ChatLayout';
+import ChatNotSelected from '../features/chat/componentes/ChatNotSelected';
 
 
 const AppRoutes: React.FC = () => {
@@ -77,9 +78,12 @@ const AppRoutes: React.FC = () => {
         <Route path="/notifications/:id" element={<AllNotifications />} />
 
         {/* chat */}
-        <Route element={<ChatLayout />}>
-          <Route path="/chat" element={<ChatMessages />} />
+
+        <Route path="/chat" element={<ChatLayout />}>
+          <Route index element={<ChatNotSelected />} />
+          <Route path=":chatId" element={<ChatMessages />} />
         </Route>
+
 
       </Route>
 

@@ -1,15 +1,26 @@
-import React from 'react'
 import { ChatUserInfo } from '../types/chat';
 import { timeAgo } from '../../../utils/dateUtils';
+import { useChat } from '../../../context/chatcontext/ChatContext';
+import { useNavigate } from 'react-router-dom';
 
 interface ChatUserCardProps {
-  chat: ChatUserInfo;
+    chat: ChatUserInfo;
 }
 
 const ChatUserCard = ({ chat }: ChatUserCardProps) => {
 
+    const navigate = useNavigate();
+
+    const { setChatSelected } = useChat();
+
+    // to link and get message then
+    const handleClick = () => {
+        setChatSelected(chat);
+        navigate(`/chat/${chat.chatId}`);
+    };
+
     return (
-        <div>
+        <div onClick={handleClick}>
             <div className="cursor-pointer border-l-[3px] border-primary bg-blue-500/5 transition-colors">
                 <div className="flex items-center gap-4 px-4 py-3 justify-between">
                     <div className="flex items-center gap-3 overflow-hidden">

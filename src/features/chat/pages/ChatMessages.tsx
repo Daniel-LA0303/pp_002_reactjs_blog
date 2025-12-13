@@ -4,17 +4,12 @@ import React from 'react'
  * icons
  */
 import DoneAllOutlinedIcon from '@mui/icons-material/DoneAllOutlined';
-import ChatAside from '../componentes/ChatAside';
 import ChatHeader from '../componentes/ChatHeader';
-
-
+import ChatFooter from '../componentes/ChatFooter';
 
 const ChatMessages = () => {
     return (
-        <main className="flex flex-1 overflow-hidden relative">
-
-            {/* aside */}
-            <ChatAside />
+        <main className="flex flex-1 w-full overflow-hidden relative">
 
             <section className="hidden h-screen md:flex flex-col flex-1 bg-background-light relative">
 
@@ -89,7 +84,8 @@ const ChatMessages = () => {
                         </div>
                     </div>
                 </div>
-
+                
+                <ChatFooter />
                 
             </section>
         </main>

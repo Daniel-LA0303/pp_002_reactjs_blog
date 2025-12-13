@@ -5,13 +5,16 @@ import App from './App.tsx'
 import { Provider } from 'react-redux'
 import { store } from './redux/store.ts'
 import { AppProvider } from './context/AppProvider.tsx'
+import { ChatProvider } from './context/chatcontext/ChatContext.tsx'
 
 createRoot(document.getElementById('root')!).render(
   // <StrictMode>
-    <Provider store={store}> 
-      <AppProvider>
+  <Provider store={store}>
+    <AppProvider>
+      <ChatProvider>
         <App />
-      </AppProvider>
-    </Provider>
+      </ChatProvider>
+    </AppProvider>
+  </Provider>
   // </StrictMode>,
 )

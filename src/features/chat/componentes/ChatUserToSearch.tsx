@@ -11,29 +11,28 @@ interface UserToChatCardProps {
 }
 
 const ChatUserToSearch = ({ user, onClick }: UserToChatCardProps) => {
+    
     const navigate = useNavigate();
-
+    
     const { setChatsByUser, chatsByUser } = useChat();
 
+    // click when user wanna get a user from search
     const handleClick = async () => {
         try {
             const res = await apiAuthClient.post(`/v1/chats?receiver-id=${user.userId}`);
             const newChat: ChatUserInfo = res.data;
-
-            console.log("Respuesta del backend:", newChat);
 
             // get to chatid delay
             await new Promise(resolve => setTimeout(resolve, 50));
 
             const chatId = res.data.id;
 
-            // update list
+            // update list if user don't have convesation with user in request
             const chatExists = chatsByUser.some((chat: any) => chat.chatId === chatId);
             if (!chatExists && chatId) {
                 setChatsByUser((prev: any) => [{ ...newChat, chatId: chatId }, ...prev]);
             }
 
-            // nav
             navigate(`/chat/${chatId}`);
             onClick();
 
@@ -57,7 +56,6 @@ const ChatUserToSearch = ({ user, onClick }: UserToChatCardProps) => {
                 </div>
                 <div className="ml-3">
                     <h3 className="font-medium">{user.username}</h3>
-                    {/* <h3 className="font-medium">{user.username}</h3> */}
                     <p className="text-sm text-gray-500">Start a conversation</p>
                 </div>
             </div>

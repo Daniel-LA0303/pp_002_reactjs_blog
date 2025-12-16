@@ -1,65 +1,78 @@
 // hooks/useWebSocket.ts
-import { useEffect, useRef, useCallback } from 'react';
+import { useRef, useCallback } from 'react';
 import { Client, IMessage } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 
+
+// hook web socket
 export const useWebSocket = (onMessage: (data: any) => void) => {
-  // Store STOMP client instance
+
+  // stomp client
   const stompClientRef = useRef<Client | null>(null);
 
-  // Connect to WebSocket server
-  const connect = useCallback((token: string, userId: string) => {
-    // Skip if already connected
-    if (stompClientRef.current?.connected) return;
+  // connect ref
+  const connectedRef = useRef(false);
 
-    // Create STOMP client
+  // connecting
+  const connectingRef = useRef(false); 
+
+  // useCallback to connect
+  const connect = useCallback((token: string, userId: string) => {
+
+    // if there is a conecction then not do it again
+    if (connectedRef.current || connectingRef.current) {
+      return;
+    }
+
+    connectingRef.current = true;
+
+    // conecction
     const client = new Client({
-      // Server endpoint
-      webSocketFactory: () => new SockJS('http://localhost:8080/ws'),
-      // Auth headers
-      connectHeaders: { Authorization: `Bearer ${token}` },
-      // On successful connection
+
+      // wbe socket
+      webSocketFactory: () => new SockJS('http://192.168.100.3:8080/ws'),
+      connectHeaders: {
+        Authorization: `Bearer ${token}`,
+      },
+
+      // when we are connected 
       onConnect: () => {
-        console.log('WebSocket connected');
-        // Subscribe to user's private channel
+        // change states
+        connectedRef.current = true;
+        connectingRef.current = false;
+
+        // suscribe to server
         client.subscribe(`/user/${userId}/chat`, (message: IMessage) => {
-          const data = JSON.parse(message.body);
-          onMessage(data); // Forward to handler
+          console.log('WS RAW BODY:', message.body);
+          onMessage(JSON.parse(message.body)); // <- receive response from web socket
         });
       },
-      // Error handling
-      onStompError: (frame) => console.error('STOMP error:', frame),
-      // Auto-reconnect after 5s
-      reconnectDelay: 5000
+
+      // disconnect client
+      onDisconnect: () => {
+        connectedRef.current = false;
+        connectingRef.current = false;
+      },
+
+      reconnectDelay: 0,
     });
 
-    client.activate();
     stompClientRef.current = client;
+    client.activate();
   }, [onMessage]);
 
-  // Disconnect from server
+
+  // call back to disconnect a reset state
   const disconnect = useCallback(() => {
     stompClientRef.current?.deactivate();
     stompClientRef.current = null;
+    connectedRef.current = false;
+    connectingRef.current = false;
   }, []);
-
-  // Send message to server
-  const sendMessage = useCallback((destination: string, body: any) => {
-    if (stompClientRef.current?.connected) {
-      stompClientRef.current.publish({
-        destination,
-        body: JSON.stringify(body)
-      });
-    }
-  }, []);
-
-  // Cleanup on unmount
-  useEffect(() => disconnect, [disconnect]);
 
   return {
     connect,
     disconnect,
-    sendMessage,
-    isConnected: stompClientRef.current?.connected || false
+    isConnected: connectedRef.current,
   };
 };

@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import NotificationsNoneRoundedIcon from '@mui/icons-material/NotificationsNoneRounded';
+import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
 import { NotifcationsSSEResponseI, NotificationReceivedI } from '../types/user';
 import NotificationCard from './NotificationCard';
 import apiAuthClient from '../../../services/config-client/apiAuthClient';
@@ -74,9 +75,9 @@ const NotificationUser: React.FC<{ notificationsResponse: NotifcationsSSERespons
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
                 className="relative z-10 flex size-12 cursor-pointer items-center justify-center 
-                           overflow-hidden rounded-full bg-white text-gray-600 hover:bg-gray-100"
+                           overflow-hidden rounded-full bg-white text-gray-600 hover:bg-gray-100 "
             >
-                <NotificationsNoneRoundedIcon fontSize='large' />
+                <NotificationsNoneOutlinedIcon  fontSize='large'/>
                 {numberNotifications !== 0 && (
                     <div className="absolute z-20 top-1 right-2 flex h-4 w-4 items-center justify-center rounded-full bg-red-600 text-[10px] font-bold text-white shadow">
                         {notificationsResponse?.numberNotifications}

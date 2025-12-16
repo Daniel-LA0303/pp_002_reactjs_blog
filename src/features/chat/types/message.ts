@@ -21,3 +21,11 @@ export interface MessageResponseDTO {
   createdAt: string;
   media: Uint8Array | null;
 }
+
+export interface MessageRequestDTO {
+  content: string;
+  senderId: number;
+  receiverId: number;
+  type: MessageType;
+  chatId: string;
+}

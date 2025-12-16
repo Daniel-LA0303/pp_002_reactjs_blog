@@ -6,11 +6,12 @@ import { DoneAllOutlined } from '@mui/icons-material';
 interface ChatMessageProps {
     message: MessageResponseDTO;
 }
-
+// componete message
 const ChatMessage = ({ message }: ChatMessageProps) => {
 
     const userIdAuth = useSelector((state: RootState) => state.auth.userId);
     const isSelfMessage = message.senderId === userIdAuth;
+
     return (
 
         <div className={`flex gap-3 max-w-[80%] ${isSelfMessage ? 'self-end flex-row-reverse' : ''}`}>

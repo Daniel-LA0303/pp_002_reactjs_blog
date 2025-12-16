@@ -78,7 +78,6 @@ const AppRoutes: React.FC = () => {
         <Route path="/notifications/:id" element={<AllNotifications />} />
 
         {/* chat */}
-
         <Route path="/chat" element={<ChatLayout />}>
           <Route index element={<ChatNotSelected />} />
           <Route path=":chatId" element={<ChatMessages />} />

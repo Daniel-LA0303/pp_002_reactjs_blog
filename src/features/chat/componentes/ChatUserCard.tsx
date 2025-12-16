@@ -10,7 +10,8 @@ interface ChatUserCardProps {
 const ChatUserCard = ({ chat }: ChatUserCardProps) => {
 
     const navigate = useNavigate();
-
+    
+    // get chat selected
     const { setChatSelected } = useChat();
 
     // to link and get message then
@@ -39,6 +40,9 @@ const ChatUserCard = ({ chat }: ChatUserCardProps) => {
                     </div>
                     <div className="shrink-0 flex flex-col items-end gap-1">
                         <p className="text-[#4c809a] text-xs font-normal">{chat.lastMessageTime ? timeAgo(chat.lastMessageTime) : "No messages"}</p>
+                        {
+                            chat.unreadCount !== 0 ? <p className="text-white text-center p-1 w-6 rounded-full text-xs font-normal bg-blue-500">{chat.unreadCount}</p> : null 
+                        }
                     </div>
                 </div>
             </div>

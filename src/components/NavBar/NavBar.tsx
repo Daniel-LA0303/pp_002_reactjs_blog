@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import NotificationUser from "../../features/user/components/NotificationUser";
 import { NotifcationsSSEResponseI } from "../../features/user/types/user";
+import ChatButton from "../../features/chat/componentes/ChatButton";
 
 
 const NavBar: React.FC = () => {
@@ -51,7 +52,7 @@ useEffect(() => {
 
 
   const handleSearch = () => {
-    if (searchQuery.trim()) {  // Verifica que no esté vacío
+    if (searchQuery.trim()) { 
       route(`/search/${encodeURIComponent(searchQuery.trim())}`);
     }
   };
@@ -113,6 +114,7 @@ useEffect(() => {
                   >
                     Create Blog
                   </Link>
+                  <ChatButton />
                   <NotificationUser 
                     notificationsResponse={notificationsResponse}
                   />

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 /**
  * icons
@@ -10,32 +10,47 @@ import { MessageResponseDTO } from '../types/message';
 import apiAuthClient from '../../../services/config-client/apiAuthClient';
 import ChatMessage from '../componentes/ChatMessage';
 import Spinner from './../../../components/Spinner/Spinner';
+import { useChat } from '../../../context/chatcontext/ChatContext';
 
 const ChatMessages = () => {
 
     const { chatId } = useParams<{ chatId: string }>();
-    const [messages, setMessages] = useState<MessageResponseDTO[]>([]);
+    const { messages, setMessages, setActiveChat } = useChat();
+    
+    // loading state
     const [loading, setLoading] = useState(false);
 
+    // scroll down
+    const messagesEndRef = useRef<HTMLDivElement | null>(null);
+    
+    // ref chat in context
+    useEffect(() => {
+        setActiveChat(chatId ?? null);
+    }, [chatId]);
+
+    // charge messages
     useEffect(() => {
         if (chatId) {
             loadChatData(chatId);
         }
     }, [chatId]);
 
+    // get messages form a chat
     const loadChatData = async (id: string) => {
         setLoading(true);
         try {
             const res = await apiAuthClient.get(`/v1/messages/chat/${id}`);
-            const data = res.data;
-            setMessages(data);
-        } catch (error) {
-            console.error('Error loading chat:', error);
+            setMessages(res.data); // state from context
         } finally {
             setLoading(false);
         }
     };
 
+
+    // scroll down
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [messages]);
 
     return (
         <div>
@@ -49,9 +64,10 @@ const ChatMessages = () => {
 
                             {/* messages */}
                             <div className="flex-1 overflow-y-auto px-6 py-6 flex flex-col gap-6">
-                                {messages.map((message) => (
+                                {messages.map((message: MessageResponseDTO) => (
                                     <ChatMessage key={message.id} message={message} />
                                 ))}
+                                <div ref={messagesEndRef} />
                             </div>
 
                             {/* footer chat */}

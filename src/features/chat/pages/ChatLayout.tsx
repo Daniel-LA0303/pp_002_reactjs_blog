@@ -4,6 +4,8 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/store';
 import { useCallback, useEffect } from 'react';
 import { useWebSocket } from '../hooks/useSocket';
+import { useChat } from '../../../context/chatcontext/ChatContext';
+import NavBar from '../../../components/NavBar/NavBar';
 
 const ChatLayout = () => {
 
@@ -11,11 +13,11 @@ const ChatLayout = () => {
   const accessToken = useSelector((state: RootState) => state.auth.accessToken);
 
   // Handle incoming WebSocket messages
-  const handleMessage = useCallback((data: any) => {
-    console.log('WebSocket message received:', data);
-    // Process notifications or real-time updates
-  }, []);
+  const { handleNotification } = useChat();
 
+  const handleMessage = useCallback((data: any) => {
+    handleNotification(data);
+  }, [handleNotification]);
   // Initialize WebSocket
   const { connect } = useWebSocket(handleMessage);
 
@@ -28,14 +30,19 @@ const ChatLayout = () => {
 
 
   return (
-    <div className="flex h-screen">
-      {/* aside*/}
-      <ChatAside />
+    <div>
+      <NavBar />
+      <div className="flex h-screen">
 
-      {/* chat area*/}
-      <div className="flex-1 flex flex-col">
-        <Outlet />
+        {/* aside*/}
+        <ChatAside />
+
+        {/* chat area*/}
+        <div className="flex-1 flex flex-col">
+          <Outlet />
+        </div>
       </div>
+
     </div>
   )
 }

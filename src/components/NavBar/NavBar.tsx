@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import SearchIcon from '@mui/icons-material/Search';
 import ProfileButton from "../../features/user/components/ProfileButton";
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
@@ -10,6 +10,8 @@ import { RootState } from "../../redux/store";
 import NotificationUser from "../../features/user/components/NotificationUser";
 import { NotifcationsSSEResponseI } from "../../features/user/types/user";
 import ChatButton from "../../features/chat/componentes/ChatButton";
+import "./styles.css";
+
 
 
 const NavBar: React.FC = () => {
@@ -19,8 +21,12 @@ const NavBar: React.FC = () => {
 
   const route = useNavigate();
   const [atTop, setAtTop] = useState(true);
-  const [searchQuery, setSearchQuery] = useState(""); 
-  const [menuOpen, setMenuOpen] = useState(false); 
+  const [searchQuery, setSearchQuery] = useState("");
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const [isOpen, setIsOpen] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null); // <- to dinamic search button
+
   const [notificationsResponse, setNotificationsResponse] = useState<NotifcationsSSEResponseI>();
 
   // Detect scroll to handle "atTop" state
@@ -34,26 +40,41 @@ const NavBar: React.FC = () => {
     };
   }, []);
 
-  
-useEffect(() => {
-  if (!userIdAuth) return; // no user, no SSE
 
-  const sse = new EventSource(`http://192.168.100.3:8080/api/push-notifications/${userIdAuth}`);
+  // useeffect to connect SSE server
+  useEffect(() => {
+    if (!userIdAuth) return; // no user, no SSE
 
-  sse.addEventListener("user-list-event", (event) => {
-    const data = JSON.parse(event.data);
-    setNotificationsResponse(data);
-  });
+    const sse = new EventSource(`http://192.168.100.3:8080/api/push-notifications/${userIdAuth}`);
 
-  sse.onerror = () => sse.close();
+    sse.addEventListener("user-list-event", (event) => {
+      const data = JSON.parse(event.data);
+      setNotificationsResponse(data);
+    });
 
-  return () => sse.close();
-}, [userIdAuth]);
+    sse.onerror = () => sse.close();
+
+    return () => sse.close();
+  }, [userIdAuth]);
 
 
   const handleSearch = () => {
-    if (searchQuery.trim()) { 
+    if (searchQuery.trim()) {
       route(`/search/${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
+
+  const handleClick = () => {
+    console.log("click search -> ", isOpen);
+
+    if (!isOpen) {
+      inputRef.current?.focus();
+    }
+    setIsOpen(!Boolean(isOpen) ? "open" : "");
+
+    // when user need to search and there are a string query
+    if(isOpen && searchQuery !== ""){
+      handleSearch();
     }
   };
 
@@ -61,7 +82,7 @@ useEffect(() => {
     setMenuOpen((prev) => !prev);
   };
 
-  useEffect(() => {    
+  useEffect(() => {
   }, []);
 
 
@@ -69,9 +90,8 @@ useEffect(() => {
     <>
       <div className={`bg-slate-200 w-full shadow-md`}>
         <div
-          className={`w-full text-gray-700 bg-white h-16 fixed top-0 z-40 transition-all ${
-            !atTop ? "bg-black shadow-lg" : ""
-          }`}
+          className={`w-full text-gray-700 bg-white h-16 fixed top-0 z-40 transition-all ${!atTop ? "bg-black shadow-lg" : ""
+            }`}
         >
           <div className="flex md:items-center justify-between md:flex-row w-full sm:w-full max-w-screen-lg mx-auto">
             <div className="py-3 flex flex-row items-center justify-between">
@@ -88,22 +108,32 @@ useEffect(() => {
               >
                 LOGO
               </Link>
-              <div className="searchBox">
-                <input 
-                  className="searchInput" 
-                  type="text" 
-                  name="searchQuery"
-                  value={searchQuery} 
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                  placeholder="Search" 
-                />
-                <button onClick={handleSearch} className="searchButton">
-                  <SearchIcon fontSize="small" />
-                </button>
+              <div
+                // onSubmit={handleSearch}
+                className="wrapper bg-slate-100 rounded-full">
+                <div className={`search ${isOpen}`}>
+                  <input
+                    ref={inputRef}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Find a car"
+                    type="text"
+                                        onKeyDown={(e) => {
+                      if(e.key === "Enter"){
+                        handleSearch();
+                      }
+                    }}
+                  />
+                  <button
+                    onClick={handleClick}
+                    // type="submit"
+                    className={`nav-button uil uil-${isOpen ? "multiply" : "search"} `}
+                  >
+                    <SearchIcon />
+                  </button>
+                </div>
               </div>
             </div>
-  
+
             <div className="flex items-center justify-center mr-2 lg:mr-0">
               {accessToken ? (
                 <>
@@ -115,13 +145,13 @@ useEffect(() => {
                     Create Blog
                   </Link>
                   <ChatButton />
-                  <NotificationUser 
+                  <NotificationUser
                     notificationsResponse={notificationsResponse}
                   />
                   <ProfileButton />
 
                 </>
-              ): (
+              ) : (
                 <>
                   <Link
                     to={`/login`}
@@ -143,13 +173,12 @@ useEffect(() => {
           </div>
         </div>
       </div>
-  
+
       {/* SideBar Menu */}
       {menuOpen && (
         <div
-          className={`fixed top-0 left-0 z-50 w-64 h-full bg-white shadow-lg transition-transform transform ${
-            menuOpen ? "translate-x-0" : "-translate-x-full"
-          } duration-300 ease-in-out`}
+          className={`fixed top-0 left-0 z-50 w-64 h-full bg-white shadow-lg transition-transform transform ${menuOpen ? "translate-x-0" : "-translate-x-full"
+            } duration-300 ease-in-out`}
         >
           <div className="mt-2 mr-2 flex justify-end">
             <CloseIcon fontSize="medium" onClick={toggleMenu} />
@@ -157,17 +186,16 @@ useEffect(() => {
           <SideBarMenu />
         </div>
       )}
-  
+
       {menuOpen && (
         <div
-          className={`fixed inset-0 bg-black transition-opacity ${
-            menuOpen ? "opacity-50" : "opacity-0 pointer-events-none h-full"
-          } z-40 duration-300 ease-in-out`}
+          className={`fixed inset-0 bg-black transition-opacity ${menuOpen ? "opacity-50" : "opacity-0 pointer-events-none h-full"
+            } z-40 duration-300 ease-in-out`}
           onClick={toggleMenu}
         ></div>
       )}
     </>
   );
-}  
+}
 
 export default NavBar;

@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react'
-import NotificationsNoneRoundedIcon from '@mui/icons-material/NotificationsNoneRounded';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
 import { NotifcationsSSEResponseI, NotificationReceivedI } from '../types/user';
 import NotificationCard from './NotificationCard';
@@ -16,7 +15,7 @@ const NotificationUser: React.FC<{ notificationsResponse: NotifcationsSSERespons
     const [localNotifications, setLocalNotifications] = useState<NotificationReceivedI[]>(notificationsResponse?.notifications ?? []);
     const [numberNotifications, setNumberNotifications] = useState<number>(notificationsResponse?.numberNotifications ?? 0);
     const [open, setOpen] = useState(false);
-    const hoverTimeoutRef = useRef<number | null>(null);
+    const menuRef = useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
 
     const handleNotificationClick = async (notification: NotificationReceivedI) => {
@@ -45,9 +44,22 @@ const NotificationUser: React.FC<{ notificationsResponse: NotifcationsSSERespons
         }
     }
 
+    // click outside space notifications
     useEffect(() => {
-        if (notificationsResponse?.numberNotifications) { 
-            setNumberNotifications(notificationsResponse?.numberNotifications); 
+        const handleClickOutside = (e: MouseEvent) => {
+            if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+                setOpen(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+
+    useEffect(() => {
+        if (notificationsResponse?.numberNotifications) {
+            setNumberNotifications(notificationsResponse?.numberNotifications);
         }
 
         if (notificationsResponse?.notifications) {
@@ -55,29 +67,17 @@ const NotificationUser: React.FC<{ notificationsResponse: NotifcationsSSERespons
         }
     }, [notificationsResponse]);
 
-    // Funciones de hover con delay para mantener el dropdown abierto
-    const handleMouseEnter = () => {
-        if (hoverTimeoutRef.current) {
-            clearTimeout(hoverTimeoutRef.current);
-        }
-        setOpen(true);
-    };
-
-    const handleMouseLeave = () => {
-        hoverTimeoutRef.current = setTimeout(() => {
-            setOpen(false);
-        }, 150); 
-    };
+    const toggle = () => setOpen((prev: any) => !prev);
 
     return (
-        <div className="relative bg-white text-gray-600">
+        <div
+            ref={menuRef} 
+            className="relative bg-white text-gray-600 ">
             <button
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-                className="relative z-10 flex size-12 cursor-pointer items-center justify-center 
-                           overflow-hidden rounded-full bg-white text-gray-600 hover:bg-gray-100 "
+                onClick={toggle}
+                className="relative rounded-full p-2 hover:bg-slate-100"
             >
-                <NotificationsNoneOutlinedIcon  fontSize='large'/>
+                <NotificationsNoneOutlinedIcon sx={{ fontSize: 28 }} />
                 {numberNotifications !== 0 && (
                     <div className="absolute z-20 top-1 right-2 flex h-4 w-4 items-center justify-center rounded-full bg-red-600 text-[10px] font-bold text-white shadow">
                         {notificationsResponse?.numberNotifications}
@@ -87,12 +87,18 @@ const NotificationUser: React.FC<{ notificationsResponse: NotifcationsSSERespons
 
             {/** Dropdown */}
             <div
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-                className={`absolute right-0 top-full mt-2 w-80 sm:w-96 origin-top-right transform-gpu transition-all duration-200 ease-in-out bg-white text-gray-600
-                            ${open ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}
+                className={`
+                    absolute right-0 top-12 z-10
+                    min-w-[20rem]
+                    rounded-md border bg-white
+                    transition-all duration-200 ease-out
+                    ${open
+                        ? 'opacity-100 scale-100 translate-y-0'
+                        : 'opacity-0 scale-95 -translate-y-2 pointer-events-none'
+                    }
+                `}
             >
-                <div className="flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-background-light shadow-lg">
+                <div className="flex flex-col overflow-hidden border border-gray-200 bg-background-light shadow-lg">
                     <div className="flex items-center justify-between border-b border-gray-200 px-4 py-3">
                         <h3 className="font-semibold">Notifications</h3>
                         <button

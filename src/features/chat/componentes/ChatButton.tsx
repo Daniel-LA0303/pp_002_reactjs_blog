@@ -11,10 +11,10 @@ const ChatButton = () => {
 
     return (
         <div
-            className='p-4 hover:bg-slate-100 rounded-full cursor-pointer'
+            className='p-4 hover:bg-slate-100 rounded-full cursor-pointer h-10 w-10 flex justify-center items-center'
             onClick={() => navigate(`/chat`)}
         >
-            <ChatBubbleOutlineIcon />
+            <ChatBubbleOutlineIcon sx={{ fontSize: 22 }}/>
         </div>
     )
 }

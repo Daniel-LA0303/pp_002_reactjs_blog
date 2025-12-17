@@ -10,6 +10,7 @@ import { RootState } from "../../redux/store";
 import NotificationUser from "../../features/user/components/NotificationUser";
 import { NotifcationsSSEResponseI } from "../../features/user/types/user";
 import ChatButton from "../../features/chat/componentes/ChatButton";
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import "./styles.css";
 
 
@@ -65,7 +66,6 @@ const NavBar: React.FC = () => {
   };
 
   const handleClick = () => {
-    console.log("click search -> ", isOpen);
 
     if (!isOpen) {
       inputRef.current?.focus();
@@ -115,7 +115,7 @@ const NavBar: React.FC = () => {
                   <input
                     ref={inputRef}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Find a car"
+                    placeholder="Find something"
                     type="text"
                                         onKeyDown={(e) => {
                       if(e.key === "Enter"){
@@ -140,11 +140,15 @@ const NavBar: React.FC = () => {
                   <Link
                     to={`/create-blog`}
                     type="button"
-                    className="hidden md:block text-gray-900 hover:text-white border border-gray-800 hover:bg-gray-900 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-800"
+                    className="hidden md:inline-block h-10 w-10 py-1.5 rounded-full font-medium text-sm text-center hover:bg-slate-100"
                   >
-                    Create Blog
+                    <AddCircleOutlineIcon sx={{ fontSize: 28 }} />
                   </Link>
-                  <ChatButton />
+                  
+                  <div className="hidden md:block">
+                    <ChatButton />
+                  </div>
+
                   <NotificationUser
                     notificationsResponse={notificationsResponse}
                   />

@@ -1,7 +1,10 @@
 import { useState } from 'react'
 import apiClient from '../../../services/config-client/apiClient';
+import { useNavigate } from 'react-router-dom';
 
 const ResetPasswordRequest = () => {
+
+  const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
@@ -55,7 +58,7 @@ const ResetPasswordRequest = () => {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
+              className="w-full px-4 py-2 border rounded-lg  outline-none"
               placeholder="you@example.com"
             />
           </div>
@@ -64,10 +67,18 @@ const ResetPasswordRequest = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 rounded-lg transition disabled:bg-gray-400"
+            className="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2 rounded-lg transition disabled:bg-gray-400"
           >
             {loading ? "Sending..." : "Send Reset Email"}
           </button>
+
+          <button
+            onClick={() => navigate(-1)}
+            className="text-blue-500 hover:underline"
+          >
+            Return Login
+          </button>
+
         </form>
 
       </div>

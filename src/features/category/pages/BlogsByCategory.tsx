@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { useEffect, useRef, useState } from 'react'
 import CategoryCard from '../components/CategoryCard';
 import { useParams } from 'react-router-dom';
@@ -46,14 +45,11 @@ const BlogsByCategory = () => {
    * useEffect
    */
   useEffect(() => {
-    console.log("Category changed to:", nameCategory);
     setBlogs([]);  
     setPage(0);    
     setHasMore(true);  
     setInitialLoad(false); 
     fetchCategoryInfo();  
-    
-    console.log("page:", page);
     
     currentCategory.current = nameCategory;
   
@@ -61,6 +57,7 @@ const BlogsByCategory = () => {
       abortController.current.abort();
     }
 
+    // to change params and loading data in the same page
     abortController.current = new AbortController(); 
 
     const timeoutId = setTimeout(() => {
@@ -85,7 +82,6 @@ const BlogsByCategory = () => {
       const response = await apiClient.get(
         `/category/${nameCategory}`
       );
-      console.log("Category Info:", response);
       setCategoryInfo(response.data.data);
     } catch (error) {
       console.error("Error fetching category info:", error);
@@ -115,8 +111,6 @@ const BlogsByCategory = () => {
         fetchingInProgress.current = false;  
         return;
       }
-
-      console.log("Blogs:", response);
 
       const { content, last } = response.data.data;
       setBlogs((prevBlogs) => {
@@ -156,7 +150,7 @@ const BlogsByCategory = () => {
       <div className="w-full max-w-screen-lg px-2 lg:mx-auto mt-16 grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-3">
           <CategoryCard
-            categoryId={categoryInfo?.categoryFullInfoDTO?.categoryId ?? null} // Asignar null si no está disponible
+            categoryId={categoryInfo?.categoryFullInfoDTO?.categoryId ?? null}
             nameCategory={categoryInfo?.categoryFullInfoDTO?.name ?? ''}
             color={categoryInfo?.categoryFullInfoDTO?.color ?? ''}
             postsNumber={categoryInfo?.categoryFullInfoDTO?.postsNumber ?? 0}
@@ -166,9 +160,8 @@ const BlogsByCategory = () => {
 
         </div>
 
-        <aside className="hidden md:block pb-4 px-4 bg-gray-100 rounded-lg lg:col-span-1 max-h-[800px] overflow-auto">
+        <aside className="hidden md:block pb-4  bg-gray-100 rounded-lg lg:col-span-1 max-h-[800px] overflow-auto">
           <h2 
-            // style={{ color: categoryInfo?.categoryFullInfoDTO.color || '#fff' }}
             className="mb-4 text-lg font-semibold text-gray-700"
           >{categoryInfo?.categoryFullInfoDTO?.name}</h2>
           <hr />
@@ -200,7 +193,6 @@ const BlogsByCategory = () => {
               ))}
             </ul>
           </div>
-
         </aside>
 
         <div className="lg:col-span-2">

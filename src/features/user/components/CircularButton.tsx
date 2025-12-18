@@ -3,13 +3,14 @@ import { UserSimpleInfoI } from "../types/user"
 import { Link } from "react-router-dom"
 
 
-const CircularButton: React.FC<UserSimpleInfoI> = ({userId, username}) => {
+const CircularButton: React.FC<UserSimpleInfoI> = ({userId, username, profilePicture}) => {    
+    
   return (
     <div className="mr-1 my-2">
         <Tooltip title={username} arrow>
             <Link to={`/profile/${userId}`} style={{ textDecoration: 'none' }}>
                 <Avatar
-                    src="https://i.pravatar.cc/150?img=3" 
+                    src={`${profilePicture}`}
                     alt="User"
                     sx={{
                         width: 45,  

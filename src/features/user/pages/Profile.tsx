@@ -357,7 +357,7 @@ const Profile: React.FC = () => {
                     <span className='ml-1'>Skills</span>
                   </h2>
                   <div className=" my-2 border-t border-0.5 text-center"></div>
-                  <p>{user?.skills ? user?.skills : 'No data'}</p>
+                  <p className='text-center'>{user?.skills ? user?.skills : 'No data'}</p>
                 </div>
               </div>
 
@@ -372,7 +372,7 @@ const Profile: React.FC = () => {
                     <span className='ml-1'>Work</span>
                   </h2>
                   <div className="my-2 border-t border-0.5 text-center"></div>
-                  <p>{user?.work ? user?.work : 'No data'}</p>
+                  <p className='text-center'>{user?.work ? user?.work : 'No data'}</p>
                 </div>
               </div>
             }
@@ -386,7 +386,7 @@ const Profile: React.FC = () => {
                     <span className='ml-1'>Education</span>
                   </h2>
                   <div className=" my-2 border-t border-0.5 text-center"></div>
-                  <p className=' text-sm'>{user?.education ? user?.education : 'No data'}</p>
+                  <p className='text-sm text-center'>{user?.education ? user?.education : 'No data'}</p>
                 </div>
               </div>
             }

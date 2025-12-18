@@ -12,14 +12,11 @@ const useSearch = (module: string, query: string, page: number, size: number) =>
                 const response = await fetch(
                     `http://192.168.100.3:8080/api/search?query=${query}&modules=${module}&page=${page}&size=${size}`
                 );
-
-                console.log(response);
                 
                 if (!response.ok) {
                     throw new Error("Error en la solicitud");
                 }
                 const result = await response.json();
-                console.log(result.data);
                 
                 setData(result.data);
             } catch (error: any) {

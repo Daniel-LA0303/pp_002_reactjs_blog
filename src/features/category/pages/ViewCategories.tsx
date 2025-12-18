@@ -28,14 +28,11 @@ const ViewCategories: React.FC = () => {
   // Fetch categories function
   const fetchCategories = async () => {
     if (loadingCategories || !hasMoreCategories) return;
+
     setLoadingCategories(true);
-
     try {
-      const response = await fetchCategoriesPaginated(page, 10);      
+      const response = await fetchCategoriesPaginated(page, 20);      
       const { content, last } = response.data;
-
-      console.log(response);
-      
 
       setCategories((prevCategories) => [...prevCategories, ...content]);
       setPage((prevPage) => prevPage + 1);
@@ -72,7 +69,7 @@ const ViewCategories: React.FC = () => {
 
     const delayFetchCategories = setTimeout(async () => {
       try {
-        const response = await fetchCategoriesPaginated(0, 18);
+        const response = await fetchCategoriesPaginated(0, 20);
         if (isMounted) {
           setCategories(response.data.content);
           setPage(1);

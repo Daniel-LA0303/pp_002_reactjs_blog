@@ -37,17 +37,25 @@ import ModalError from "../../../components/Modals/ModalError";
 import { load } from 'cheerio';
 import apiAuthClient from "../../../services/config-client/apiAuthClient";
 
+import { Quill } from 'react-quill';
+import ImageResize from 'quill-image-resize-module-react';
+
+Quill.register('modules/imageResize', ImageResize);
+
 // modules of react quill
 const modules = {
-  toolbar: {
-    container: [
-      [{ header: [1, 2, 3, false] }],
-      ["bold", "italic", "underline", "strike"],
-      [{ align: [] }],
-      ["link", "image", "video"],
-      [{ list: "ordered" }, { list: "bullet" }],
-      ["clean"],
-    ],
+  toolbar: [
+    [{ header: [1, 2, 3, false] }],
+    ['bold', 'italic', 'underline', 'strike'],
+    [{ align: [] }],
+    ['link', 'image', 'video'],
+    [{ list: 'ordered' }, { list: 'bullet' }],
+    ['clean'],
+    
+  ],
+  imageResize: {
+    parchment: Quill.import('parchment'),
+    modules: ['Resize', 'DisplaySize'],
   },
 };
 
@@ -123,7 +131,6 @@ const CreateBlog: React.FC = () => {
     const fetchData = async () => {
       try {
         const response = await dispatch(fetchCategories()).unwrap();
-        console.log(response);
 
         // mapping categories tooptions
         const optionsC = response.map(c => ({
@@ -235,7 +242,6 @@ const CreateBlog: React.FC = () => {
       if (selectedImage) {
         fd.append("blogImage", selectedImage);
       }
-
       const res = await apiAuthClient.post("/blog", fd, {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -386,15 +392,13 @@ const CreateBlog: React.FC = () => {
                         modules={modules}
                         onChange={setContent}
                         style={{
-                          height: "300px",
-                          overflow: "auto",
-                          border: "1px solid #ccc",
+                          height: "550px",
                         }}
                       />
                     </div>
 
 
-                    <div className="md:col-span-5 cursor-pointer">
+                    <div className="md:col-span-5 mt-16 cursor-pointer">
                       <label className="uppercase md:text-sm text-xs text-gray-500 text-light font-semibold mb-1">
                         Upload Photo
                       </label>

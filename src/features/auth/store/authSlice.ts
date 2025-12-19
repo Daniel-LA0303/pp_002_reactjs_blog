@@ -29,10 +29,7 @@ export const fetchLogin = createAsyncThunk(
     'auth/login',
     async ({ email, password }: { email: string; password: string }, { rejectWithValue }) => {
         try {
-            const response = await fetchLoginRequest({ email, password });
-
-            console.log(response);
-            
+            const response = await fetchLoginRequest({ email, password });            
             return response;
         } catch (error: any) {
             return rejectWithValue(error.response?.data || 'Error during login');

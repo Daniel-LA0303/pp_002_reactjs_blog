@@ -1,0 +1,80 @@
+/* Wrapper for centering the modal trigger */
+.wrapper {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Modal styles */
+.modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(77, 77, 77, 0.7);
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s, opacity 0.4s ease;
+  z-index: 9999;
+}
+
+.modal--visible {
+  visibility: visible;
+  opacity: 1;
+}
+
+.modal__content {
+  position: relative;
+  border-radius: 4px;
+  width: 500px;
+  max-width: 90%;
+  background: #fff;
+  padding: 1em 2em;
+  transform: scale(0.9);
+  transition: transform 0.4s ease;
+}
+
+.modal--visible .modal__content {
+  transform: scale(1);
+}
+
+/* Modal close button */
+.modal__close {
+  position: absolute;
+  top: 0;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #585858;
+}
+
+.modal__footer {
+  text-align: right;
+}
+
+.modal__footer a {
+  color: #585858;
+}
+
+.modal__footer i {
+  color: #d02d2c;
+}
+
+.status{
+    font-size: 50px;
+    text-align: center;
+    font-weight: bold;
+    color: #e67070;
+}
+
+.message{
+    font-size: 18px;
+    text-align: center;
+}

@@ -22,5 +22,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src"]
+  "include": ["src", "src/features/blog/.modules/comments/services/commentService.ts", "src/features/blog/.modules/comments/store/commentSlice.ts", "src/features/blog/.modules/comments/types/comment.ts", "src/features/blog/.modules/comments/components/CommentBlog.tsx", "src/features/blog/.modules/comments/components/FormComment.tsx", "src/features/blog/.modules/replies/components/ReplyComment.tsx", "src/features/blog/.modules/replies/store/replySlice.ts", "src/features/blog/.modules/replies/types/reply.ts", "src/features/blog/.modules/replies/services/replyService.ts"]
 }
